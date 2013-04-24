@@ -1,4 +1,4 @@
-module SpliceReportsPlugin
+module SpliceReports
   
   class FilterController < ::ApplicationController
 
