@@ -7,11 +7,11 @@ require "splice_reports/version"
 Gem::Specification.new do |s|
   s.name        = "splice_reports"
   s.version     = SpliceReports::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of SpliceReports."
-  s.description = "TODO: Description of SpliceReports."
+  s.authors     = ["whayutin"]
+  s.email       = ["whayutin@redhat.com"]
+  s.homepage    = "https://github.com/splice/splice-reports"
+  s.summary     = "Summary of SpliceReports."
+  s.description = "Description of SpliceReports."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
