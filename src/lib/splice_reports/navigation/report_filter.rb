@@ -1,5 +1,7 @@
 module SpliceReports
   module Navigation
+
+=begin
     class ReportFilter < ::Experimental::Navigation::Item
 
       def initialize(organization)
@@ -10,5 +12,6 @@ module SpliceReports
       end
 
     end
+=end
   end
 end

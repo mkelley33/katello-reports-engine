@@ -1,6 +1,7 @@
 module SpliceReports
   class Engine < ::Rails::Engine
 
+=begin
     initializer :finisher_hook do |engine|
      
       resources = Dir[File.dirname(__FILE__) + '/navigation/*.rb']
@@ -8,7 +9,6 @@ module SpliceReports
  
       ::Experimental::Navigation::Additions.insert_after(:import_history, Foo::Navigation::ReportFilter)
     end
-
-
+=end
   end
 end
