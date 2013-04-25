@@ -1,5 +1,6 @@
 module SpliceReports
   class Engine < ::Rails::Engine
+    isolate_namespace SpliceReports
 
 =begin
     initializer :finisher_hook do |engine|
