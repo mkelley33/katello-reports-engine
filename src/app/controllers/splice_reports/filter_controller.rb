@@ -15,7 +15,6 @@ module SpliceReports
 
     end
 
-
   end 
 
 end
