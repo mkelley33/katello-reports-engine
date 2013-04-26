@@ -12,7 +12,12 @@ module SpliceReports
 
 
     def index
+      @filters = SpliceReports::Filter.all
 
+      respond_to do |format|
+        format.html
+        format.json  { render :json => @filters}
+      end
     end
 
   end 
