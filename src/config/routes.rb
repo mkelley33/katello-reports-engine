@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   namespace :splice_reports do
-    resources :filter do
+    resources :filters do
       collection do
         get :items
       end

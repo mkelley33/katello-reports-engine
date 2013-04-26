@@ -1,15 +1,17 @@
 module SpliceReports
   
-  class FilterController < ::ApplicationController
+  class FiltersController < ::ApplicationController
 
-    before_filter :panel_options, :only => [:index, :items]
+    before_filter :panel_options, :only => [:init_action, :index, :items]
 
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
         {
           :index => lambda{true},
-          :items => lambda{true}
+          :items => lambda{true},
+          :new => lambda{true},
+          :edit => lambda{true}
         }
 
     end
@@ -36,8 +38,8 @@ module SpliceReports
           :create_label => _('+ New Filter'),
           :name => controller_display_name,
           :ajax_load => true,
-          :ajax_scroll=>items_splice_reports_filter_index_path(),
-          :initial_action => :init_action,
+          :ajax_scroll=>items_splice_reports_filters_path(),
+          :initial_action => :edit,
           :search_class => Filter,
           :enable_create => true
       }
@@ -48,10 +50,15 @@ module SpliceReports
       return 'filter'
     end
 
-    def init_action
-      #@filter = @filters.name
-      render :partial => "filter_names", :locals => {:filter => @filter}
+    def edit
+      @filter = Filter.find(params["id"])
+      render :partial => "filter_details", :locals => {:filters => @filter}
 
+    end
+
+    def new
+      @filter = Filter.new
+      render :partial => "new", :locals => {:filters => @filter}
     end
 
     def items

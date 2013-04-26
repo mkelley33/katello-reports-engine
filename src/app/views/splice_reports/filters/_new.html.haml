@@ -1,0 +1,11 @@
+= javascript 'splice_reports/filter_create'
+
+= content_for :title do
+  #{_("New Filter")}
+
+= content_for :content do
+  #filter
+    = kt_form_for @filter do |form|
+      = render :partial => 'form', :locals => { :form => form }
+
+= render :template => "layouts/tupane_layout"
