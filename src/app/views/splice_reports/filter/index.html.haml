@@ -1,7 +1,5 @@
-= javascript :dashboard
-
-%h2.filter-header= _("Your Filters sir")
+= javascript :splice_reports
 
 
-- @filters.each do |f|
-  %h1= "Filter Name:" + f.name + "Filter Satellite: " + f.satellite_name
+.grid_16
+  = two_panel(@filters, @panel_options)

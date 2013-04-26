@@ -1,7 +1,8 @@
 module SpliceReports
   class Filter < ActiveRecord::Base
-    has_many :organizations
+    include FilterSearch::Filter if Katello.config.use_elasticsearch
 
+    has_many :organizations
 
     validates :name, :presence => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
