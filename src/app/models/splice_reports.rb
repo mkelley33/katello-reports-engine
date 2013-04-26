@@ -1,5 +1,5 @@
 module SpliceReports
   def self.table_name_prefix
-    'splice_reports'
+    'splice_reports_'
   end
 end
