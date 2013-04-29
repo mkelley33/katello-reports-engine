@@ -14,7 +14,9 @@ module SpliceReports
           :edit => lambda{true},
           :details => lambda{true},
           :update => lambda{true},
-          :destroy => lambda{true}
+          :destroy => lambda{true},
+          :create => lambda{true},
+          :new => lambda{true}
         }
 
     end
@@ -54,6 +56,23 @@ module SpliceReports
       render :partial => "new", :locals => {:filter => @filter}
     end
 
+    def create
+      @filter = SpliceReports::Filter.new(params[:splice_reports_filter])
+
+      @filter.save!
+
+      notify.success _("Filter '%s' was created.") % @filter['name']
+
+      if search_validate(SpliceReports::Filter, @filter.id, params[:search])
+        #render :partial => "edit", :locals => {:filter => @filter, :editable => current_organization.editable?}
+        #notify.message _("'%s' was created successfully.") % @filter["name"]
+        render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>:edit, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+      else
+        notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @filter["name"]
+        render :json => { :no_match => true }
+      end
+    end
+
     def controller_display_name
       return 'filter'
     end
@@ -66,9 +85,7 @@ module SpliceReports
 
 
     def update
-      debugger
       updated_filter = Filter.find(params[:id])
-      debugger
       result = params[:filter].values.first
 
       updated_filter.name = params[:filter][:name] unless params[:filter][:name].nil?
@@ -76,7 +93,6 @@ module SpliceReports
       unless params[:filter][:description].nil?
         result = updated_filter.description = params[:filter][:description].gsub("\n",'')
       end
-      debugger
       updated_filter.save!
       notify.success _("Filter '%s' was updated.") % updated_filter.name
 

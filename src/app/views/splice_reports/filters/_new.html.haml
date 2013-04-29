@@ -4,7 +4,16 @@
   #{_("New Filter")}
 
 = content_for :content do
-  #filter
-    = render :partial => 'form', :locals => { :filter => @filter }
+  .grid_10
+  = kt_form_for SpliceReports::Filter.new, :id => "new filter" do |form|
+    = form.text_field :name, :label => _("Name:")
+    = form.text_field :description, :label => _("Description:")
+    = form.text_field :status, :label => _("Status:")
+    = form.text_field :satellite_name, :label => _("Satellite Server:")
+    = form.text_field :hours, :label => _("Number of Hours:")
+    = form.text_field :start_date, :label => _("Start Date:")
+    = form.text_field :end_date, :label => _("End Date:")
+
+    = form.submit _("Save Filter"), :id => :save_filter
 
 = render :template => "layouts/tupane_layout"
