@@ -1,18 +1,37 @@
+= javascript 'widgets/jquery.jeditable.helpers'
+
 -# parameters: form
-- raise ArgumentError, "Filter form requires :form be passed in :locals" unless local_assigns[:form]
+- raise ArgumentError, "Filter form requires :form be passed in :locals" unless local_assigns[:filter]
 
-= form.text_field :name, :label => _("Name")
 
-= form.text_area :description, :label => _("Description"), :size => "40x5"
+= kt_form_for filter do |form|
 
-= form.text_field :status, :label => _("Status")
+  %fieldset.fl.clear
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_9.la#filter_name{:title=>@filter[:name], 'name' => 'filter[name]', 'data-url' => splice_reports_filters_path(@filter.id),
+                           :class=>editable_class(editable)} #{@filter[:name]}
 
-= form.text_field :satellite_name, :label => _("Satellite")
+    .grid_2.ra
+      %label #{_("Description")}:
+    .grid_9.la#filter_name{:title=>@filter[:description], 'description' => 'filter[description]', 'data-url' => splice_reports_filters_path(@filter.id),
+                          :class=>editable_class(editable)} #{@filter[:description]}
 
-= form.text_field :hours, :label => _("Hours")
+    .grid_2.ra
+      %label #{_("Status")}:
+    .grid_9.la#filter_name{:title=>@filter[:status], 'status' => 'filter[status]', 'data-url' => splice_reports_filters_path(@filter.id),
+                           :class=>editable_class(editable)} #{@filter[:status]}
 
-= form.text_field :start_date, :label => _("Start Date")
+    .grid_2.ra
+      %label #{_("Satellite Server")}:
+    .grid_9.la#filter_name{:title=>@filter[:satellite_name], 'satellite_name' => 'filter[satellite_name]', 'data-url' => splice_reports_filters_path(@filter.id),
+                            :class=>editable_class(editable)} #{@filter[:satellite_name]}
 
-= form.text_field :end_date, :label => _("End Date")
 
-= form.submit _("Save")
+  = form.text_field :hours, :label => _("Hours")
+
+  = form.text_field :start_date, :label => _("Start Date")
+
+  = form.text_field :end_date, :label => _("End Date")
+
+  = form.submit _("Save")

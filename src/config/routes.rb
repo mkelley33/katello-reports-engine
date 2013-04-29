@@ -6,6 +6,6 @@ Rails.application.routes.draw do
         get :items
       end
     end
-    resources :home
+    
   end
 end

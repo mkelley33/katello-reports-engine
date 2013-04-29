@@ -11,7 +11,8 @@ module SpliceReports
           :index => lambda{true},
           :items => lambda{true},
           :new => lambda{true},
-          :edit => lambda{true}
+          :edit => lambda{true},
+          :details => lambda{true},
         }
 
     end
@@ -52,13 +53,13 @@ module SpliceReports
 
     def edit
       @filter = Filter.find(params["id"])
-      render :partial => "filter_details", :locals => {:filters => @filter}
+      render :partial => "edit", :locals => {:editable => current_organization.editable?}
 
     end
 
     def new
       @filter = Filter.new
-      render :partial => "new", :locals => {:filters => @filter}
+      render :partial => "new", :locals => {:filter => @filter}
     end
 
     def items
