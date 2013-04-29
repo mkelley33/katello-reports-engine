@@ -27,11 +27,20 @@
     .grid_9.la#filter_name{:title=>@filter[:satellite_name], 'satellite_name' => 'filter[satellite_name]', 'data-url' => splice_reports_filters_path(@filter.id),
                             :class=>editable_class(editable)} #{@filter[:satellite_name]}
 
+    .grid_2.ra
+      %label #{_("Number of Hours")}:
+    .grid_9.la#filter_name{:title=>@filter[:hours], 'hours' => 'filter[hours]', 'data-url' => splice_reports_filters_path(@filter.id),
+                            :class=>editable_class(editable)} #{@filter[:hours]}
 
-  = form.text_field :hours, :label => _("Hours")
+    .grid_2.ra
+      %label #{_("Start Date")}:
+    .grid_9.la#filter_name{:title=>@filter[:start_date], 'start_date' => 'filter[start_date]', 'data-url' => splice_reports_filters_path(@filter.id),
+                            :class=>editable_class(editable)} #{@filter[:start_date]}
 
-  = form.text_field :start_date, :label => _("Start Date")
+    .grid_2.ra
+      %label #{_("End Date")}:
+    .grid_9.la#filter_name{:title=>@filter[:end_date], 'end_date' => 'filter[end_date]', 'data-url' => splice_reports_filters_path(@filter.id),
+                            :class=>editable_class(editable)} #{@filter[:end_date]}
 
-  = form.text_field :end_date, :label => _("End Date")
 
-  = form.submit _("Save")
+
