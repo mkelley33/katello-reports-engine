@@ -3,43 +3,45 @@
 -# parameters: form
 - raise ArgumentError, "Filter form requires :form be passed in :locals" unless local_assigns[:filter]
 
+= render :partial => 'remove_item'
+
 
 = kt_form_for filter do |form|
 
-  %fieldset.fl.clear
-    .grid_2.ra
+  %fieldset
+    .grid_2.ra.fieldset
       %label #{_("Name")}:
-    .grid_9.la#filter_name{:title=>@filter[:name], 'name' => 'filter[name]', 'data-url' => splice_reports_filters_path(@filter.id),
-                           :class=>editable_class(editable)} #{@filter[:name]}
-
-    .grid_2.ra
+    .grid_9.la#filter_name{:title=>@filter[:name], 'name' => 'filter[name]', :class=>editable_class(editable),
+                           'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:name]}
+  %fieldset
+    .grid_2.ra.fieldset
       %label #{_("Description")}:
-    .grid_9.la#filter_name{:title=>@filter[:description], 'description' => 'filter[description]', 'data-url' => splice_reports_filters_path(@filter.id),
-                          :class=>editable_class(editable)} #{@filter[:description]}
-
+    .grid_9.la#filter_description{:description=>@filter[:description], 'name' => 'filter[description]',
+                                  :class=>editable_class(editable), 'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:description]}
+  %fieldset
     .grid_2.ra
       %label #{_("Status")}:
-    .grid_9.la#filter_name{:title=>@filter[:status], 'status' => 'filter[status]', 'data-url' => splice_reports_filters_path(@filter.id),
+    .grid_9.la#filter_status{:title=>@filter[:status], 'name' => 'filter[status]', 'data-url' => splice_reports_filter_path(@filter.id),
                            :class=>editable_class(editable)} #{@filter[:status]}
 
     .grid_2.ra
       %label #{_("Satellite Server")}:
-    .grid_9.la#filter_name{:title=>@filter[:satellite_name], 'satellite_name' => 'filter[satellite_name]', 'data-url' => splice_reports_filters_path(@filter.id),
+    .grid_9.la#filter_satellite_name{:title=>@filter[:satellite_name], 'name' => 'filter[satellite_name]', 'data-url' => splice_reports_filter_path(@filter.id),
                             :class=>editable_class(editable)} #{@filter[:satellite_name]}
 
     .grid_2.ra
       %label #{_("Number of Hours")}:
-    .grid_9.la#filter_name{:title=>@filter[:hours], 'hours' => 'filter[hours]', 'data-url' => splice_reports_filters_path(@filter.id),
+    .grid_9.la#filter_hours{:title=>@filter[:hours], 'name' => 'filter[hours]', 'data-url' => splice_reports_filter_path(@filter.id),
                             :class=>editable_class(editable)} #{@filter[:hours]}
 
     .grid_2.ra
       %label #{_("Start Date")}:
-    .grid_9.la#filter_name{:title=>@filter[:start_date], 'start_date' => 'filter[start_date]', 'data-url' => splice_reports_filters_path(@filter.id),
+    .grid_9.la#filter_start_date{:title=>@filter[:start_date], 'name' => 'filter[start_date]', 'data-url' => splice_reports_filter_path(@filter.id),
                             :class=>editable_class(editable)} #{@filter[:start_date]}
 
     .grid_2.ra
       %label #{_("End Date")}:
-    .grid_9.la#filter_name{:title=>@filter[:end_date], 'end_date' => 'filter[end_date]', 'data-url' => splice_reports_filters_path(@filter.id),
+    .grid_9.la#filter_end{:title=>@filter[:end_date], 'name' => 'filter[end_date]', 'data-url' => splice_reports_filter_path(@filter.id),
                             :class=>editable_class(editable)} #{@filter[:end_date]}
 
 

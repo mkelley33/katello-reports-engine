@@ -13,6 +13,8 @@ module SpliceReports
           :new => lambda{true},
           :edit => lambda{true},
           :details => lambda{true},
+          :update => lambda{true},
+          :destroy => lambda{true}
         }
 
     end
@@ -47,6 +49,11 @@ module SpliceReports
 
     end
 
+    def new
+      @filter = Filter.new
+      render :partial => "new", :locals => {:filter => @filter}
+    end
+
     def controller_display_name
       return 'filter'
     end
@@ -57,10 +64,34 @@ module SpliceReports
 
     end
 
-    def new
-      @filter = Filter.new
-      render :partial => "new", :locals => {:filter => @filter}
+
+    def update
+      debugger
+      updated_filter = Filter.find(params[:id])
+      debugger
+      result = params[:filter].values.first
+
+      updated_filter.name = params[:filter][:name] unless params[:filter][:name].nil?
+
+      unless params[:filter][:description].nil?
+        result = updated_filter.description = params[:filter][:description].gsub("\n",'')
+      end
+      debugger
+      updated_filter.save!
+      notify.success _("Filter '%s' was updated.") % updated_filter.name
+
+      if not search_validate(Filter, updated_filter.id, params[:search])
+        notify.message _("'%s' no longer matches the current search criteria.") % updated_filter["name"]
+      end
+
+      render :text => escape_html(result)
     end
+
+    def destroy
+      #render and do the removal in one swoop!
+      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+    end
+
 
     def items
       render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
