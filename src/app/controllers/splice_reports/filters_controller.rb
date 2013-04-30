@@ -78,21 +78,31 @@ module SpliceReports
     end
 
     def edit
-      @filter = Filter.find(params["id"])
+      @filter = SpliceReports::Filter.find(params["id"])
       render :partial => "edit", :locals => {:editable => current_organization.editable?}
 
     end
 
 
     def update
-      updated_filter = Filter.find(params[:id])
+
+      updated_filter = SpliceReports::Filter.find(params[:id])
       result = params[:filter].values.first
+
+      #update attributes
 
       updated_filter.name = params[:filter][:name] unless params[:filter][:name].nil?
 
       unless params[:filter][:description].nil?
         result = updated_filter.description = params[:filter][:description].gsub("\n",'')
       end
+
+      updated_filter.status = params[:filter][:status] unless params[:filter][:status].nil?
+      updated_filter.satellite_name = params[:filter][:satellite_name] unless params[:filter][:satellite_name].nil?
+      updated_filter.hours = params[:filter][:hours] unless params[:filter][:hours].nil?
+      updated_filter.start_date = params[:filter][:start_date] unless params[:filter][:start_date].nil?
+      updated_filter.end_date = params[:filter][:end_date] unless params[:filter][:end_date].nil?
+
       updated_filter.save!
       notify.success _("Filter '%s' was updated.") % updated_filter.name
 
@@ -101,13 +111,17 @@ module SpliceReports
       end
 
       render :text => escape_html(result)
+
     end
+
 
     def destroy
-      #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+      @filter = SpliceReports::Filter.find(params["id"])
+      if @filter.destroy
+        notify.success _("Filter '%s' was deleted.") % @filter[:name]
+        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+      end
     end
-
 
     def items
       render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
