@@ -64,5 +64,16 @@
                          :class=>editable_class(editable),
                          'data-url' => splice_reports_filter_path(@filter.id)} #{@filter[:end_date]}
 
+  %a{:href => report_splice_reports_filter_path}
+    .button.fl#submit_button
+      #{_('Run Report')}
+
+  .button.fl#export_button
+    #{_('Export Report')}
+
+  %a{:href => report_splice_reports_filter_path}
+    .button.fl#test_button
+      #{_('testing')}
+
 
 

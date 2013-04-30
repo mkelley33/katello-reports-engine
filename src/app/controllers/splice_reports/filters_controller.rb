@@ -1,3 +1,15 @@
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
 module SpliceReports
   
   class FiltersController < ::ApplicationController
@@ -16,7 +28,8 @@ module SpliceReports
           :update => lambda{true},
           :destroy => lambda{true},
           :create => lambda{true},
-          :new => lambda{true}
+          :new => lambda{true},
+          :report => lambda{true}
         }
 
     end
@@ -126,6 +139,17 @@ module SpliceReports
     def items
       render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
                           {:default_field => :name })
+    end
+
+    def report
+
+      c = SpliceReports::MongoConn.new.get_collection()
+      Rails.logger.error(c.find_one)
+      @report_invalid = c.find({"status" => "invalid"}).as_json.to_s
+      @report_valid = c.find({"status" => "valid"}).as_json.to_s
+      filter = SpliceReports::Filter.find(params[:id])
+      #render :partial => "reports/report"
+      render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}
     end
 
   end 
