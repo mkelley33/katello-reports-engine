@@ -9,3 +9,4 @@ src/Gemfile*.lock
 .idea/
 .nfs*
 .Trash*
+*.sublime-workspace
