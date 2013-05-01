@@ -1,2 +1,2 @@
 require 'mongo'
-require 'mongo_mapper'
+require 'bson_ext'
