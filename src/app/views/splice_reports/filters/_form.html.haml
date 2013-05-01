@@ -43,6 +43,16 @@
                                     'data-url' => splice_reports_filter_path(@filter.id)} #{@filter[:satellite_name]}
 
     .grid_2.ra.fieldset
+      %label #{_("Organizations:")}
+
+    %fieldset
+      .grid_10.la{'name' => 'filter[organizations]', :class => ("editable edit_multiselect" if editable),
+             'data-url' => splice_reports_filter_path(@filter.id),
+             'data-options' => @accessible_orgs_hash.to_json}
+        = @filter.organizations.collect{|o| o.name}.join(", ")
+
+
+    .grid_2.ra.fieldset
       %label #{_("Number of Hours")}:
     .grid_10.la#filter_hours{:title=>@filter[:hours],
                            'name' => 'filter[hours]',

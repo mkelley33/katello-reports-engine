@@ -15,7 +15,7 @@ module SpliceReports
   class FiltersController < ::ApplicationController
 
     before_filter :panel_options, :only => [:init_action, :index, :items]
-
+    before_filter :accessible_orgs_hash, :only=>[:new, :edit]
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
@@ -34,6 +34,13 @@ module SpliceReports
 
     end
 
+    def param_rules
+      items = {:filter => [:name, :description, :status, :satellite_name, :state_date, :end_date, :organizations]}
+      {
+        :create => items,
+        :update => items
+      }
+    end
 
     def index
 
@@ -70,7 +77,12 @@ module SpliceReports
 
     def create
       params[:splice_reports_filter][:user_id] = current_user.id
+      org_ids = params[:splice_reports_filter].delete :organizations
       @filter = SpliceReports::Filter.new(params[:splice_reports_filter])
+
+      if org_ids
+         @filter.organizations << accessible_orgs.where(:id=>org_ids)
+      end
 
       @filter.save!
 
@@ -98,29 +110,25 @@ module SpliceReports
 
 
     def update
+      @filter = SpliceReports::Filter.find(params[:id])
+      filter_params = params[:filter]
 
-      updated_filter = SpliceReports::Filter.find(params[:id])
-      result = params[:filter].values.first
-
-      #update attributes
-
-      updated_filter.name = params[:filter][:name] unless params[:filter][:name].nil?
-
-      unless params[:filter][:description].nil?
-        result = updated_filter.description = params[:filter][:description].gsub("\n",'')
+      if filter_params[:organizations]
+         org_ids = filter_params[:organizations]
+         @filter.organizations.clear
+         @filter.organizations << accessible_orgs.where(:id=>org_ids)
+         result = @filter.organizations.collect{|o| o.name}.join(',')
+      else
+         filter_params[:description] = filter_params[:description].gsub("\n",'') if filter_params[:description]
+         result = filter_params.values.first
+         @filter.update_attributes(filter_params) 
       end
 
-      updated_filter.status = params[:filter][:status] unless params[:filter][:status].nil?
-      updated_filter.satellite_name = params[:filter][:satellite_name] unless params[:filter][:satellite_name].nil?
-      updated_filter.hours = params[:filter][:hours] unless params[:filter][:hours].nil?
-      updated_filter.start_date = params[:filter][:start_date] unless params[:filter][:start_date].nil?
-      updated_filter.end_date = params[:filter][:end_date] unless params[:filter][:end_date].nil?
+      @filter.save!
+      notify.success _("Filter '%s' was updated.") % @filter.name
 
-      updated_filter.save!
-      notify.success _("Filter '%s' was updated.") % updated_filter.name
-
-      if not search_validate(Filter, updated_filter.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % updated_filter["name"]
+      if not search_validate(Filter, @filter.id, params[:search])
+        notify.message _("'%s' no longer matches the current search criteria.") % @filter["name"]
       end
 
       render :text => escape_html(result)
@@ -134,6 +142,14 @@ module SpliceReports
         notify.success _("Filter '%s' was deleted.") % @filter[:name]
         render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       end
+    end
+
+    def accessible_orgs_hash
+      @accessible_orgs_hash = Hash[*accessible_orgs.map{ |p| [p.id, p.name] }.flatten]
+    end
+
+    def accessible_orgs
+      Organization.readable
     end
 
     def items
