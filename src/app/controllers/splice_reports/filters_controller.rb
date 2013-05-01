@@ -92,7 +92,7 @@ module SpliceReports
 
     def edit
       @filter = SpliceReports::Filter.find(params["id"])
-      render :partial => "edit", :locals => {:editable => current_organization.editable?}
+      render :partial => "edit", :locals => {:editable => !@filter.locked}
 
     end
 
