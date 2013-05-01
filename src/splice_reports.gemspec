@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "bson_ext"
   s.add_dependency "mongo_mapper"
 
+  s.add_dependency "rails", "~> 3.2"
   s.add_development_dependency "sqlite3"
 
 end

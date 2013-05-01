@@ -36,9 +36,6 @@ module SpliceReports
 
 
     def index
-      @filters = SpliceReports::Filter.all
-
-
 
 
       respond_to do |format|
@@ -59,7 +56,9 @@ module SpliceReports
           :ajax_scroll=>items_splice_reports_filters_path(),
           :initial_action => :edit,
           :search_class => Filter,
-          :enable_create => true
+          :enable_create => true,
+          :list_partial => 'splice_reports/filters/list_items'
+
       }
 
     end
@@ -70,6 +69,7 @@ module SpliceReports
     end
 
     def create
+      params[:splice_reports_filter][:user_id] = current_user.id
       @filter = SpliceReports::Filter.new(params[:splice_reports_filter])
 
       @filter.save!
@@ -137,8 +137,9 @@ module SpliceReports
     end
 
     def items
-      render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-                          {:default_field => :name })
+      ids = Filter.where("user_id = #{current_user.id} or locked = true").pluck(:id)
+      render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, 'ask'],
+                          {:default_field => :name, :filter=>[{:id=>ids}]})
     end
 
     def report

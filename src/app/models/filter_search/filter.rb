@@ -9,11 +9,12 @@ module FilterSearch::Filter
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
+        indexes :user_id, :type=>'integer', :index=>:not_analyzed
       end
     end
 
     def extended_index_attrs
-      {}
+      {:name_sort=>self.name}
     end
   end
 end
