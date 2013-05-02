@@ -29,7 +29,8 @@ module SpliceReports
           :destroy => lambda{true},
           :create => lambda{true},
           :new => lambda{true},
-          :report => lambda{true}
+          :report => lambda{true},
+          :show => lambda{true}
         }
 
     end
@@ -135,6 +136,11 @@ module SpliceReports
 
     end
 
+
+    def show
+      @filter = SpliceReports::Filter.find(params[:id])
+      render :partial=>"common/list_update", :locals=>{:item=>@filter, :accessor=>"id", :columns=>['name']}
+    end
 
     def destroy
       @filter = SpliceReports::Filter.find(params["id"])

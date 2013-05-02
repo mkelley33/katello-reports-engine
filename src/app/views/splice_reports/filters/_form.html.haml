@@ -9,6 +9,8 @@
 
 = kt_form_for filter do |form|
 
+  %input#panel_element_id{:name=>@filter.id, :type=>"hidden", :value=>"filter_#{@filter.id}", "data-ajax_url"=>splice_reports_filter_path(@filter.id)}
+
   %fieldset
     %h5 Filter Name and Description:
   %fieldset
