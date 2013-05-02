@@ -34,12 +34,17 @@ module SpliceReports
 
 
     def items
-      c = SpliceReports::MongoConn.new.get_collection()
-      Rails.logger.error(c.find_one)
-      #@report_invalid = c.find({"status" => "invalid"}).as_json.to_s
-      #@report_valid = c.find({"status" => "valid"}).as_json.to_s
+      #find the selected filter
+      @filter = SpliceReports::Filter.where(:id=>params[:id]).first
 
-      render :json=>{ :subtotal => 1, :total=>1, :systems=> [c.find_one]  }
+      # connect to mongo collection
+      c = SpliceReports::MongoConn.new.get_collection()
+
+      #add report criteria
+      @report_row = c.find({"status" => @filter[:status]}).as_json
+      #debug
+      #render :json=>{ :subtotal => 1, :total=>1, :systems=> [c.find_one]  }
+      render :json=>{ :subtotal => 1, :total=>1, :systems=> @report_row  }
     end
 
   end 
