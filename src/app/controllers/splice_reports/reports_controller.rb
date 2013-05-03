@@ -36,17 +36,9 @@ module SpliceReports
     def items
       #find the selected filter
       @filter = SpliceReports::Filter.where(:id=>params[:id]).first
-<<<<<<< Updated upstream
-
-      # connect to mongo collection
-      c = SpliceReports::MongoConn.new.get_collection()
-
-=======
-
       # connect to mongo collection
       c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
 
->>>>>>> Stashed changes
       #add report criteria
       @report_row = c.find({"status" => @filter[:status]}).as_json
       #debug
