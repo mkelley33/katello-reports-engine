@@ -71,13 +71,15 @@ module SpliceReports
     end
 
     def new
+      debugger
       @filter = Filter.new
-      render :partial => "new", :locals => {:filter => @filter}
+      @splice_servers = SpliceReports::MongoConn.new.get_splice_servers()
+
+      render :partial => "new", :locals => {:filter => @filter, :splice_servers => @splice_servers[0]}
     end
 
     def create
       filter_params = params[:splice_reports_filter]
-
       filter_params[:user_id] = current_user.id
       org_ids = filter_params.delete :organizations
       filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
@@ -88,6 +90,8 @@ module SpliceReports
       if org_ids
          @filter.organizations << accessible_orgs.where(:id=>org_ids)
       end
+
+
 
       @filter.save!
 
