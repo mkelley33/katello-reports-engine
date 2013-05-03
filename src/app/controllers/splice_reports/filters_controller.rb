@@ -35,7 +35,7 @@ module SpliceReports
     end
 
     def param_rules
-      items = {:filter => [:name, :description, :status, :satellite_name, :state_date, :end_date, :organizations]}
+      items = {:filter => [:name, :description, :status, :satellite_name, :start_date, :end_date, :organizations]}
       {
         :create => items,
         :update => items
@@ -76,8 +76,13 @@ module SpliceReports
     end
 
     def create
-      params[:splice_reports_filter][:user_id] = current_user.id
-      org_ids = params[:splice_reports_filter].delete :organizations
+      filter_params = params[:splice_reports_filter]
+
+      filter_params[:user_id] = current_user.id
+      org_ids = filter_params.delete :organizations
+      filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
+      filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
+
       @filter = SpliceReports::Filter.new(params[:splice_reports_filter])
 
       if org_ids
@@ -113,6 +118,7 @@ module SpliceReports
       @filter = SpliceReports::Filter.find(params[:id])
       filter_params = params[:filter]
 
+
       if filter_params[:organizations]
          org_ids = filter_params[:organizations]
          @filter.organizations.clear
@@ -121,6 +127,8 @@ module SpliceReports
       else
          filter_params[:description] = filter_params[:description].gsub("\n",'') if filter_params[:description]
          result = filter_params.values.first
+         filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
+         filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
          @filter.update_attributes(filter_params) 
       end
 
