@@ -26,28 +26,24 @@ angular.module('Katello').controller('ReportsController',
     function($scope, Nutupane, $location, $http, $compile) {
 
         var columns = [{
+            id: 'status',
+            display: 'Status',
+            show: true
+        },{
             id: 'systemid',
-            display: 'System Id',
+            display: 'System ID',
             show: true
         },{
-            id: 'description',
-            display: 'Description',
+            id: 'hostname',
+            display: 'Hostname',
             show: true
         },{
-            id: 'environment',
-            display: 'Environment',
+            id: 'splice_server',
+            display: 'Satellite Server',
             show: true
         },{
-            id: 'content_view_id',
-            display: 'Content View',
-            show: true
-        },{
-            id: 'created_at',
-            display: 'Created at',
-            show: true
-        },{
-            id: 'updated_at',
-            display: 'Updated at',
+            id: 'date',
+            display: 'Checkin Time',
             show: true
         }];
 
@@ -57,27 +53,24 @@ angular.module('Katello').controller('ReportsController',
             angular.forEach(data.systems,
                 function(system){
                     var row = {
-                        'row_id' : system.systemid,
+                        'row_id' : system.status,
                         'show'  : true,
                         'cells': [{
                             //display: $compile('<a ng-click="select_item(\'' + system.uuid + '\')">' + system.name + '</a>')($scope),
+                            display: system.status,
+                            column_id: 'status'
+                        },{
                             display: system.systemid,
                             column_id: 'systemid'
                         },{
-                            display: system.description,
-                            column_id: 'description'
+                            display: system.hostname,
+                            column_id: 'hostname'
                         },{
-                            display: system.environment.name,
-                            column_id: 'environment'
+                            display: system.splice_server,
+                            column_id: 'splice_server'
                         },{
-                            display: system.content_view_id ? system.content_view_id : "",
-                            column_id: 'content_view_id'
-                        },{
-                            display: system.created_at,
-                            column_id: 'created_at'
-                        },{
-                            display: system.updated_at,
-                            column_id: 'updated_at'
+                            display: system.date,
+                            column_id: 'date'
                         }]
                     };
                     rows.push(row);
