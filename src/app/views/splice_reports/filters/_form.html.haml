@@ -28,20 +28,28 @@
                                  'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:description]}
   %h5 Filter Criteria:
 
+
   %fieldset
     .grid_2.ra
       %label #{_("Status")}:
     .grid_10.la#filter_status{:title=>@filter[:status],
-                             'name' => 'filter[status]',
-                             :class=>editable_class(editable),
-                             'data-url' => splice_reports_filter_path(@filter.id)} #{@filter[:status]}
+                               'name' => 'filter[status]',
+                               :class => ("editable edit_select" if editable),
+                               'data-options' => @status_hash.to_json,
+                               'data-url' => splice_reports_filter_path(@filter.id)}
+      = @filter.status
+
+
   %fieldset
     .grid_2.ra
-      %label #{_("Satellite Server")}:
-    .grid_10.la#filter_satellite_name{:title=>@filter[:satellite_name],
-                                    'name' => 'filter[satellite_name]',
-                                    :class=>editable_class(editable),
-                                    'data-url' => splice_reports_filter_path(@filter.id)} #{@filter[:satellite_name]}
+      %label #{_("Satellite Server")}
+    .grid_10.la{'name' => 'filter[satellite_name]', :class => ("editable edit_select" if editable),
+               'data-url' => splice_reports_filter_path(@filter.id),
+               'data-options' => @available_splice_servers_hash.to_json}
+      = @filter.satellite_name
+
+
+
   %fieldset
     .grid_2.ra
       %label #{_("Organizations:")}
@@ -50,14 +58,13 @@
              'data-options' => @accessible_orgs_hash.to_json}
       = @filter.organizations.collect{|o| o.name}.join(", ")
 
-
   %fieldset
     .grid_2.ra
-      %label #{_("Number of Hours")}:
-    .grid_10.la#filter_hours{:title=>@filter[:hours],
-                           'name' => 'filter[hours]',
-                           :class=>editable_class(editable),
-                           'data-url' => splice_reports_filter_path(@filter.id)} #{@filter[:hours]}
+      %label #{_("Number of Hours")}
+    .grid_10.la{'name' => 'filter[hours]', :class => ("editable edit_select" if editable),
+                 'data-url' => splice_reports_filter_path(@filter.id),
+                 'data-options' => @number_of_hours_hash.to_json}
+      = @filter.hours
 
   %fieldset
     .grid_2.ra
