@@ -12,8 +12,8 @@
     = form.select :satellite_name, options_for_select(%w(sat1 sat2 sat3)), {}, {:label => _("Satellite Server:"), :size=>1}
     = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:label=> _("Organizations"), :size=>5} 
     = form.select :hours, options_for_select(%w(4 8 24 48)), {}, {:label => _("Number of Hours:"), :size=>1}
-    = form.text_field :start_date, :id => 'datepicker', :label => _("Start Date:")
-    = form.text_field :end_date, :id => 'datepicker', :label => _("End Date:")
+    = form.text_field :start_date, :label => _("Start Date:"), :class=>'datepicker'
+    = form.text_field :end_date, :label => _("End Date:"),:class=>'datepicker'
 
     = form.select :inactive, options_for_select(%w(1 3 5)), {}, {:label => _("Inactive for Days:"), :size=>1}
 
