@@ -5,10 +5,13 @@ Rails.application.routes.draw do
       collection do
         get :items
       end
+    end
+
+    resources :reports do
       member do
-        get :report
+        get :items
       end
     end
-    
+
   end
 end

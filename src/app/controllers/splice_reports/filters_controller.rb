@@ -28,7 +28,6 @@ module SpliceReports
           :update => lambda{true},
           :destroy => lambda{true},
           :create => lambda{true},
-          :new => lambda{true},
           :report => lambda{true},
           :show => lambda{true}
         }
@@ -164,16 +163,6 @@ module SpliceReports
                           {:default_field => :name, :filter=>[{:id=>ids}]})
     end
 
-    def report
-
-      c = SpliceReports::MongoConn.new.get_collection()
-      Rails.logger.error(c.find_one)
-      @report_invalid = c.find({"status" => "invalid"}).as_json.to_s
-      @report_valid = c.find({"status" => "valid"}).as_json.to_s
-      filter = SpliceReports::Filter.find(params[:id])
-      #render :partial => "reports/report"
-      render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}
-    end
 
   end 
 
