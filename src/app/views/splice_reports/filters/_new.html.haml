@@ -17,8 +17,6 @@
 
     = form.select :inactive, options_for_select(%w(1 3 5)), {}, {:label => _("Inactive for Days:"), :size=>1}
 
-    = form.select :inactive, options_for_select(%w(1 3 5)), {}, {:label => _("Inactive for Days:"), :size=>1}
-
     = form.submit _("Save Filter"), :id => :save_filter
 
 = render :template => "layouts/tupane_layout"

@@ -71,7 +71,6 @@ module SpliceReports
     end
 
     def new
-      debugger
       @filter = Filter.new
       @splice_servers = SpliceReports::MongoConn.new.get_splice_servers()
 
