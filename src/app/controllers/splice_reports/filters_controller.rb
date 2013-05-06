@@ -19,6 +19,7 @@ module SpliceReports
     before_filter :status_hash
     before_filter :avail_splice_servers_hash
     before_filter :number_of_hours_hash
+    before_filter :inactive_for_days_hash
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
@@ -38,7 +39,7 @@ module SpliceReports
     end
 
     def param_rules
-      items = {:filter => [:name, :description, :status, :satellite_name, :hours, :start_date, :end_date, :organizations]}
+      items = {:filter => [:name, :description, :status, :satellite_name, :inactive, :hours, :start_date, :end_date, :organizations]}
       {
         :create => items,
         :update => items
@@ -185,7 +186,7 @@ module SpliceReports
     end
 
     def status_hash
-      status = ["current", "invalid", "insufficient"]
+      status = ["current", "invalid", "insufficient", "failed", "all"]
       status_hash = {}
       status.each_with_index { |val, index|
         status_hash[val] = val
@@ -210,6 +211,15 @@ module SpliceReports
         num_hash[val] = val
       }
       @number_of_hours_hash = num_hash
+    end
+
+    def inactive_for_days_hash
+      days = [1, 3, 10, 30]
+      days_hash = {}
+      days.each_with_index { |val, index|
+        days_hash[val] = val
+      }
+      @inactive_for_days_hash = days_hash
     end
 
     def accessible_orgs
