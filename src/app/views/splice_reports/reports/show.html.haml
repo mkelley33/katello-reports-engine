@@ -3,16 +3,15 @@
 = stylesheet 'dashboard'
 = stylesheet 'widgets/nutupane'
 
-- owner_info = current_organization.owner_info
-
 = javascript do
   :plain
     Splice = {}
-    Splice.filter_id = #{@filter.id}
-    KT.subscription_data = [{data:#{escape_javascript(owner_info.total_invalid_compliance_consumers.to_s)}, color:"#e13831"},  //red     invalid
-                            {data:#{escape_javascript(owner_info.total_partial_compliance_consumers.to_s)}, color:"#f0e960"},  //yellow  partial
-                            {data:#{escape_javascript(owner_info.total_valid_compliance_consumers && owner_info.total_partial_compliance_consumers && owner_info.total_invalid_compliance_consumers == 0 ? "100" : owner_info.total_valid_compliance_consumers.to_s)}, color:"#9ccc50"}]; //green   valid
+    Splice.filter_id = #{filter_id}
+    Splice.filtered_systems = [{data:#{escape_javascript(num_invalid.to_s)}, color:"#e13831"},  //red     invalid
+                            {data:#{escape_javascript(num_insufficient.to_s)}, color:"#f0e960"},  //yellow  partial
+                            {data:#{escape_javascript(num_current.to_s)}, color:"#9ccc50"}]; //green   valid
 
+                            
 %div{ 'ng-controller' => 'ReportsController' }
   %h1
     = _("System Report")
@@ -32,24 +31,24 @@
                   %h5
                     #{_("Invalid Subscriptions")}
                 .sub_count.fr
-                  #{owner_info.total_invalid_compliance_consumers}
+                  #{num_invalid}
               %li
                 %span
                   .icon.yellow_icon.fl
                   %h5
                     #{_("Insufficient Subscriptions")}
                 .sub_count.fr
-                  #{owner_info.total_partial_compliance_consumers}
+                  #{num_insufficient}
               %li
                 %span
                   .icon.green_icon.fl
                   %h5
                     #{_("Current Subscriptions")}
                 .sub_count.fr
-                  #{owner_info.total_valid_compliance_consumers}
+                  #{num_current}
             %hr
               .sys_count.fr
-                #{owner_info.total_consumers}
+                #{num_total}
 
               %h4.fr
                 #{_("Total Systems")}
