@@ -14,11 +14,11 @@
   %fieldset
     %h5 Filter Name and Description:
   %fieldset
-    .grid_2.ra
-      %label #{_("Name")}:
-    .grid_10.la#filter_name{:title=>@filter[:name], 'name' => 'filter[name]',
-                           :class=>editable_class(editable),
-                           'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:name]}
+  .grid_2.ra
+    %label #{_("Name")}:
+  .grid_10.la#filter_name{:title=>@filter[:name], 'name' => 'filter[name]',
+                         :class=>editable_class(editable),
+                         'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:name]}
   %fieldset
     .grid_2.ra
       %label #{_("Description")}:
@@ -58,30 +58,58 @@
              'data-options' => @accessible_orgs_hash.to_json}
       = @filter.organizations.collect{|o| o.name}.join(", ")
 
-  %fieldset
-    .grid_2.ra
-      %label #{_("Number of Hours")}
-    .grid_10.la{'name' => 'filter[hours]', :class => ("editable edit_select" if editable),
-                 'data-url' => splice_reports_filter_path(@filter.id),
-                 'data-options' => @number_of_hours_hash.to_json}
-      = @filter.hours
+  %h4 Additional Filter Criteria:
+  %fieldset.clearfix
+    .grid_10.prefix_1.fielditem
+      .grid_5.la
+        = _("By Number of Hours:")
+      %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"} 
+      %br
+      .grid_5.la
+        = _("By Date:")
+      %input{:type=>:radio, :name=>"time", :id=>"choose_daterange", :value=>"choose_daterange"}
+      %br
+      .grid_5.la
+        = _("Inactive:")
+      %input{:type=>:radio, :name=>"time", :id=>"choose_inactive", :value=>"choose_inactive"} 
 
-  %fieldset
-    .grid_2.ra
-      %label #{_("Start Date")}:
-    .grid_10.la#filter_start_date{:title=>@filter[:start_date],
-                                 'name' => 'filter[start_date]',
-                                 :class=>("editable edit_datepicker" if editable),
-                                 'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter.start_date) || _("None")}
+  %div#hour
+    %fieldset
+      .grid_2.ra
+        %label #{_("Number of Hours")}
+      .grid_10.la{'name' => 'filter[hours]', :class => ("editable edit_select" if editable),
+                   'data-url' => splice_reports_filter_path(@filter.id),
+                   'data-options' => @number_of_hours_hash.to_json}
+        = @filter.hours
+
+  %div#inactive
+    %fieldset
+      .grid_2.ra
+        %label #{_("Inactive for Days")}
+      .grid_10.la{'name' => 'filter[inactive]', :class => ("editable edit_select" if editable),
+                   'data-url' => splice_reports_filter_path(@filter.id),
+                   'data-options' => @inactive_for_days_hash.to_json}
+        = @filter.inactive
+
+  %div#daterange
+    %fieldset
+      .grid_2.ra
+        %label #{_("Start Date")}:
+      .grid_10.la#filter_start_date{:title=>@filter[:start_date],
+                                   'name' => 'filter[start_date]',
+                                   :class=>("editable edit_datepicker" if editable),
+                                   'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter.start_date) || _("None")}
     -# look in _edit_errata_parameters.html.haml
 
-  %fieldset
-    .grid_2.ra
-      %label #{_("End Date")}:
-    .grid_10.la#filter_end{:title=>@filter[:end_date],
-                         'name' => 'filter[end_date]',
-                         :class=>("editable edit_datepicker" if editable),
-                         'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter[:end_date]) || _("None")}
+    %fieldset
+      .grid_2.ra
+        %label #{_("End Date")}:
+      .grid_10.la#filter_end{:title=>@filter[:end_date],
+                           'name' => 'filter[end_date]',
+                           :class=>("editable edit_datepicker" if editable),
+                           'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter[:end_date]) || _("None")}
+    
+    
 
   %a{:href => splice_reports_report_path(@filter.id)}
     .button.fl#submit_button
