@@ -6,11 +6,17 @@
 = content_for :content do
   .grid_10
   = kt_form_for SpliceReports::Filter.new, :id => "new filter" do |form|
+
+    %h4 Filter Name and Description:
     = form.text_field :name, :label => _("Name:")
     = form.text_field :description, :label => _("Description:")
+
+    %h4 Filter Criteria:
     = form.select :status, options_for_select(@status_hash.invert), {}, {:label => _("Status:"), :size=>1}
     = form.select :satellite_name, options_for_select(@available_splice_servers_hash.invert), {}, {:label => _("Satellite Server:"), :size=>1}
-    = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:label=> _("Organizations"), :size=>5} 
+    = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:label=> _("Organizations"), :size=>5}
+
+    %h5 Please choose either "Number of Hours OR a Start / End Date: 
     = form.select :hours, options_for_select(@number_of_hours_hash.invert), {}, {:label => _("Number of Hours:"), :size=>1}
     = form.text_field :start_date, :label => _("Start Date:"), :class=>'datepicker'
     = form.text_field :end_date, :label => _("End Date:"),:class=>'datepicker'
@@ -18,5 +24,7 @@
     = form.select :inactive, options_for_select(%w(1 3 5)), {}, {:label => _("Inactive for Days:"), :size=>1}
 
     = form.submit _("Save Filter"), :id => :save_filter
+    
+    %input.button{:type => "reset", :name => "commit", :value => "Reset"}
 
 = render :template => "layouts/tupane_layout"

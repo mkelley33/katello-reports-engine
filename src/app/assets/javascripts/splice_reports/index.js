@@ -6,6 +6,13 @@ KT.panel.list.registerPage('splice_reports_filters', { create : 'new_splice_repo
 
 $(document).ready(function() {
     KT.panel.set_expand_cb(function(){
+        
+        $("#splice_reports_filter_hours").change(function() {
+            $("#splice_reports_filter_start_date").addClass('disabled');
+            $("#splice_reports_filter_start_date").attr('readonly', true).datepicker("destroy");
+        });
+
+
         //New date pickers
         $(".datepicker").datepicker({
             changeMonth: true,
