@@ -17,7 +17,14 @@ module SpliceReports
     def run_filter_by_id(filter_id)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
       c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      filtered_systems = c.find({"status" => filter[:status]}).as_json
+      if filter[:status] == "all"
+        filtered_systems = c.find().as_json
+      elsif filter[:status] == "failed"
+        filtered_systems = c.find({ :$or => [{:status => "invalid"}, {:status => "insufficient"}]}).as_json
+      else
+        filtered_systems = c.find({"status" => filter[:status]}).as_json
+      end
+
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems}")
       return filtered_systems
     end
