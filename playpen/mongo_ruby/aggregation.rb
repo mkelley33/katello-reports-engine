@@ -28,8 +28,8 @@ result1 = @coll.aggregate([
 ])
 
 result2 = @coll.aggregate([
-	#{"$match" => { "$or" => [{ status: "invalid"}, { status: "insufficient"}] }},
-
+	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 03, 07)}}},
+	{"$match" => { status: "current"}},
 	{"$group" => {
 	  _id: "$instance_identifier",
 	  date: {"$max" => "$created"},
@@ -40,7 +40,6 @@ result2 = @coll.aggregate([
 		}
 	 },
 	{"$sort" => {status: 1}},
-	{"$project" => {status: 1, systemid: 1 }}
 	
 		
 ])

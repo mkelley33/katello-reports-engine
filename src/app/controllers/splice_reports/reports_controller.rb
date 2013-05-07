@@ -13,18 +13,19 @@
 module SpliceReports
   
   class ReportsController < ::ApplicationController
-    $c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+    @@c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+
     def run_filter_by_id(filter_id)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
       
       if filter[:status] == "all"
-        filtered_systems = get_marketing_product_results_all().as_json.as_json
+        filtered_systems = get_marketing_product_results_all(filter).as_json
       elsif filter[:status] == "failed"
-        #filtered_systems = c.find({ :$or => [{:status => "invalid"}, {:status => "insufficient"}]}).as_json
-        filtered_systems = get_marketing_product_results_failed().as_json
+        
+        filtered_systems = get_marketing_product_results_failed(filter).as_json
       else
-        #filtered_systems = c.find({"status" => filter[:status]}).as_json
-        filtered_systems = get_marketing_product_results(filter[:status]).as_json
+        
+        filtered_systems = get_marketing_product_results(filter).as_json
       end
 
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems}")
@@ -81,10 +82,11 @@ module SpliceReports
       render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems  }
     end
 
-    def get_marketing_product_results(status)
+    def get_marketing_product_results(filter)
       #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      result = $c.aggregate([
-        {"$match" => { status: status}},
+      result = @@c.aggregate([
+        {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
+        {"$match" => { status: filter["status"]}},
         {"$group" => {
                     _id: "$instance_identifier",
                     date: {"$max" => "$created"},
@@ -99,9 +101,10 @@ module SpliceReports
         ])
     end
 
-    def get_marketing_product_results_failed()
+    def get_marketing_product_results_failed(filter)
       #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      result = $c.aggregate([
+      result = @@c.aggregate([
+        {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
         {"$match" => { "$or" => [{ status: "invalid"}, { status: "insufficient"}] }},
         {"$group" => {
                     _id: "$instance_identifier",
@@ -117,10 +120,10 @@ module SpliceReports
         ])
     end
 
-    def get_marketing_product_results_all()
+    def get_marketing_product_results_all(filter)
       #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      result = $c.aggregate([
-        #{"$match" => { "$or" => [{ status: "invalid"}, { status: "insufficient"}] }},
+      result = @@c.aggregate([
+        {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
         {"$group" => {
                     _id: "$instance_identifier",
                     date: {"$max" => "$created"},
