@@ -16,6 +16,10 @@ module SpliceReports
 
     before_filter :panel_options, :only => [:init_action, :index, :items]
     before_filter :accessible_orgs_hash, :only=>[:new, :edit]
+    before_filter :status_hash
+    before_filter :avail_splice_servers_hash
+    before_filter :number_of_hours_hash
+    before_filter :inactive_for_days_hash
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
@@ -35,7 +39,7 @@ module SpliceReports
     end
 
     def param_rules
-      items = {:filter => [:name, :description, :status, :satellite_name, :state_date, :end_date, :organizations]}
+      items = {:filter => [:name, :description, :status, :satellite_name, :inactive, :hours, :start_date, :end_date, :organizations]}
       {
         :create => items,
         :update => items
@@ -72,17 +76,25 @@ module SpliceReports
 
     def new
       @filter = Filter.new
-      render :partial => "new", :locals => {:filter => @filter}
+      @splice_servers = SpliceReports::MongoConn.new.get_splice_servers()
+
+      render :partial => "new", :locals => {:filter => @filter, :splice_servers => @splice_servers[0]}
     end
 
     def create
-      params[:splice_reports_filter][:user_id] = current_user.id
-      org_ids = params[:splice_reports_filter].delete :organizations
+      filter_params = params[:splice_reports_filter]
+      filter_params[:user_id] = current_user.id
+      org_ids = filter_params.delete :organizations
+      filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
+      filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
+
       @filter = SpliceReports::Filter.new(params[:splice_reports_filter])
 
       if org_ids
          @filter.organizations << accessible_orgs.where(:id=>org_ids)
       end
+
+
 
       @filter.save!
 
@@ -103,8 +115,9 @@ module SpliceReports
     end
 
     def edit
+
       @filter = SpliceReports::Filter.find(params["id"])
-      render :partial => "edit", :locals => {:editable => !@filter.locked}
+      render :partial => "edit", :locals => {:editable => !@filter.locked }
 
     end
 
@@ -112,6 +125,19 @@ module SpliceReports
     def update
       @filter = SpliceReports::Filter.find(params[:id])
       filter_params = params[:filter]
+
+=begin
+      if filter_params[:satellite_name]
+        current_sat = filter_params[:satellite_name]
+        @splice_servers = SpliceReports::MongoConn.new.get_coll_splice_server()
+        @filter.satellite_name.clear
+        ss =  @splice_servers.find(:hostname=>current_sat).to_a
+        splice_server = ss.collect{|s| s["hostname"]}
+        @filter.satellite_name << splice_server[0].to_s
+        result =  "test01,test01"
+      end
+=end
+
 
       if filter_params[:organizations]
          org_ids = filter_params[:organizations]
@@ -121,6 +147,8 @@ module SpliceReports
       else
          filter_params[:description] = filter_params[:description].gsub("\n",'') if filter_params[:description]
          result = filter_params.values.first
+         filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
+         filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
          @filter.update_attributes(filter_params) 
       end
 
@@ -151,6 +179,47 @@ module SpliceReports
 
     def accessible_orgs_hash
       @accessible_orgs_hash = Hash[*accessible_orgs.map{ |p| [p.id, p.name] }.flatten]
+    end
+
+    def avail_splice_servers
+      @splice_servers = SpliceReports::MongoConn.new.get_splice_servers()
+    end
+
+    def status_hash
+      status = ["current", "invalid", "insufficient", "failed", "all"]
+      status_hash = {}
+      status.each_with_index { |val, index|
+        status_hash[val] = val
+      }
+      @status_hash =  status_hash
+
+    end
+
+    def avail_splice_servers_hash
+      splice_servers = SpliceReports::MongoConn.new.get_splice_servers()
+      server_hash = {}
+      splice_servers.each_with_index { |val, index|
+        server_hash[val] = val
+      }
+      @available_splice_servers_hash =  server_hash
+    end
+
+    def number_of_hours_hash
+      hours = [4, 8, 24, 48]
+      num_hash = {}
+      hours.each_with_index { |val, index|
+        num_hash[val] = val
+      }
+      @number_of_hours_hash = num_hash
+    end
+
+    def inactive_for_days_hash
+      days = [1, 3, 10, 30]
+      days_hash = {}
+      days.each_with_index { |val, index|
+        days_hash[val] = val
+      }
+      @inactive_for_days_hash = days_hash
     end
 
     def accessible_orgs
