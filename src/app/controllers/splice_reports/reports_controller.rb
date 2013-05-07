@@ -13,16 +13,18 @@
 module SpliceReports
   
   class ReportsController < ::ApplicationController
-
+    $c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
     def run_filter_by_id(filter_id)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
-      c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+      
       if filter[:status] == "all"
-        filtered_systems = c.find().as_json
+        filtered_systems = get_marketing_product_results_all().as_json.as_json
       elsif filter[:status] == "failed"
-        filtered_systems = c.find({ :$or => [{:status => "invalid"}, {:status => "insufficient"}]}).as_json
+        #filtered_systems = c.find({ :$or => [{:status => "invalid"}, {:status => "insufficient"}]}).as_json
+        filtered_systems = get_marketing_product_results_failed().as_json
       else
-        filtered_systems = c.find({"status" => filter[:status]}).as_json
+        #filtered_systems = c.find({"status" => filter[:status]}).as_json
+        filtered_systems = get_marketing_product_results(filter[:status]).as_json
       end
 
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems}")
@@ -77,6 +79,60 @@ module SpliceReports
       #debug
       #render :json=>{ :subtotal => 1, :total=>1, :systems=> [c.find_one]  }
       render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems  }
+    end
+
+    def get_marketing_product_results(status)
+      #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+      result = $c.aggregate([
+        {"$match" => { status: status}},
+        {"$group" => {
+                    _id: "$instance_identifier",
+                    date: {"$max" => "$created"},
+                    status: {"$last" => "$status"},
+                    identifier: {"$last" => "$instance_identifier"},
+                    splice_server: {"$last" => "$splice_server"},
+                    systemid: {"$last" => "$systemid"}
+                    }
+        },
+        {"$sort" => {status: 1}},
+      
+        ])
+    end
+
+    def get_marketing_product_results_failed()
+      #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+      result = $c.aggregate([
+        {"$match" => { "$or" => [{ status: "invalid"}, { status: "insufficient"}] }},
+        {"$group" => {
+                    _id: "$instance_identifier",
+                    date: {"$max" => "$created"},
+                    status: {"$last" => "$status"},
+                    identifier: {"$last" => "$instance_identifier"},
+                    splice_server: {"$last" => "$splice_server"},
+                    systemid: {"$last" => "$systemid"}
+                    }
+        },
+        {"$sort" => {status: 1}},
+      
+        ])
+    end
+
+    def get_marketing_product_results_all()
+      #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+      result = $c.aggregate([
+        #{"$match" => { "$or" => [{ status: "invalid"}, { status: "insufficient"}] }},
+        {"$group" => {
+                    _id: "$instance_identifier",
+                    date: {"$max" => "$created"},
+                    status: {"$last" => "$status"},
+                    identifier: {"$last" => "$instance_identifier"},
+                    splice_server: {"$last" => "$splice_server"},
+                    systemid: {"$last" => "$systemid"}
+                    }
+        },
+        {"$sort" => {status: 1}},
+      
+        ])
     end
 
   end 
