@@ -9,22 +9,22 @@ $(document).ready(function() {
 
 
     KT.panel.set_expand_cb(function(){
+
         $("#choose_hour").change(function(){
-            console.log('choose_hour');
             $("#hour").show();
             $("#daterange").hide();
+            $("#daterange option:selected").remove();
             $("#inactive").hide();
+            $("#inactive option:selected").remove();
         });
     
         $("#choose_daterange").change(function() {
-            console.log('choose_daterange');
             $("#daterange").show();
             $("#hour").hide();
             $("#inactive").hide();            
         });
 
         $("#choose_inactive").change(function() {
-            console.log('choose_inactive');
             $("#inactive").show();
             $("#hour").hide();
             $("#daterange").hide();            

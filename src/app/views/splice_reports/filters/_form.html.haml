@@ -80,7 +80,7 @@
       .grid_10.la{'name' => 'filter[hours]', :class => ("editable edit_select" if editable),
                    'data-url' => splice_reports_filter_path(@filter.id),
                    'data-options' => @number_of_hours_hash.to_json}
-        = @filter.hours
+        = @filter.hours 
 
   %div#inactive
     %fieldset
@@ -89,7 +89,7 @@
       .grid_10.la{'name' => 'filter[inactive]', :class => ("editable edit_select" if editable),
                    'data-url' => splice_reports_filter_path(@filter.id),
                    'data-options' => @inactive_for_days_hash.to_json}
-        = @filter.inactive
+        = @filter.inactive 
 
   %div#daterange
     %fieldset

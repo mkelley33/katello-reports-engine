@@ -31,12 +31,12 @@ result2 = @coll.aggregate([
 	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 03, 07)}}},
 	{"$match" => { status: "current"}},
 	{"$group" => {
-	  _id: "$instance_identifier",
+	  _id: "$record_identifier",
 	  date: {"$max" => "$created"},
 	  status: {"$last" => "$status"},
-	  identifier: {"$addToSet" => "$instance_identifier"},
-	  satellite: {"$addToSet" => "$splice_server"},
-	  systemid: {"$addToSet" => "$systemid"}
+	  identifier: {"$last" => "$instance_identifier"},
+	  satellite: {"$last" => "$splice_server"},
+	  systemid: {"$last" => "$systemid"}
 		}
 	 },
 	{"$sort" => {status: 1}},

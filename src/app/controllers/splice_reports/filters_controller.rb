@@ -125,20 +125,7 @@ module SpliceReports
     def update
       @filter = SpliceReports::Filter.find(params[:id])
       filter_params = params[:filter]
-
-=begin
-      if filter_params[:satellite_name]
-        current_sat = filter_params[:satellite_name]
-        @splice_servers = SpliceReports::MongoConn.new.get_coll_splice_server()
-        @filter.satellite_name.clear
-        ss =  @splice_servers.find(:hostname=>current_sat).to_a
-        splice_server = ss.collect{|s| s["hostname"]}
-        @filter.satellite_name << splice_server[0].to_s
-        result =  "test01,test01"
-      end
-=end
-
-
+      debugger
       if filter_params[:organizations]
          org_ids = filter_params[:organizations]
          @filter.organizations.clear
@@ -205,7 +192,7 @@ module SpliceReports
     end
 
     def number_of_hours_hash
-      hours = [4, 8, 24, 48]
+      hours = [0, 4, 8, 24, 48]
       num_hash = {}
       hours.each_with_index { |val, index|
         num_hash[val] = val
@@ -214,7 +201,7 @@ module SpliceReports
     end
 
     def inactive_for_days_hash
-      days = [1, 3, 10, 30]
+      days = [0, 1, 3, 10, 30]
       days_hash = {}
       days.each_with_index { |val, index|
         days_hash[val] = val
