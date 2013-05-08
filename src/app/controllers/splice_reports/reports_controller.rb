@@ -15,7 +15,6 @@ module SpliceReports
   class ReportsController < ::ApplicationController
     @@c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
 
-
     def run_filter_by_id(filter_id)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
       filtered_systems = get_marketing_product_results(filter).as_json
@@ -64,7 +63,7 @@ module SpliceReports
       #render :partial => "reports/report"
       #render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}
       logger.info("Splice Reports id: #{params[:id]}, num_current = #{summary[:num_current]}, num_invalid = #{summary[:num_invalid]}, num_insufficient = #{summary[:num_insufficient]}")
-      render 'show', :locals => {:filter_id => params[:id], 
+      render 'show', :locals => {:filter_id => params[:id],  :experimental_ui => true,
                                   :num_current => summary[:num_current], 
                                   :num_invalid => summary[:num_invalid], 
                                   :num_insufficient => summary[:num_insufficient], 
@@ -84,23 +83,23 @@ module SpliceReports
       if filter["status"] == 'all'
         rules = []
       elsif filter["status"] == 'failed'
-        rules = [{"$match" =>{ "$or" => [{ status: "invalid"}, { status: "insufficient"}] } }] 
+        rules = [{"$match" =>{ "$or" => [{ :status=> "invalid"}, { :status=> "insufficient"}] } }] 
       else
-        rules = [{"$match" =>  { status: filter["status"]}}]
+        rules = [{"$match" =>  { :status=> filter["status"]}}]
       end
 
       result = @@c.aggregate(rules + [
-        {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
+        {"$match" => {:created=> {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
         {"$group" => {
-                    _id: "$record_identifier",
-                    date: {"$max" => "$created"},
-                    status: {"$last" => "$status"},
-                    identifier: {"$last" => "$instance_identifier"},
-                    splice_server: {"$last" => "$splice_server"},
-                    systemid: {"$last" => "$systemid"}
+                    '_id' => "$record_identifier",
+                    :date => {"$max" => "$created"},
+                    :status => {"$last" => "$status"},
+                    :identifier => {"$last" => "$instance_identifier"},
+                    :splice_server => {"$last" => "$splice_server"},
+                    :systemid => {"$last" => "$systemid"}
                     }
         },
-        {"$sort" => {status: -1}},
+        {"$sort" => {:status => -1}},
       
         ])
     end
