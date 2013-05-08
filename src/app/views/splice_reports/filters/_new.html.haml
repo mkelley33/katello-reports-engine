@@ -6,17 +6,48 @@
 = content_for :content do
   .grid_10
   = kt_form_for SpliceReports::Filter.new, :id => "new filter" do |form|
+
+    %h4 Filter Name and Description:
     = form.text_field :name, :label => _("Name:")
     = form.text_field :description, :label => _("Description:")
-    = form.select :status, options_for_select(%w(valid invalid insufficient)), {}, {:label => _("Status:"), :size=>1}
-    = form.select :satellite_name, options_for_select(@splice_servers), {}, {:label => _("Satellite Server:"), :size=>1}
-    = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:label=> _("Organizations"), :size=>5} 
-    = form.select :hours, options_for_select(%w(4 8 24 48)), {}, {:label => _("Number of Hours:"), :size=>1}
-    = form.text_field :start_date, :label => _("Start Date:"), :class=>'datepicker'
-    = form.text_field :end_date, :label => _("End Date:"),:class=>'datepicker'
 
-    = form.select :inactive, options_for_select(%w(1 3 5)), {}, {:label => _("Inactive for Days:"), :size=>1}
+    %br
+    %br
+    .grid_2.ra
+    #criteria
+    %h4 Filter Criteria:
+    = form.select :status, options_for_select(@status_hash.invert), {}, {:label => _("Status:"), :size=>1}
+    = form.select :satellite_name, options_for_select(@available_splice_servers_hash.invert), {}, {:label => _("Satellite Server:"), :size=>1}
+    = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:label=> _("Organizations"), :size=>5}
+
+    %br
+    %br
+    
+    %h4 Additional Filter Criteria:
+    %fieldset.clearfix
+      .grid_10.prefix_1.fielditem
+        .grid_5.la
+          = _("By Number of Hours:")
+        %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"} 
+        %br
+        .grid_5.la
+          = _("By Date:")
+        %input{:type=>:radio, :name=>"time", :id=>"choose_daterange", :value=>"choose_daterange"}
+        %br
+        .grid_5.la
+          = _("Inactive:")
+        %input{:type=>:radio, :name=>"time", :id=>"choose_inactive", :value=>"choose_inactive"} 
+
+    %div#hour
+      = form.select :hours, options_for_select(@number_of_hours_hash.invert), {}, {:label => _("Number of Hours:"), :size=>1}
+    %div#daterange
+      = form.text_field :start_date, :label => _("Start Date:"), :class=>'datepicker'
+      = form.text_field :end_date, :label => _("End Date:"),:class=>'datepicker'
+    %div#inactive
+      = form.select :inactive, options_for_select(@inactive_for_days_hash.invert), {}, {:label => _("Inactive for Days:"), :size=>1}
+      
 
     = form.submit _("Save Filter"), :id => :save_filter
+    
 
 = render :template => "layouts/tupane_layout"

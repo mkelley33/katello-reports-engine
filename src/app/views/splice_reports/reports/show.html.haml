@@ -1,15 +1,64 @@
-= javascript 'splice_reports/reports.controller', 'widgets/nutupane', 'components/scrollWithPage.directive.js', 'components/inline_edit.directive', 'components/input.directive'
-= stylesheet 'widgets/nutupane', 'splice_reports/reports'
+= javascript 'splice_reports/reports.controller', 'splice_reports/reports.piechart', 'widgets/nutupane', 'components/scrollWithPage.directive.js', 'components/inline_edit.directive', 'components/input.directive'
 
+= stylesheet 'dashboard'
+= stylesheet 'splice_reports/reports'
+= stylesheet 'widgets/nutupane'
 
 = javascript do
   :plain
     Splice = {}
-    Splice.filter_id = #{@filter.id}
+    Splice.filter_id = #{filter_id}
+    Splice.filtered_systems = [{data:#{escape_javascript(num_invalid.to_s)}, color:"#e13831"},  //red     invalid
+                            {data:#{escape_javascript(num_insufficient.to_s)}, color:"#f0e960"},  //yellow  partial
+                            {data:#{escape_javascript(num_current.to_s)}, color:"#9ccc50"}]; //green   valid
 
+                            
 %div{ 'ng-controller' => 'ReportsController' }
   %h1
     = _("System Report")
+  .sixty
+    .dash
+      .dashhead
+      .fl.clear.portal
+      #dashboard_subscriptions.big_widget
+        .left_side
+          .line
+          .stats
+            %hr
+            %ul
+              %li
+                %span
+                  .icon.red_icon.fl
+                  %h5
+                    #{_("Invalid Subscriptions")}
+                .sub_count.fr
+                  #{num_invalid}
+              %li
+                %span
+                  .icon.yellow_icon.fl
+                  %h5
+                    #{_("Insufficient Subscriptions")}
+                .sub_count.fr
+                  #{num_insufficient}
+              %li
+                %span
+                  .icon.green_icon.fl
+                  %h5
+                    #{_("Current Subscriptions")}
+                .sub_count.fr
+                  #{num_current}
+            %hr
+              .sys_count.fr
+                #{num_total}
+
+              %h4.fr
+                #{_("Total Systems")}
+
+        .right_side
+          #overlay
+          #sub_graph
+      %br.clearfloat
+
   %div{ 'alch-table-toolbar' => 'table' }
   %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": !table.visible}' }
   %span.nutupane-details.panel#nutupane-details{ 'nutupane-details'=>'table.visible', 'model'=>'table', 'ng-class' => '{ "nutupane-details-open" : !table.visible }' }

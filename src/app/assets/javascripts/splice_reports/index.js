@@ -5,7 +5,35 @@ KT.routes.splice_reports_filters_path = function(){return KT.routes.options.pref
 KT.panel.list.registerPage('splice_reports_filters', { create : 'new_splice_reports_filter' });
 
 $(document).ready(function() {
+    
+
+
     KT.panel.set_expand_cb(function(){
+        $("#choose_hour").change(function(){
+            console.log('choose_hour');
+            $("#hour").show();
+            $("#daterange").hide();
+            $("#inactive").hide();
+        });
+    
+        $("#choose_daterange").change(function() {
+            console.log('choose_daterange');
+            $("#daterange").show();
+            $("#hour").hide();
+            $("#inactive").hide();            
+        });
+
+        $("#choose_inactive").change(function() {
+            console.log('choose_inactive');
+            $("#inactive").show();
+            $("#hour").hide();
+            $("#daterange").hide();            
+        });
+
+        $("#hour").hide();
+        $("#daterange").hide();
+        $("#inactive").hide();
+
         //New date pickers
         $(".datepicker").datepicker({
             changeMonth: true,
