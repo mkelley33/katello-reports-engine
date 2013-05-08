@@ -15,11 +15,11 @@ module SpliceReports
   class ReportsController < ::ApplicationController
     @@c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
 
-    def run_filter_by_id(filter_id)
+    def run_filter_by_id(filter_id, offset)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
-      filtered_systems = get_marketing_product_results(filter).as_json
+      filtered_systems = get_marketing_product_results(filter, offset)
 
-      logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems}")
+      logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems.inspect}")
       return filtered_systems
     end
 
@@ -73,7 +73,7 @@ module SpliceReports
     end
 
     def show
-      filtered_systems = run_filter_by_id(params[:id])
+      filtered_systems = run_filter_by_id(params[:id], nil).as_json
       summary = get_num_summary(filtered_systems)
 
       #render :partial => "reports/report"
@@ -87,24 +87,34 @@ module SpliceReports
     end
 
     def items
-      offset = params[:offset]
-      filtered_systems = self.run_filter_by_id(params[:id])
-       respond_to do |format|
-        format.csv { render :text => systems_to_csv(filtered_systems) }
-        format.any(:json, :html) { render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems } }
+     respond_to do |format|
+        format.csv do
+           filtered_systems = self.run_filter_by_id(params[:id], nil)
+           render :text => systems_to_csv(filtered_systems.as_json) 
+        end
+        format.any(:json, :html) do
+          filtered_systems = self.run_filter_by_id(params[:id], params[:offset] || 0)
+          total = self.run_filter_by_id(params[:id], nil).count
+          render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems } 
+        end
       end
     end
 
-    def get_marketing_product_results(filter)
+    def get_marketing_product_results(filter, offset)
       #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      
+
       rules = []
+      if offset
+        rules << {"$skip" => offset.to_i}
+        rules << {"$limit" => current_user.page_size}
+      end
+
       if filter["status"] == 'all'
-        rules = []
+        #do nothing
       elsif filter["status"] == 'failed'
-        rules = [{"$match" =>{ "$or" => [{ :status=> "invalid"}, { :status=> "insufficient"}] } }] 
+        rules << {"$match" =>{ "$or" => [{ :status=> "invalid"}, { :status=> "insufficient"}] } } 
       else
-        rules = [{"$match" =>  { :status=> filter["status"]}}]
+        rules << {"$match" =>  { :status=> filter["status"]}}
       end
 
       result = @@c.aggregate(rules + [
