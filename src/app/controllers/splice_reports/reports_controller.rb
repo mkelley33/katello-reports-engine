@@ -17,16 +17,7 @@ module SpliceReports
 
     def run_filter_by_id(filter_id)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
-      
-      if filter[:status] == "all"
-        filtered_systems = get_marketing_product_results_all(filter).as_json
-      elsif filter[:status] == "failed"
-        
-        filtered_systems = get_marketing_product_results_failed(filter).as_json
-      else
-        
-        filtered_systems = get_marketing_product_results(filter).as_json
-      end
+      filtered_systems = get_marketing_product_results(filter).as_json
 
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems}")
       return filtered_systems
@@ -88,45 +79,17 @@ module SpliceReports
 
     def get_marketing_product_results(filter)
       #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      result = @@c.aggregate([
-        {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
-        {"$match" => { status: filter["status"]}},
-        {"$group" => {
-                    _id: "$record_identifier",
-                    date: {"$max" => "$created"},
-                    status: {"$last" => "$status"},
-                    identifier: {"$last" => "$instance_identifier"},
-                    splice_server: {"$last" => "$splice_server"},
-                    systemid: {"$last" => "$systemid"}
-                    }
-        },
-        {"$sort" => {status: -1}},
       
-        ])
-    end
+      rules = []
+      if filter["status"] == 'all'
+        rules = []
+      elsif filter["status"] == 'failed'
+        rules = [{"$match" =>{ "$or" => [{ status: "invalid"}, { status: "insufficient"}] } }] 
+      else
+        rules = [{"$match" =>  { status: filter["status"]}}]
+      end
 
-    def get_marketing_product_results_failed(filter)
-      #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      result = @@c.aggregate([
-        {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
-        {"$match" => { "$or" => [{ status: "invalid"}, { status: "insufficient"}] }},
-        {"$group" => {
-                    _id: "$record_identifier",
-                    date: {"$max" => "$created"},
-                    status: {"$last" => "$status"},
-                    identifier: {"$last" => "$instance_identifier"},
-                    splice_server: {"$last" => "$splice_server"},
-                    systemid: {"$last" => "$systemid"}
-                    }
-        },
-        {"$sort" => {status: -1}},
-      
-        ])
-    end
-
-    def get_marketing_product_results_all(filter)
-      #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      result = @@c.aggregate([
+      result = @@c.aggregate(rules + [
         {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
         {"$group" => {
                     _id: "$record_identifier",
