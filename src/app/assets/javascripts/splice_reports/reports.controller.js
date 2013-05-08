@@ -53,11 +53,11 @@ angular.module('Katello').controller('ReportsController',
             angular.forEach(data.systems,
                 function(system){
                     var row = {
-                        'row_id' : system.identifier,
+                        'row_id' : system._id,
                         'show'  : true,
                         'cells': [{
                             //display: system.systemid,
-                            display: $compile('<a ng-click="table.select_item(\'' + '/katello/splice_reports/reports/record/?id=' + system.identifier + '\',\'' + system.identifier + '\')">' + system.systemid + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + '/katello/splice_reports/reports/record/?id=' + system._id + '\',\'' + system._id + '\')">' + system.systemid + '</a>')($scope),
                             column_id: 'systemid'
                         },{
                             display: system.status,

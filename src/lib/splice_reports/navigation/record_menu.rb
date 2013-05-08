@@ -22,13 +22,13 @@ module Navigation
       menu = [
         { :key => :record_details,
           :name =>_("Details"),
-          :url => lambda{record_splice_reports_reports_path(:id=>@record['identifier'])},
+          :url => lambda{record_splice_reports_reports_path(:id=>@record['record_identifier'])},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
         },
         { :key => :record_facts,
           :name =>_("Facts"),
-          :url => lambda{facts_splice_reports_reports_path(:id=>@record['identifier'])},
+          :url => lambda{facts_splice_reports_reports_path(:id=>@record['record_identifier'])},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
         }

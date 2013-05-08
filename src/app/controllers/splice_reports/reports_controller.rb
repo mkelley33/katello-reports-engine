@@ -92,7 +92,7 @@ module SpliceReports
         {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
         {"$match" => { status: filter["status"]}},
         {"$group" => {
-                    _id: "$instance_identifier",
+                    _id: "$record_identifier",
                     date: {"$max" => "$created"},
                     status: {"$last" => "$status"},
                     identifier: {"$last" => "$instance_identifier"},
@@ -100,7 +100,7 @@ module SpliceReports
                     systemid: {"$last" => "$systemid"}
                     }
         },
-        {"$sort" => {status: 1}},
+        {"$sort" => {status: -1}},
       
         ])
     end
@@ -111,7 +111,7 @@ module SpliceReports
         {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
         {"$match" => { "$or" => [{ status: "invalid"}, { status: "insufficient"}] }},
         {"$group" => {
-                    _id: "$instance_identifier",
+                    _id: "$record_identifier",
                     date: {"$max" => "$created"},
                     status: {"$last" => "$status"},
                     identifier: {"$last" => "$instance_identifier"},
@@ -119,7 +119,7 @@ module SpliceReports
                     systemid: {"$last" => "$systemid"}
                     }
         },
-        {"$sort" => {status: 1}},
+        {"$sort" => {status: -1}},
       
         ])
     end
@@ -129,7 +129,7 @@ module SpliceReports
       result = @@c.aggregate([
         {"$match" => {created: {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
         {"$group" => {
-                    _id: "$instance_identifier",
+                    _id: "$record_identifier",
                     date: {"$max" => "$created"},
                     status: {"$last" => "$status"},
                     identifier: {"$last" => "$instance_identifier"},
@@ -137,7 +137,7 @@ module SpliceReports
                     systemid: {"$last" => "$systemid"}
                     }
         },
-        {"$sort" => {status: 1}},
+        {"$sort" => {status: -1}},
       
         ])
     end
@@ -164,7 +164,7 @@ module SpliceReports
     def find_record
       record_id = params[:id]
       c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      @record = c.find({"instance_identifier" => record_id}).first
+      @record = c.find({"record_identifier" => record_id}).first
     end
 
   end 
