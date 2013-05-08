@@ -77,18 +77,22 @@
     %fieldset
       .grid_2.ra
         %label #{_("Number of Hours")}
-      .grid_10.la{'name' => 'filter[hours]', :class => ("editable edit_select" if editable),
-                   'data-url' => splice_reports_filter_path(@filter.id),
-                   'data-options' => @number_of_hours_hash.to_json}
+      .grid_10.la{'name' => 'filter[hours]',
+                'id' => 'num_hours',
+                 :class => ("editable edit_select" if editable),
+                 'data-url' => splice_reports_filter_path(@filter.id), 
+                 'data-options' => @number_of_hours_hash.to_json}
         = @filter.hours 
 
   %div#inactive
     %fieldset
       .grid_2.ra
         %label #{_("Inactive for Days")}
-      .grid_10.la{'name' => 'filter[inactive]', :class => ("editable edit_select" if editable),
-                   'data-url' => splice_reports_filter_path(@filter.id),
-                   'data-options' => @inactive_for_days_hash.to_json}
+      .grid_10.la{'name' => 'filter[inactive]',
+                'id' => 'days_inactive',
+                :class => ("editable edit_select" if editable),
+                'data-url' => splice_reports_filter_path(@filter.id),
+                'data-options' => @inactive_for_days_hash.to_json}
         = @filter.inactive 
 
   %div#daterange
@@ -97,6 +101,7 @@
         %label #{_("Start Date")}:
       .grid_10.la#filter_start_date{:title=>@filter[:start_date],
                                    'name' => 'filter[start_date]',
+                                   'id' => 'start_date',
                                    :class=>("editable edit_datepicker" if editable),
                                    'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter.start_date) || _("None")}
     -# look in _edit_errata_parameters.html.haml
@@ -106,6 +111,7 @@
         %label #{_("End Date")}:
       .grid_10.la#filter_end{:title=>@filter[:end_date],
                            'name' => 'filter[end_date]',
+                           'id' => 'end_date',
                            :class=>("editable edit_datepicker" if editable),
                            'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter[:end_date]) || _("None")}
     

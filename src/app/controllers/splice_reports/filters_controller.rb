@@ -191,7 +191,7 @@ module SpliceReports
     end
 
     def number_of_hours_hash
-      hours = [0, 4, 8, 24, 48]
+      hours = [nil, 4, 8, 24, 48]
       num_hash = {}
       hours.each_with_index { |val, index|
         num_hash[val] = val
@@ -200,7 +200,7 @@ module SpliceReports
     end
 
     def inactive_for_days_hash
-      days = [0, 1, 3, 10, 30]
+      days = [nil, 1, 3, 10, 30]
       days_hash = {}
       days.each_with_index { |val, index|
         days_hash[val] = val
