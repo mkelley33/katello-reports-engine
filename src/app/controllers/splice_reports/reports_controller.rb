@@ -14,11 +14,15 @@ module SpliceReports
   
   class ReportsController < ::ApplicationController
 
+    before_filter :find_record, :only=>[:record, :facts]
+
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
         {
           :show => lambda{true},
-          :items => lambda{true}
+          :items => lambda{true},
+          :record => lambda{true},
+          :facts=> lambda{true}
         }
 
     end
@@ -44,6 +48,31 @@ module SpliceReports
       #debug
       #render :json=>{ :subtotal => 1, :total=>1, :systems=> [c.find_one]  }
       render :json=>{ :subtotal => 1, :total=>1, :systems=> @report_row  }
+    end
+
+
+    def record
+
+      render :partial=>'record'
+
+    end
+
+    def facts
+      @record['facts'] = @record['facts'].collect do |f|
+        f[0] = f[0].gsub('_dot_', '.')
+        #manualyl adjust systemid to not mess up the rendering
+        f[0] = 'system.id' if f[0] == 'systemid'
+        f
+      end
+
+      render :partial=>'facts'
+    end
+
+
+    def find_record
+      record_id = params[:id]
+      c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+      @record = c.find({"record_identifier" => record_id}).first
     end
 
   end 

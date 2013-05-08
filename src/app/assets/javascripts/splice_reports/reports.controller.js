@@ -26,12 +26,12 @@ angular.module('Katello').controller('ReportsController',
     function($scope, Nutupane, $location, $http, $compile) {
 
         var columns = [{
-            id: 'status',
-            display: 'Status',
-            show: true
-        },{
             id: 'systemid',
             display: 'System ID',
+            show: true
+        },{
+            id: 'status',
+            display: 'Status',
             show: true
         },{
             id: 'hostname',
@@ -53,15 +53,15 @@ angular.module('Katello').controller('ReportsController',
             angular.forEach(data.systems,
                 function(system){
                     var row = {
-                        'row_id' : system.status,
+                        'row_id' : system.record_identifier,
                         'show'  : true,
                         'cells': [{
-                            //display: $compile('<a ng-click="select_item(\'' + system.uuid + '\')">' + system.name + '</a>')($scope),
+                            //display: system.systemid,
+                            display: $compile('<a ng-click="table.select_item(\'' + '/katello/splice_reports/reports/record/?id=' + system.record_identifier + '\',\'' + system.record_identifier + '\')">' + system.systemid + '</a>')($scope),
+                            column_id: 'systemid'
+                        },{
                             display: system.status,
                             column_id: 'status'
-                        },{
-                            display: system.systemid,
-                            column_id: 'systemid'
                         },{
                             display: system.hostname,
                             column_id: 'hostname'
@@ -93,22 +93,44 @@ angular.module('Katello').controller('ReportsController',
         var nameColumn = $scope.table.data.columns.slice(0).splice(0, 1);
 
 
-        $scope.select_item = function(id){
-            $location.search('item', id);
+        $scope.table.select_item = function(url, id){
+            var system;
 
-            $http.get('/katello/api/splice_reports/reports/' + Splice.filter_id + 'items' + id, {
+            if (id) {
+                angular.forEach($scope.table.data.rows, function(row) {
+                    if (row.row_id.toString() === id.toString()) {
+                        system = row;
+                    }
+                });
+            }
+            url = url ? url : KT.routes.edit_system_path(id);
+
+            $http.get(url, {
                 params : {
                     expanded : true
                 }
             })
             .then(function(response){
                 $scope.table.visible = false;
-                $scope.system = response.data;
-                // Remove all columns except name and replace them with the details pane
-                $scope.table.data.columns = nameColumn;
+
+                // Only reset the active_item if an ID is provided
+                if (id) {
+                    // Remove all columns except name and replace them with the details pane
+                    $scope.table.data.columns = nameColumn;
+                    $scope.table.select_all(false);
+                    $scope.table.active_item = system;
+                    $scope.table.active_item.selected  = true;
+                    $scope.rowSelect = false;
+                }
+                $scope.table.active_item.html = response.data;
             });
         };
 
+        $scope.table.close_item = function () {
+            $scope.table.visible = true;
+            // Restore the former columns
+            $scope.table.data.columns = allColumns;
+        };
         $scope.close_item = function () {
             $location.search("");
             $scope.table.visible = true;

@@ -11,6 +11,10 @@ Rails.application.routes.draw do
       member do
         get :items
       end
+      collection do
+        get :record
+        get :facts
+      end
     end
 
   end

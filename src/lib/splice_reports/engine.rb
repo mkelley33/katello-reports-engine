@@ -13,7 +13,13 @@ module SpliceReports
       resources = Dir[File.dirname(__FILE__) + '/navigation/*.rb']
       resources.uniq.each{ |f| require f }
  
-      ::Experimental::Navigation::Additions.insert_after(:organizations, SpliceReports::Navigation::ReportFilter)
+      ::Navigation::Additions.insert_after(:organizations, SpliceReports::Navigation::ReportFilter)
+
+      module ::Navigation
+        def self.included(base)
+          base.send :include, SpliceReports::Navigation::RecordMenu
+         end
+       end
     end
   end
 end
