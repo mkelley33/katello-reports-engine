@@ -125,7 +125,6 @@ module SpliceReports
     def update
       @filter = SpliceReports::Filter.find(params[:id])
       filter_params = params[:filter]
-      debugger
       if filter_params[:organizations]
          org_ids = filter_params[:organizations]
          @filter.organizations.clear

@@ -12,23 +12,19 @@
 module SpliceReports
 module Navigation
   module RecordMenu
-    def self.included(base)
-      base.class_eval do
-        helper_method :record_navigation
-      end
-    end
+ 
 
-    def record_navigation
+    def record_navigation(record)
       menu = [
         { :key => :record_details,
           :name =>_("Details"),
-          :url => lambda{record_splice_reports_reports_path(:id=>@record['record_identifier'])},
+          :url => lambda{record_splice_reports_reports_path(:id=>record['record_identifier'])},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
         },
         { :key => :record_facts,
           :name =>_("Facts"),
-          :url => lambda{facts_splice_reports_reports_path(:id=>@record['record_identifier'])},
+          :url => lambda{facts_splice_reports_reports_path(:id=>record['record_identifier'])},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
         }

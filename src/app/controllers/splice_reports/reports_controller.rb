@@ -15,6 +15,7 @@ module SpliceReports
   class ReportsController < ::ApplicationController
     @@c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
 
+
     def run_filter_by_id(filter_id)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
       filtered_systems = get_marketing_product_results(filter).as_json
@@ -71,9 +72,8 @@ module SpliceReports
     end
 
     def items
+      offset = params[:offset]
       filtered_systems = self.run_filter_by_id(params[:id])
-      #debug
-      #render :json=>{ :subtotal => 1, :total=>1, :systems=> [c.find_one]  }
       render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems  }
     end
 

@@ -14,12 +14,6 @@ module SpliceReports
       resources.uniq.each{ |f| require f }
  
       ::Navigation::Additions.insert_after(:organizations, SpliceReports::Navigation::ReportFilter)
-
-      module ::Navigation
-        def self.included(base)
-          base.send :include, SpliceReports::Navigation::RecordMenu
-         end
-       end
     end
   end
 end
