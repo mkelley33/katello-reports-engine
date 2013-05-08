@@ -43,6 +43,22 @@ module SpliceReports
               num_total: num_current + num_invalid + num_insufficient}
     end
 
+    def systems_to_csv(systems)
+      return "" unless systems.length > 0
+      # Assuming all arrays have a hash with same keys, also assuming order of keys is same for all entries in array
+      fields = systems[0].keys
+      # Header
+      header = ""
+      fields.each { |field| header << field << ", "}
+      # Body
+      body_lines = systems.map { |system|
+        entry = ""
+        fields.each { |field| entry << system[field].to_s << ", " }
+        entry
+      }
+      csv_data = "#{header}\n#{body_lines.join("\n")}"
+    end
+
     before_filter :find_record, :only=>[:record, :facts]
 
     def rules
@@ -73,7 +89,10 @@ module SpliceReports
     def items
       offset = params[:offset]
       filtered_systems = self.run_filter_by_id(params[:id])
-      render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems  }
+       respond_to do |format|
+        format.csv { render :text => systems_to_csv(filtered_systems) }
+        format.any(:json, :html) { render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems } }
+      end
     end
 
     def get_marketing_product_results(filter)
