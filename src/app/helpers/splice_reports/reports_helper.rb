@@ -5,8 +5,7 @@ module SpliceReports
 
     def find_system(record)
       uuid = record['instance_identifier']
-      #System.where(:uuid=>uuid).first
-      System.first
+      System.where(:uuid=>uuid).first
     end
 
     def system_link(system)
