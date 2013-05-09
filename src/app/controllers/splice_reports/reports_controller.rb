@@ -18,7 +18,7 @@ module SpliceReports
     def run_filter_by_id(filter_id, offset)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
       filtered_systems = get_marketing_product_results(filter, offset)
-
+      logger.info(filtered_systems.length)
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems.inspect}")
       return filtered_systems
     end
@@ -87,6 +87,7 @@ module SpliceReports
     end
 
     def items
+
      respond_to do |format|
         format.csv do
            filtered_systems = self.run_filter_by_id(params[:id], nil)
@@ -95,7 +96,7 @@ module SpliceReports
         format.any(:json, :html) do
           filtered_systems = self.run_filter_by_id(params[:id], params[:offset] || 0)
           total = self.run_filter_by_id(params[:id], nil).count
-          render :json=>{ :subtotal => 1, :total=>1, :systems=> filtered_systems } 
+          render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_systems } 
         end
       end
     end
@@ -109,7 +110,8 @@ module SpliceReports
         end_date = filter["end_date"].utc
         start_date = filter["start_date"].utc 
       end         
-
+      logger.info(start_date.to_s)
+      logger.info(end_date.to_s)
       rules = []
       if offset
         rules << {"$skip" => offset.to_i}
@@ -124,7 +126,7 @@ module SpliceReports
         rules << {"$match" =>  { :status=> filter["status"]}}
       end
 
-      result = @@c.aggregate(rules + [
+      result = @@c.aggregate( [
         {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}},
         {"$group" => {
                     '_id' => "$record_identifier",
@@ -136,8 +138,13 @@ module SpliceReports
                     }
         },
         {"$sort" => {:status => -1}},
-      
-        ])
+
+        #RULES MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
+        #paginated prior      
+        ] + rules)
+        logger.info(result.length)
+        result
+
     end
 
 
