@@ -3,9 +3,27 @@
   #{_(@record['systemid'])}
 
 = content_for :content do
-  #record.grid_10
-    = @record['systemid']
-  asdf
+  #record
+    %form.form
+      .control-group
+        .label
+          %label
+            = _("Existing System:")
+        .value
+          - if system_exists(@record)
+            %a{:href=>system_link(@record)}
+              = _("Current System")
+          - else
+            = _("Unable to locate matching system.")
+
+
+
+
+
+
+
+
+
 
 = content_for :navigation do
   = render_menu(1..2, record_navigation(@record))
