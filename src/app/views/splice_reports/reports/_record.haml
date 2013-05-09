@@ -10,8 +10,11 @@
           %label
             = _("Existing System:")
         .value
-          - if system_exists(@record)
-            %a{:href=>system_link(@record)}
+          - current_system = find_system(@record)
+          - if current_system
+            .subs_image_wrapper
+              .subs_image{:class => "#{current_system.compliance_color}"}
+            %a{:href=>system_link(current_system)}
               = _("Current System")
           - else
             = _("Unable to locate matching system.")
@@ -19,7 +22,19 @@
 
 
 
-
+  #checkins
+    %table
+      %thead
+        %tr
+          %th
+            = _("Column 1")
+          %th
+            = _("Column 2")
+      -#%tbody
+      -#  - for checkin in checkins
+      -#    %tr
+      -#      %td
+      -#        foo
 
 
 

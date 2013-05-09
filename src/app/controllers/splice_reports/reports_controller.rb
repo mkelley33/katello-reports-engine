@@ -143,7 +143,7 @@ module SpliceReports
 
     def record
 
-      render :partial=>'record'
+      render :partial=>'record', :locals=>{:checkins=>[]}
 
     end
 
