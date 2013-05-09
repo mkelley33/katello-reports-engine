@@ -11,8 +11,9 @@
 
   %input#panel_element_id{:name=>@filter.id, :type=>"hidden", :value=>"filter_#{@filter.id}", "data-ajax_url"=>splice_reports_filter_path(@filter.id)}
 
-  %fieldset
-    %h5 Filter Name and Description:
+  
+  %h5 Filter Name and Description:
+  %br
   %fieldset
   .grid_2.ra
     %label #{_("Name")}:
@@ -27,7 +28,7 @@
                                  :class=>editable_class(editable),
                                  'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:description]}
   %h5 Filter Criteria:
-
+  %br
 
   %fieldset
     .grid_2.ra
@@ -59,21 +60,9 @@
       = @filter.organizations.collect{|o| o.name}.join(", ")
 
   %h4 Additional Filter Criteria:
-  %fieldset.clearfix
-    .grid_10.prefix_1.fielditem
-      .grid_5.la
-        = _("By Number of Hours:")
-      %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"} 
-      %br
-      .grid_5.la
-        = _("By Date:")
-      %input{:type=>:radio, :name=>"time", :id=>"choose_daterange", :value=>"choose_daterange"}
-      %br
-      .grid_5.la
-        = _("Inactive:")
-      %input{:type=>:radio, :name=>"time", :id=>"choose_inactive", :value=>"choose_inactive"} 
+  %br 
 
-  %div#hour
+  %div#edit_hour
     %fieldset
       .grid_2.ra
         %label #{_("Number of Hours")}
@@ -84,7 +73,7 @@
                  'data-options' => @number_of_hours_hash.to_json}
         = @filter.hours 
 
-  %div#inactive
+  %div#edit_inactive
     %fieldset
       .grid_2.ra
         %label #{_("Inactive for Days")}
@@ -95,7 +84,7 @@
                 'data-options' => @inactive_for_days_hash.to_json}
         = @filter.inactive 
 
-  %div#daterange
+  %div#edit_daterange
     %fieldset
       .grid_2.ra
         %label #{_("Start Date")}:

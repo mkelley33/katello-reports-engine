@@ -54,26 +54,6 @@ $(document).ready(function() {
         });
 
 
-        //Edit Filter: Hide unused fields
-        if (document.getElementById("start_date")){
-            if (document.getElementById("start_date").innerHTML != null){
-                $("#daterange".show);
-            }
-        }
-
-        else if (document.getElementById("num_hours")){
-            if (document.getElementById("num_hours").innerHTML != null){
-                $("#hour").show();
-            }
-        }
-        else if (document.getElementById("days_inactive")){
-            if (document.getElementById("num_hours").innerHTML != null){
-                $("#hour").show();
-            }
-        }
-
-
-
         //New date pickers
         $(".datepicker").datepicker({
             changeMonth: true,

@@ -101,7 +101,14 @@ module SpliceReports
     end
 
     def get_marketing_product_results(filter, offset)
-      #c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+      
+      if filter["hours"] != nil
+        end_date = Time.now.utc
+        start_date = end_date - filter["hours"].hours
+      elsif filter["start_date"] != nil && filter["end_date"] != nil
+        end_date = filter["end_date"].utc
+        start_date = filter["start_date"].utc 
+      end         
 
       rules = []
       if offset
@@ -118,7 +125,7 @@ module SpliceReports
       end
 
       result = @@c.aggregate(rules + [
-        {"$match" => {:created=> {"$gt" => filter["start_date"].utc, "$lt" => filter["end_date"].utc}}},
+        {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}},
         {"$group" => {
                     '_id' => "$record_identifier",
                     :date => {"$max" => "$created"},
