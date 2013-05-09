@@ -161,9 +161,19 @@ module SpliceReports
 
     def find_record
       record_id = params[:id]
-      c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-      @record = c.find({"record_identifier" => record_id}).first
+      @record = @@c.find({"record_identifier" => record_id}).first
     end
+
+    def find_instance_checkins(instance_identifier)
+      result4 = @coll.find({"instance_identifier" => instance_identifier}, 
+                :fields => ["systemid",
+                           "status",
+                           "hostname",
+                           "environment",
+                           "created" ]).as_json
+    end
+
+
 
   end 
 

@@ -39,10 +39,20 @@ result2 = @coll.aggregate([
 	  systemid: {"$last" => "$systemid"}
 		}
 	 },
-	{"$sort" => {status: 1}},
-	
-		
+	{"$sort" => {status: 1}},	
 ])
 
-a = result2.to_json
+result3 = @coll.aggregate([
+	{"$match" => { instance_identifier: "server_ident1"}},
+	{"$group" => {
+	  _id: "$record_identifier",
+		}
+	 },
+	{"$sort" => {status: 1}},	
+])
+
+result4 = @coll.find({"instance_identifier" => "server_ident1"}, :fields => 
+	["systemid", "status", "hostname", "environment", "created" ]).to_a
+
+a = result4.to_json
 puts a
