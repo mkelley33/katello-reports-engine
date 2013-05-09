@@ -10,6 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'time'
+
+# TODO:  Move registration of 'csv_encrypted' to a better spot
+Mime::Type.register "application/pgp-encrypted", :csv_encrypted
+
 module SpliceReports
   
   class ReportsController < ::ApplicationController
@@ -59,6 +64,10 @@ module SpliceReports
       csv_data = "#{header}\n#{body_lines.join("\n")}"
     end
 
+    def encrypt(data)
+      "Make believe this data is encrypted\n" + data
+    end
+
     before_filter :find_record, :only=>[:record, :facts]
 
     def rules
@@ -91,7 +100,13 @@ module SpliceReports
      respond_to do |format|
         format.csv do
            filtered_systems = self.run_filter_by_id(params[:id], nil)
+           response.headers['Content-Disposition'] = "attachment; filename=\"report_#{Time.now.utc.iso8601}.csv\""
            render :text => systems_to_csv(filtered_systems.as_json) 
+        end
+        format.csv_encrypted do
+           filtered_systems = self.run_filter_by_id(params[:id], nil)
+           response.headers['Content-Disposition'] = "attachment; filename=\"report_#{Time.now.utc.iso8601}.zip.pgp\""
+           render :text => encrypt(systems_to_csv(filtered_systems.as_json))  
         end
         format.any(:json, :html) do
           filtered_systems = self.run_filter_by_id(params[:id], params[:offset] || 0)
