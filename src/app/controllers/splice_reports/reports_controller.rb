@@ -18,6 +18,9 @@ Mime::Type.register "application/pgp-encrypted", :csv_encrypted
 module SpliceReports
   
   class ReportsController < ::ApplicationController
+    
+    before_filter :find_filter
+
     @@c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
 
     def run_filter_by_id(filter_id, offset)
@@ -73,7 +76,7 @@ module SpliceReports
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
         {
-          :show => lambda{true},
+          :index => lambda{true},
           :items => lambda{true},
           :record => lambda{true},
           :facts=> lambda{true}
@@ -81,14 +84,15 @@ module SpliceReports
 
     end
 
-    def show
-      filtered_systems = run_filter_by_id(params[:id], nil).as_json
+    def index
+      @filter = SpliceReports::Filter.find(params[:filter_id])
+      filtered_systems = run_filter_by_id(@filter.id, nil).as_json
       summary = get_num_summary(filtered_systems)
 
       #render :partial => "reports/report"
       #render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}
-      logger.info("Splice Reports id: #{params[:id]}, num_current = #{summary[:num_current]}, num_invalid = #{summary[:num_invalid]}, num_insufficient = #{summary[:num_insufficient]}")
-      render 'show', :locals => {:filter_id => params[:id],  :experimental_ui => true,
+      logger.info("Splice Reports id: #{@filter.id}, num_current = #{summary[:num_current]}, num_invalid = #{summary[:num_invalid]}, num_insufficient = #{summary[:num_insufficient]}")
+      render 'show', :locals => {:filter_id => @filter.id,  :experimental_ui => true,
                                   :num_current => summary[:num_current], 
                                   :num_invalid => summary[:num_invalid], 
                                   :num_insufficient => summary[:num_insufficient], 
@@ -99,18 +103,18 @@ module SpliceReports
 
      respond_to do |format|
         format.csv do
-           filtered_systems = self.run_filter_by_id(params[:id], nil)
+           filtered_systems = self.run_filter_by_id(params[:filter_id], nil)
            response.headers['Content-Disposition'] = "attachment; filename=\"report_#{Time.now.utc.iso8601}.csv\""
            render :text => systems_to_csv(filtered_systems.as_json) 
         end
         format.csv_encrypted do
-           filtered_systems = self.run_filter_by_id(params[:id], nil)
+           filtered_systems = self.run_filter_by_id(params[:filter_id], nil)
            response.headers['Content-Disposition'] = "attachment; filename=\"report_#{Time.now.utc.iso8601}.zip.pgp\""
            render :text => encrypt(systems_to_csv(filtered_systems.as_json))  
         end
         format.any(:json, :html) do
-          filtered_systems = self.run_filter_by_id(params[:id], params[:offset] || 0)
-          total = self.run_filter_by_id(params[:id], nil).count
+          filtered_systems = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
+          total = self.run_filter_by_id(params[:filter_id], nil).count
           render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_systems } 
         end
       end
@@ -164,7 +168,7 @@ module SpliceReports
 
 
     def record
-      checkins = find_instance_checkins(@record['instance_identifier'])
+      checkins = find_instance_checkins(@filter, @record['instance_identifier'])
       render :partial=>'record', :locals=>{:checkins=>checkins}
     end
 
@@ -179,13 +183,15 @@ module SpliceReports
       render :partial=>'facts'
     end
 
-
+    def find_filter
+      @filter = SpliceReports::Filter.find(params[:filter_id])
+    end
     def find_record
       record_id = params[:id]
       @record = @@c.find({"record_identifier" => record_id}).first
     end
 
-    def find_instance_checkins(instance_identifier)
+    def find_instance_checkins(filter, instance_identifier)
       result = @@c.find({"instance_identifier" => instance_identifier},
                 :fields => ["systemid",
                            "status",

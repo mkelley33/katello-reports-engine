@@ -37,10 +37,11 @@
       %tbody
         - for ci in checkins
           %tr
-            -#%td
-            -#  = ci['hostname']
             %td
-              = ci['status']
+              %ul
+                %li.panel_link
+                  %a{:href=>record_splice_reports_filter_reports_path(@filter.id, :id=>@record['instance_identifier'])}
+                    = ci['status']
             %td
               = ci['created']
 
@@ -50,7 +51,7 @@
 
 
 = content_for :navigation do
-  = render_menu(1..2, record_navigation(@record))
+  = render_menu(1..2, record_navigation(@filter, @record))
 
 
 

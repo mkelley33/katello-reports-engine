@@ -134,11 +134,11 @@
         %br
 
 
-  %a{:href => splice_reports_report_path(@filter.id)}
+  %a{:href => splice_reports_filter_reports_path(@filter.id)}
     .button.fl#submit_button
       #{_('Run Report')}
 
-  %a#splice_reports_export_btn{:href => items_splice_reports_report_path(@filter.id, :format => 'csv')}
+  %a#splice_reports_export_btn{:href => items_splice_reports_filter_reports_path(@filter.id, :format => 'csv')}
     .button.fl#export_button
       #{_('Export Report')}
 

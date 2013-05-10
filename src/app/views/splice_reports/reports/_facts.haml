@@ -8,7 +8,7 @@
   #{_('Facts')}
 
 = content_for :navigation do
-  = render_menu(1..2, record_navigation(@record))
+  = render_menu(1..2, record_navigation(@filter, @record))
 
 = content_for :content do
   #record.grid_10
