@@ -23,17 +23,19 @@ module SpliceReports
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
+      read_test = lambda{(current_organization)}
+      #not sure if this is correct
         {
-          :index => lambda{true},
-          :items => lambda{true},
-          :new => lambda{true},
-          :edit => lambda{true},
-          :details => lambda{true},
-          :update => lambda{true},
-          :destroy => lambda{true},
-          :create => lambda{true},
-          :report => lambda{true},
-          :show => lambda{true}
+          :index => read_test,
+          :items => read_test,
+          :new => read_test,
+          :edit => read_test,
+          :details => read_test,
+          :update => read_test,
+          :destroy => read_test,
+          :create => read_test,
+          :report => read_test,
+          :show => read_test
         }
 
     end
