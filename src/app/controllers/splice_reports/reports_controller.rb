@@ -79,6 +79,7 @@ module SpliceReports
           :index => lambda{true},
           :items => lambda{true},
           :record => lambda{true},
+          :checkin => lambda{true},
           :facts=> lambda{true}
         }
 
@@ -165,7 +166,10 @@ module SpliceReports
         result
 
     end
-
+    
+    def checkin
+      render :partial=>'checkin', :locals=>{:original_id=>params[:original_id]}
+    end
 
     def record
       checkins = find_instance_checkins(@filter, @record['instance_identifier'])

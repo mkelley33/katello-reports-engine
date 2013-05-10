@@ -40,7 +40,7 @@
             %td
               %ul
                 %li.panel_link
-                  %a{:href=>record_splice_reports_filter_reports_path(@filter.id, :id=>@record['instance_identifier'])}
+                  %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['record_identifier'], :original_id=>@record['record_identifier'])}
                     = ci['status']
             %td
               = ci['created']

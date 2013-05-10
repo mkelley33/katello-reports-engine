@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         collection do
           get :facts
           get :record #have to use collection with ?id as get param because of dots
+          get :checkin
           get :items
         end
       end
