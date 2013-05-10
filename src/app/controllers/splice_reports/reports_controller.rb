@@ -186,7 +186,7 @@ module SpliceReports
     end
 
     def find_instance_checkins(instance_identifier)
-      result4 = @@c.find({"instance_identifier" => instance_identifier},
+      result = @@c.find({"instance_identifier" => instance_identifier},
                 :fields => ["systemid",
                            "status",
                            "hostname",
