@@ -164,9 +164,8 @@ module SpliceReports
 
 
     def record
-
-      render :partial=>'record', :locals=>{:checkins=>[]}
-
+      checkins = find_instance_checkins(@record['instance_identifier'])
+      render :partial=>'record', :locals=>{:checkins=>checkins}
     end
 
     def facts
@@ -187,7 +186,7 @@ module SpliceReports
     end
 
     def find_instance_checkins(instance_identifier)
-      result4 = @coll.find({"instance_identifier" => instance_identifier}, 
+      result4 = @@c.find({"instance_identifier" => instance_identifier},
                 :fields => ["systemid",
                            "status",
                            "hostname",

@@ -37,3 +37,16 @@
     background: url("../icons/status_icons_sprite.png") no-repeat -25px 0;
   }
 }
+
+
+
+#checkins {
+  table {
+    th {
+      cursor: auto !important;
+    }
+    tr {
+      cursor: pointer !important;
+    }
+  }
+}

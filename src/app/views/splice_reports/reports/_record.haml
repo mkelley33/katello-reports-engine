@@ -21,20 +21,29 @@
 
 
 
-
+  %h2
+    = _("Checkins")
   #checkins
-    %table
+    %table.table
       %thead
         %tr
+          -#%th
+          -#  = _("Hostname")
           %th
-            = _("Column 1")
+            = _("Status")
           %th
-            = _("Column 2")
-      -#%tbody
-      -#  - for checkin in checkins
-      -#    %tr
-      -#      %td
-      -#        foo
+            = _("Checkin Time")
+
+      %tbody
+        - for ci in checkins
+          %tr
+            -#%td
+            -#  = ci['hostname']
+            %td
+              = ci['status']
+            %td
+              = ci['created']
+
 
 
 
