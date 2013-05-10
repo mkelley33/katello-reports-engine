@@ -197,6 +197,7 @@ module SpliceReports
                            "status",
                            "hostname",
                            "environment",
+                           "record_identifier",
                            "created" ]).as_json
     end
 
