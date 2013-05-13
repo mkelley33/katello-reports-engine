@@ -101,12 +101,19 @@ module SpliceReports
       buffer
     end
 
-    def get_export_metadata(now, systems)
+    def get_export_metadata(now, systems, filter_id)
       data = "Generated at: #{now}\n"
       data << "Number of Systems: #{systems.size}\n"
       summary = get_num_summary(systems)
       summary.each do |key, value|
         data << "\t#{key}: #{value}\n"
+      end
+      filter = SpliceReports::Filter.find(filter_id)
+      if filter
+        data << "Filter Info\n"
+        filter.attributes.each do |key, value|
+          data << "\t#{key}: #{value}\n"
+        end
       end
       data
     end
@@ -196,7 +203,7 @@ module SpliceReports
           file_name = "report_#{now}.zip"
           csv_data = systems_to_csv(filtered_systems.as_json)
           expanded_data = expanded_data(filtered_systems)
-          metadata = get_export_metadata(now, filtered_systems) 
+          metadata = get_export_metadata(now, filtered_systems, params[:filter_id]) 
           zipped_data = create_zip_file(now, ["export.csv" => csv_data, "metadata" => metadata, "expanded_export.json" => expanded_data])
           if params.include?(:encrypt) and params[:encrypt] == "1"
             zipped_data = encrypt(zipped_data)
