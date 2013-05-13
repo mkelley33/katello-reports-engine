@@ -1,20 +1,24 @@
-= javascript 'widgets/jquery.jeditable.helpers'
+= javascript 'widgets/jquery.jeditable.helpers', 'splice_reports/jsuri-1.1.1.min'
 = javascript do
   :plain
     $(document).ready(function() {
         $('#splice_reports_export_btn').click(function() {
-          var suffix = "/?encrypt=1";
-          var suffix_regexp = new RegExp(suffix+"$");
           var target_href = $('#splice_reports_export_btn').attr('href');
+          var uri = new Uri(target_href); // using jsuri
+          // Encrypt
           if ($('#splice_reports_export_encrypt_cbox').attr('checked')) {
-            if (!target_href.match(suffix_regexp)) {
-              $('#splice_reports_export_btn').attr('href', target_href+suffix);
-            }
+            uri.replaceQueryParam('encrypt', "1");
           } else {
-            if (target_href.match(suffix_regexp)) {
-              $('#splice_reports_export_btn').attr('href', target_href.slice(0, target_href.length-suffix.length)); // Remove suffix
-            }
+            uri.replaceQueryParam('encrypt', "0");
           }
+          // Skip expand
+          if ($('#splice_reports_include_json_cbox').attr('checked')) {
+            uri.replaceQueryParam('skip_expand', "1");
+          } else {
+            uri.replaceQueryParam('skip_expand', "0");
+          }
+          // Replace href with modified query params
+          $('#splice_reports_export_btn').attr('href', uri.toString());
           return true; // Continue on and process default callback for this button
         });
     });
@@ -135,7 +139,7 @@
     %fieldset
       .grid_10.prefix_1.fielditem
         .grid_5.la
-          = _("Expanded JSON export:")
+          = _("Skip including expanded JSON data:")
           %input#splice_reports_include_json_cbox{:type=>:checkbox, :value=>:true} 
         %br
 
@@ -143,7 +147,7 @@
     .button.fl#submit_button
       #{_('Run Report')}
 
-  %a#splice_reports_export_btn{:href => items_splice_reports_filter_reports_path(@filter.id, :format => 'zip')}
+  %a#splice_reports_export_btn{:href => items_splice_reports_filter_reports_path(@filter.id, :format => 'zip', :encrypt => "0", :skip_expand => "0")}
     .button.fl#export_button
       #{_('Export Report')}
 

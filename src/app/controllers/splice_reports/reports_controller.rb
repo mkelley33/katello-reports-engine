@@ -202,9 +202,13 @@ module SpliceReports
           now = Time.now.utc.iso8601
           file_name = "report_#{now}.zip"
           csv_data = systems_to_csv(filtered_systems.as_json)
-          expanded_data = expanded_data(filtered_systems)
-          metadata = get_export_metadata(now, filtered_systems, params[:filter_id]) 
-          zipped_data = create_zip_file(now, ["export.csv" => csv_data, "metadata" => metadata, "expanded_export.json" => expanded_data])
+          metadata = get_export_metadata(now, filtered_systems, params[:filter_id])
+          files = ["export.csv" => csv_data, "metadata" => metadata]
+          unless params.include?(:skip_expand) and params[:skip_expand] == "1"
+            expanded_data = expanded_data(filtered_systems)
+            files.push({"expanded_export.json" => expanded_data})
+          end
+          zipped_data = create_zip_file(now, files)
           if params.include?(:encrypt) and params[:encrypt] == "1"
             zipped_data = encrypt(zipped_data)
             file_name = "#{file_name}.gpg"
