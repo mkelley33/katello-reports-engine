@@ -11,9 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'time'
-
-# TODO:  Move registration of 'csv_encrypted' to a better spot
-Mime::Type.register "application/pgp-encrypted", :csv_encrypted
+require 'tmpdir'
+require 'zipruby'
 
 module SpliceReports
   
@@ -22,12 +21,12 @@ module SpliceReports
     before_filter :find_filter
 
     @@c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
+    # TODO: Determine location of GPG Public Key from a configuration file
+    @@gpg_public_key = "/etc/pki/splice/splice_reports_key.gpg.pub"
 
     def run_filter_by_id(filter_id, offset)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
       filtered_systems = get_marketing_product_results(filter, offset)
-      logger.info(filtered_systems.length)
-      logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems.inspect}")
       return filtered_systems
     end
 
@@ -67,8 +66,74 @@ module SpliceReports
       csv_data = "#{header}\n#{body_lines.join("\n")}"
     end
 
+    def expanded_data(systems)
+      # TODO:  Perform mongo query on each object id and return a 
+      # full json doc for each item with all fields populated
+      systems.to_json
+    end
+
+    def create_zip_file(now, data)
+      # Returns a buffer representing contents of a zipfile
+      # all processing is done in memory with no temp files written
+      buffer = ""
+      dir_name = "export_#{now}"
+      Zip::Archive.open_buffer(buffer, Zip::CREATE) do |archive|
+        archive.add_dir(dir_name)
+        data.each do |entry|
+          entry.each do |filename, blob| 
+            archive.add_buffer("#{dir_name}/#{filename}", blob)
+          end
+        end
+      end
+      buffer
+    end
+
+    def get_export_metadata(now, systems)
+      data = "Generated at: #{now}\n"
+      data << "Number of Systems: #{systems.size}\n"
+      summary = get_num_summary(systems)
+      summary.each do |key, value|
+        data << "\t#{key}: #{value}\n"
+      end
+      data
+    end
+
+    def get_gpgkey_name(keyring)
+      output = `/usr/bin/gpg --no-default-keyring --keyring #{keyring} --list-keys`
+      logger.info("Output = #{output}")
+      lines = output.split("\n")
+      lines.each do |line|
+        #Matching string such as: "uid                  key-a (key-a generated ....)"
+        match = line.match(/^uid\s*(.*)\(/)
+        if match
+          return match[1]
+        end
+      end
+      logger.warn("Unable to find a GPG key name from: #{output}")
+      return ""
+    end
+
     def encrypt(data)
-      "Make believe this data is encrypted\n" + data
+      Dir.mktmpdir do |tmp_dir|
+        keyring = "#{tmp_dir}/keyring"
+        raw_file = "#{tmp_dir}/raw_data"
+        encrypted_file ="#{tmp_dir}/encrypted_data"
+        # Write data to file so we can encrypt it
+        File.open(raw_file, 'wb') { |file| file.write(data)}
+        # Import the public key to a temporary key ring
+        cmd_import_pub_key = "/usr/bin/gpg --import --no-default-keyring --keyring #{keyring} #{@@gpg_public_key}"
+        system(cmd_import_pub_key)
+        # Instead of hard-coding key name, we will ask gpg to us it's name 
+        # needed by encryption to specify '-r'/'--recipient'
+        key_name = get_gpgkey_name(keyring)
+        if key_name.empty?
+          raise "Unable to encrypt data, unable to use configured GPG public key: #{@@gpg_public_key}"
+        end
+        logger.info("Will encrypt data for key: #{key_name}")
+        cmd_encrypt ="/usr/bin/gpg --no-default-keyring --keyring #{keyring} --trust-model always --output #{encrypted_file} -ear #{key_name} #{raw_file}"
+        system(cmd_encrypt)
+        File.open(encrypted_file, 'rb') { |file| file.read() }
+      end
     end
 
     before_filter :find_record, :only=>[:record, :facts]
@@ -101,17 +166,23 @@ module SpliceReports
     end
 
     def items
-
-     respond_to do |format|
-        format.csv do
-           filtered_systems = self.run_filter_by_id(params[:filter_id], nil)
-           response.headers['Content-Disposition'] = "attachment; filename=\"report_#{Time.now.utc.iso8601}.csv\""
-           render :text => systems_to_csv(filtered_systems.as_json) 
-        end
-        format.csv_encrypted do
-           filtered_systems = self.run_filter_by_id(params[:filter_id], nil)
-           response.headers['Content-Disposition'] = "attachment; filename=\"report_#{Time.now.utc.iso8601}.zip.pgp\""
-           render :text => encrypt(systems_to_csv(filtered_systems.as_json))  
+      logger.info("params = #{params}")
+      respond_to do |format|
+        format.zip do
+          # Grab the data
+          filtered_systems = self.run_filter_by_id(params[:filter_id], nil)
+          # Create a zip file in memory
+          now = Time.now.utc.iso8601
+          file_name = "report_#{now}.zip"
+          csv_data = systems_to_csv(filtered_systems.as_json)
+          expanded_data = expanded_data(filtered_systems)
+          metadata = get_export_metadata(now, filtered_systems) 
+          zipped_data = create_zip_file(now, ["export.csv" => csv_data, "metadata" => metadata, "expanded_export.json" => expanded_data])
+          if params.include?(:encrypt) and params[:encrypt] == "1"
+            zipped_data = encrypt(zipped_data)
+            file_name = "#{file_name}.gpg"
+          end
+          send_data zipped_data, :type => 'application/zip', :disposition => 'attachment', :filename => file_name
         end
         format.any(:json, :html) do
           filtered_systems = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)

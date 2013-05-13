@@ -3,7 +3,7 @@
   :plain
     $(document).ready(function() {
         $('#splice_reports_export_btn').click(function() {
-          var suffix = "_encrypted";
+          var suffix = "/?encrypt=1";
           var suffix_regexp = new RegExp(suffix+"$");
           var target_href = $('#splice_reports_export_btn').attr('href');
           if ($('#splice_reports_export_encrypt_cbox').attr('checked')) {
@@ -126,19 +126,24 @@
     
   %h4 Export Criteria:
   %div#edit_export
-    %fieldset.clearfix
+    %fieldset
       .grid_10.prefix_1.fielditem
         .grid_5.la
           = _("Encrypt export:")
           %input#splice_reports_export_encrypt_cbox{:type=>:checkbox, :value=>:false} 
         %br
-
+    %fieldset
+      .grid_10.prefix_1.fielditem
+        .grid_5.la
+          = _("Expanded JSON export:")
+          %input#splice_reports_include_json_cbox{:type=>:checkbox, :value=>:true} 
+        %br
 
   %a{:href => splice_reports_filter_reports_path(@filter.id)}
     .button.fl#submit_button
       #{_('Run Report')}
 
-  %a#splice_reports_export_btn{:href => items_splice_reports_filter_reports_path(@filter.id, :format => 'csv')}
+  %a#splice_reports_export_btn{:href => items_splice_reports_filter_reports_path(@filter.id, :format => 'zip')}
     .button.fl#export_button
       #{_('Export Report')}
 
