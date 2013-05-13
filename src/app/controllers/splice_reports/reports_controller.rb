@@ -26,8 +26,6 @@ module SpliceReports
 
     def run_filter_by_id(filter_id, offset)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
-<<<<<<< HEAD
-
       search = nil
       if params["search"] != nil
         search = params["search"]
@@ -35,9 +33,7 @@ module SpliceReports
       filtered_systems = get_marketing_product_results(filter, offset, search)
       logger.info(filtered_systems.length)
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems.inspect}")
-=======
       filtered_systems = get_marketing_product_results(filter, offset)
->>>>>>> 9a5440ed495838ca19a10b490682bb40c36f6595
       return filtered_systems
     end
 
@@ -254,6 +250,7 @@ module SpliceReports
         #paginated prior      
         ] + rules)
         logger.info(result.length)
+        debugger
         result
 
     end
@@ -264,7 +261,7 @@ module SpliceReports
 
     def record
       #checkins = find_instance_checkins(@filter, @params)
-      debugger
+      
       checkins = @@c.find({:id => params[:id]},
                 :fields => ["systemid",
                            "status",
@@ -309,14 +306,14 @@ module SpliceReports
     end
 
     def find_instance_checkins(filter, params)
-      debugger
+      #debugger
       result = @@c.find({:id => params[:id]},
                 :fields => ["systemid",
                            "status",
                            "hostname",
                            "splice_server",
                            "created" ]).as_json
-      debugger
+      #debugger
       logger.info(result)
     end
 
