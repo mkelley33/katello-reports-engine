@@ -1,0 +1,58 @@
+
+= content_for :title do
+  #{_(@record['systemid'])}
+
+= content_for :content do
+  #record
+    %form.form
+      .control-group
+        .label
+          %label
+            = _("Existing System:")
+        .value
+          - current_system = find_system(@record)
+          - if current_system
+            .subs_image_wrapper
+              .subs_image{:class => "#{current_system.compliance_color}"}
+            %a{:href=>system_link(current_system)}
+              = _("Current System")
+          - else
+            = _("Unable to locate matching system.")
+
+
+
+  %h2
+    = _("Checkins")
+  #checkins
+    %table.table
+      %thead
+        %tr
+          -#%th
+          -#  = _("Hostname")
+          %th
+            = _("Status")
+          %th
+            = _("Checkin Time")
+
+      %tbody
+        - for ci in checkins
+          %tr
+            %td
+              %ul
+                %li.panel_link
+                  %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['record_identifier'], :original_id=>@record['record_identifier'])}
+                    = ci['status']
+            %td
+              = ci['created']
+
+
+
+
+
+
+= content_for :navigation do
+  = render_menu(1..2, record_navigation(@filter, @record))
+
+
+
+= render :template => "layouts/tupane_layout"

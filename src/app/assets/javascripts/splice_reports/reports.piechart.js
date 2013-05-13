@@ -2,7 +2,14 @@
 //= require "alchemy/jquery/plugins/flot-0.7/jquery.flot.pie"
 
 var plot = function() {
-	if (Splice.filtered_systems) {
+        var show_graph = false;
+        for(x = 0; x < Splice.filtered_systems.length; ++x){
+            if(Splice.filtered_systems[x].data > 0){
+	       show_graph = true; 
+            }
+        }
+        
+	if (show_graph) {
 	    $.plot($("#sub_graph"), Splice.filtered_systems, {
 	        series: {
 	            pie:{
@@ -22,6 +29,9 @@ var plot = function() {
 	        }
 	    });
 	}
+     else {
+         $("#overlay").hide()
+     }
 }
 
 $(document).ready(function() {

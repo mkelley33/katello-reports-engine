@@ -1,4 +1,24 @@
 = javascript 'widgets/jquery.jeditable.helpers'
+= javascript do
+  :plain
+    $(document).ready(function() {
+        $('#splice_reports_export_btn').click(function() {
+          var suffix = "_encrypted";
+          var suffix_regexp = new RegExp(suffix+"$");
+          var target_href = $('#splice_reports_export_btn').attr('href');
+          if ($('#splice_reports_export_encrypt_cbox').attr('checked')) {
+            if (!target_href.match(suffix_regexp)) {
+              $('#splice_reports_export_btn').attr('href', target_href+suffix);
+            }
+          } else {
+            if (target_href.match(suffix_regexp)) {
+              $('#splice_reports_export_btn').attr('href', target_href.slice(0, target_href.length-suffix.length)); // Remove suffix
+            }
+          }
+          return true; // Continue on and process default callback for this button
+        });
+    });
+
 
 -# parameters: form
 - raise ArgumentError, "Filter form requires :form be passed in :locals" unless local_assigns[:filter]
@@ -11,8 +31,9 @@
 
   %input#panel_element_id{:name=>@filter.id, :type=>"hidden", :value=>"filter_#{@filter.id}", "data-ajax_url"=>splice_reports_filter_path(@filter.id)}
 
-  %fieldset
-    %h5 Filter Name and Description:
+  
+  %h5 Filter Name and Description:
+  %br
   %fieldset
   .grid_2.ra
     %label #{_("Name")}:
@@ -27,7 +48,7 @@
                                  :class=>editable_class(editable),
                                  'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:description]}
   %h5 Filter Criteria:
-
+  %br
 
   %fieldset
     .grid_2.ra
@@ -59,44 +80,37 @@
       = @filter.organizations.collect{|o| o.name}.join(", ")
 
   %h4 Additional Filter Criteria:
-  %fieldset.clearfix
-    .grid_10.prefix_1.fielditem
-      .grid_5.la
-        = _("By Number of Hours:")
-      %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"} 
-      %br
-      .grid_5.la
-        = _("By Date:")
-      %input{:type=>:radio, :name=>"time", :id=>"choose_daterange", :value=>"choose_daterange"}
-      %br
-      .grid_5.la
-        = _("Inactive:")
-      %input{:type=>:radio, :name=>"time", :id=>"choose_inactive", :value=>"choose_inactive"} 
+  %br 
 
-  %div#hour
+  %div#edit_hour
     %fieldset
       .grid_2.ra
         %label #{_("Number of Hours")}
-      .grid_10.la{'name' => 'filter[hours]', :class => ("editable edit_select" if editable),
-                   'data-url' => splice_reports_filter_path(@filter.id),
-                   'data-options' => @number_of_hours_hash.to_json}
-        = @filter.hours
+      .grid_10.la{'name' => 'filter[hours]',
+                'id' => 'num_hours',
+                 :class => ("editable edit_select" if editable),
+                 'data-url' => splice_reports_filter_path(@filter.id), 
+                 'data-options' => @number_of_hours_hash.to_json}
+        = @filter.hours 
 
-  %div#inactive
+  %div#edit_inactive
     %fieldset
       .grid_2.ra
         %label #{_("Inactive for Days")}
-      .grid_10.la{'name' => 'filter[inactive]', :class => ("editable edit_select" if editable),
-                   'data-url' => splice_reports_filter_path(@filter.id),
-                   'data-options' => @inactive_for_days_hash.to_json}
-        = @filter.inactive
+      .grid_10.la{'name' => 'filter[inactive]',
+                'id' => 'days_inactive',
+                :class => ("editable edit_select" if editable),
+                'data-url' => splice_reports_filter_path(@filter.id),
+                'data-options' => @inactive_for_days_hash.to_json}
+        = @filter.inactive 
 
-  %div#daterange
+  %div#edit_daterange
     %fieldset
       .grid_2.ra
         %label #{_("Start Date")}:
       .grid_10.la#filter_start_date{:title=>@filter[:start_date],
                                    'name' => 'filter[start_date]',
+                                   'id' => 'start_date',
                                    :class=>("editable edit_datepicker" if editable),
                                    'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter.start_date) || _("None")}
     -# look in _edit_errata_parameters.html.haml
@@ -106,16 +120,26 @@
         %label #{_("End Date")}:
       .grid_10.la#filter_end{:title=>@filter[:end_date],
                            'name' => 'filter[end_date]',
+                           'id' => 'end_date',
                            :class=>("editable edit_datepicker" if editable),
                            'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter[:end_date]) || _("None")}
     
-    
+  %h4 Export Criteria:
+  %div#edit_export
+    %fieldset.clearfix
+      .grid_10.prefix_1.fielditem
+        .grid_5.la
+          = _("Encrypt export:")
+          %input#splice_reports_export_encrypt_cbox{:type=>:checkbox, :value=>:false} 
+        %br
 
-  %a{:href => splice_reports_report_path(@filter.id)}
+
+  %a{:href => splice_reports_filter_reports_path(@filter.id)}
     .button.fl#submit_button
       #{_('Run Report')}
 
-  .button.fl#export_button
-    #{_('Export Report')}
+  %a#splice_reports_export_btn{:href => items_splice_reports_filter_reports_path(@filter.id, :format => 'csv')}
+    .button.fl#export_button
+      #{_('Export Report')}
 
 

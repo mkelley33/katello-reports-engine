@@ -1,0 +1,49 @@
+@import "katello_base";
+
+#facts {
+  table {
+    td {
+      padding-left: 18px;
+    }
+    th {
+      padding-right: 50px;
+    }
+  }
+}
+
+
+.subs_image_wrapper {
+  height:36px;
+  width: 36px;
+  float: left;
+  @include box-shadow(1px, 1px, 4px, #888);
+  @include border-radius(0 0 5px 0);
+  padding: 0 4px 4px 0;
+  margin-top: -15px;
+}
+.subs_image {
+  height: 23px;
+  width: 25px;
+  background: url("../icons/status_icons_sprite.png") no-repeat 0 0;
+  float: left;
+  margin: 8px 8px;
+  &.green {
+    background: url("../icons/status_icons_sprite.png") no-repeat 0 0;
+  }
+  &.yellow {
+    background:  url("../icons/status_icons_sprite.png") no-repeat -53px 0;
+  }
+  &.red {
+    background: url("../icons/status_icons_sprite.png") no-repeat -25px 0;
+  }
+}
+
+
+
+#checkins {
+  table {
+    th {
+      cursor: auto !important;
+    }
+  }
+}

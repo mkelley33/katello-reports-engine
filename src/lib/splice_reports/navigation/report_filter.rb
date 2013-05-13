@@ -1,7 +1,7 @@
 module SpliceReports
   module Navigation
 
-    class ReportFilter < ::Experimental::Navigation::Item
+    class ReportFilter < ::Navigation::Item
 
       def initialize()
         @key           = :splice_reports_filters

@@ -1,0 +1,24 @@
+
+= content_for :title do
+  #{_("Checkin")}
+
+= content_for :content do
+  #record
+    %form.form
+      .control-group
+        .label
+          %label
+            = _("Checkin Time:")
+        .value
+          = @filter['created_at']
+
+
+
+
+= content_for :navigation do
+  %ul
+    %li.panel_link
+      %a{:href=>record_splice_reports_filter_reports_path(@filter.id, :id=>original_id)}
+        = _("< Return to System")
+
+= render :template => "layouts/tupane_layout"

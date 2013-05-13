@@ -23,17 +23,19 @@ module SpliceReports
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
+      read_test = lambda{(current_organization)}
+      #not sure if this is correct
         {
-          :index => lambda{true},
-          :items => lambda{true},
-          :new => lambda{true},
-          :edit => lambda{true},
-          :details => lambda{true},
-          :update => lambda{true},
-          :destroy => lambda{true},
-          :create => lambda{true},
-          :report => lambda{true},
-          :show => lambda{true}
+          :index => read_test,
+          :items => read_test,
+          :new => read_test,
+          :edit => read_test,
+          :details => read_test,
+          :update => read_test,
+          :destroy => read_test,
+          :create => read_test,
+          :report => read_test,
+          :show => read_test
         }
 
     end
@@ -125,20 +127,6 @@ module SpliceReports
     def update
       @filter = SpliceReports::Filter.find(params[:id])
       filter_params = params[:filter]
-
-=begin
-      if filter_params[:satellite_name]
-        current_sat = filter_params[:satellite_name]
-        @splice_servers = SpliceReports::MongoConn.new.get_coll_splice_server()
-        @filter.satellite_name.clear
-        ss =  @splice_servers.find(:hostname=>current_sat).to_a
-        splice_server = ss.collect{|s| s["hostname"]}
-        @filter.satellite_name << splice_server[0].to_s
-        result =  "test01,test01"
-      end
-=end
-
-
       if filter_params[:organizations]
          org_ids = filter_params[:organizations]
          @filter.organizations.clear
@@ -205,7 +193,7 @@ module SpliceReports
     end
 
     def number_of_hours_hash
-      hours = [4, 8, 24, 48]
+      hours = [nil, 4, 8, 24, 48]
       num_hash = {}
       hours.each_with_index { |val, index|
         num_hash[val] = val
@@ -214,7 +202,7 @@ module SpliceReports
     end
 
     def inactive_for_days_hash
-      days = [1, 3, 10, 30]
+      days = [nil, 1, 3, 10, 30]
       days_hash = {}
       days.each_with_index { |val, index|
         days_hash[val] = val
