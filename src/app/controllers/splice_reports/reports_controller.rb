@@ -260,14 +260,7 @@ module SpliceReports
     end
 
     def record
-      #checkins = find_instance_checkins(@filter, @params)
-      
-      checkins = @@c.find({:id => params[:id]},
-                :fields => ["systemid",
-                           "status",
-                           "hostname",
-                           "splice_server",
-                           "created" ]).as_json
+      checkins = find_instance_checkins(@filter, params)
       render :partial=>'record', :locals=>{:checkins=>checkins}
     end
 
@@ -307,6 +300,7 @@ module SpliceReports
 
     def find_instance_checkins(filter, params)
       #debugger
+      #recreate BSON ID HERE
       result = @@c.find({:id => params[:id]},
                 :fields => ["systemid",
                            "status",
