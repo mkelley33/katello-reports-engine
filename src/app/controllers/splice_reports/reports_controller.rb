@@ -270,16 +270,16 @@ module SpliceReports
 
     end
     
-    def checkin
-      render :partial=>'checkin', :locals=>{:original_id=>params[:original_id]}
-    end
+
 
     def record
+      logger.info(params.to_s)
       checkins = find_instance_checkins(@filter, params)
       render :partial=>'record', :locals=>{:checkins=>checkins}
     end
 
     def facts
+      #debugger
       @record['facts'] = @record['facts'].collect do |f|
         f[0] = f[0].gsub('_dot_', '.')
         #manualyl adjust systemid to not mess up the rendering
@@ -299,7 +299,13 @@ module SpliceReports
       render :partial=>'products'
     end
     
+     def checkin
+      logger.info("checkin original_id = " + params[:original_id] )
+      render :partial=>'checkin', :locals=>{:original_id=>params[:original_id]}
+    end
+
     def checkin_list
+      logger.info("checkin_list params: " + params.to_s)
       checkins = find_instance_checkins(@filter, params)
       render :partial=>'checkin_list', :locals=>{:checkins=>checkins}
     end
@@ -309,21 +315,19 @@ module SpliceReports
       @filter = SpliceReports::Filter.find(params[:filter_id])
     end
     def find_record
+      #debugger
       @record = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
     end
 
     def find_instance_checkins(filter, params)
       #debugger
-      #recreate BSON ID HERE
       result = @@c.find({:_id => BSON::ObjectId(params[:id])},
-                :fields => ["facts.systemid",
+                :fields => ["_id",
+                           "facts.systemid",
                            "entitlement_status.status",
                            "name",
                            "splice_server",
                            "created" ]).as_json
-      #debugger
-      logger.info(result)
-      return result
     end
 
   end 

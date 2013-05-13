@@ -96,7 +96,6 @@ angular.module('Katello').controller('ReportsController',
         $scope.table.select_item = function(url, id){
             var system;
             console.log(url)
-            console.log(system)
             if (id) {
                 angular.forEach($scope.table.data.rows, function(row) {
                     if (row.row_id.toString() === id.toString()) {

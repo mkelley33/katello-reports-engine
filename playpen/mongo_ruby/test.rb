@@ -33,3 +33,12 @@ print "Find objects w/ invalid status: "
 status = @coll.find({"entitlement_status.status" => "valid"}, :fields => ["entitlement_status.status"]).to_a
 print status.to_s << space
 
+print "Find and Modify"
+modify = @coll.find_and_modify({
+	query: {"entitlement_status.status" => "valid"},
+	update: {"id" => "asdf"} 
+	})
+
+print modify.to_s
+
+
