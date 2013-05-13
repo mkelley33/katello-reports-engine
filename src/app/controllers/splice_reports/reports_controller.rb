@@ -33,7 +33,7 @@ module SpliceReports
       filtered_systems = get_marketing_product_results(filter, offset, search)
       logger.info(filtered_systems.length)
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems.inspect}")
-      filtered_systems = get_marketing_product_results(filter, offset)
+      #filtered_systems = get_marketing_product_results(filter, offset)
       return filtered_systems
     end
 
@@ -250,7 +250,6 @@ module SpliceReports
         #paginated prior      
         ] + rules)
         logger.info(result.length)
-        debugger
         result
 
     end
@@ -285,7 +284,7 @@ module SpliceReports
     end
     
     def checkin_list
-      checkins = find_instance_checkins(@filter, @record['instance_identifier'])
+      checkins = find_instance_checkins(@filter, params)
       render :partial=>'checkin_list', :locals=>{:checkins=>checkins}
     end
 
@@ -301,14 +300,15 @@ module SpliceReports
     def find_instance_checkins(filter, params)
       #debugger
       #recreate BSON ID HERE
-      result = @@c.find({:id => params[:id]},
-                :fields => ["systemid",
-                           "status",
-                           "hostname",
+      result = @@c.find({:_id => BSON::ObjectId(params[:id])},
+                :fields => ["facts.systemid",
+                           "entitlement_status.status",
+                           "name",
                            "splice_server",
                            "created" ]).as_json
-      #debugger
+      debugger
       logger.info(result)
+      return result
     end
 
   end 
