@@ -293,8 +293,7 @@ module SpliceReports
       @filter = SpliceReports::Filter.find(params[:filter_id])
     end
     def find_record
-      record_id = params[:id]
-      @record = @@c.find({"record_identifier" => record_id}).first
+      @record = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
     end
 
     def find_instance_checkins(filter, params)
