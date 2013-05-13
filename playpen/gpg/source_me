@@ -1,13 +1,15 @@
 OUT_DIR="./output"
 
-MY_NAME="key-a"
+MY_NAME="splice_reports_key"
 MY_PUB_KEY="${OUT_DIR}/${MY_NAME}.gpg.pub"
 MY_SEC_KEY="${OUT_DIR}/${MY_NAME}.gpg.sec"
 
-KEY_RING="${OUT_DIR}/my.keyring"
+KEY_RING="${OUT_DIR}/keyring"
 FILE_TO_ENCRYPT="SAMPLE.txt"
 FILE_TO_DECRYPT="${OUT_DIR}/${FILE_TO_ENCRYPT}.pgp"
 OUTPUT_DECRYPT="${OUT_DIR}/${FILE_TO_ENCRYPT}"
+
+INSTALL_DIR="/etc/pki/splice"
 
 if [ ! -d ${OUT_DIR} ]; then
     mkdir ${OUT_DIR}

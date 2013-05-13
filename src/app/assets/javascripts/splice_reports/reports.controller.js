@@ -57,7 +57,7 @@ angular.module('Katello').controller('ReportsController',
                         'show'  : true,
                         'cells': [{
                             //display: system.systemid,
-                            display: $compile('<a ng-click="table.select_item(\'' + '/katello/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system._id + '\',\'' + system._id + '\')">' + system.systemid + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system._id + '\',\'' + system._id + '\')">' + system.systemid + '</a>')($scope),
                             column_id: 'systemid'
                         },{
                             display: system.status,
@@ -84,7 +84,7 @@ angular.module('Katello').controller('ReportsController',
         };
 
         $scope.table                = Nutupane.table;
-        $scope.table.url            = '/katello/splice_reports/filters/' + Splice.filter_id + '/reports/items';
+        $scope.table.url            = KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;

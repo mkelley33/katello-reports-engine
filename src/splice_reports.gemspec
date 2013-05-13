@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   # s.add_dependency "jquery-rails"
   s.add_dependency "mongo"
   s.add_dependency "bson_ext"
+  s.add_dependency "zipruby"
 
 
   s.add_dependency "rails", "~> 3.2"
