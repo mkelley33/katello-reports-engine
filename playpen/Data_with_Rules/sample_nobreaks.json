@@ -1,0 +1,220 @@
+{ "organization_name": "Red Hat (Internal Use Only)", 
+            "updated": "", 
+            "splice_server": "Splice CA", 
+            "name": "domU-12-31-39-16-D1-CE.compute-1.internal", 
+            "created": "change_time", 
+            "hostname": "domU-12-31-39-16-D1-CE.compute-1.internal", 
+            "entitlement_status": {
+                "status": "invalid", 
+                "reasons": [], 
+                "compliant": true, 
+                "nonCompliantProducts": [], 
+                "compliantProducts": {
+                    "69": [
+                        {
+                            "startDate": "2012-09-27T04:00:00.000+0000", 
+                            "updated": "2013-05-09T13:14:20.667+0000", 
+                            "endDate": "2013-09-27T03:59:59.000+0000", 
+                            "created": "2013-05-09T13:14:20.667+0000", 
+                            "href": "/entitlements/8a26bc8a3e8956d3013e896d967b00e1", 
+                            "certificates": [], 
+                            "consumer": null, 
+                            "id": "8a26bc8a3e8956d3013e896d967b00e1", 
+                            "pool": {
+                                "startDate": "2012-09-27T04:00:00.000+0000", 
+                                "endDate": "2013-09-27T03:59:59.000+0000", 
+                                "activeSubscription": true, 
+                                "orderNumber": null, 
+                                "subscriptionSubKey": "master", 
+                                "href": "/pools/8a26bc8a3e8956d3013e896cb7b00072", 
+                                "owner": {
+                                    "href": "/owners/satellite-1", 
+                                    "displayName": "Red Hat (Internal Use Only)", 
+                                    "id": "8a26bc8a3e8956d3013e895987b70003", 
+                                    "key": "satellite-1"
+                                }, 
+                                "id": "8a26bc8a3e8956d3013e896cb7b00072", 
+                                "contractNumber": "3229260", 
+                                "productAttributes": [
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "30", 
+                                        "name": "option_code"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "SAM", 
+                                        "name": "enabled_consumer_types"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "Employee Subscription", 
+                                        "name": "variant"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "Red Hat Employee Subscription", 
+                                        "name": "name"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "MKT", 
+                                        "name": "type"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "None", 
+                                        "name": "support_level"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "x86,x86_64,ia64,ppc,ppc64,s390x,s390", 
+                                        "name": "arch"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "Red Hat Enterprise Linux", 
+                                        "name": "description"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "None", 
+                                        "name": "support_type"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "Red Hat Enterprise Linux", 
+                                        "name": "product_family"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "128", 
+                                        "name": "sockets"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "unlimited", 
+                                        "name": "virt_limit"
+                                    }, 
+                                    {
+                                        "productId": null, 
+                                        "id": null, 
+                                        "value": "None", 
+                                        "name": "subtype"
+                                    }
+                                ], 
+                                "subscriptionId": "8a26bc8a3e8956d3013e896cb729006f", 
+                                "productId": "SYS0395", 
+                                "providedProducts": [
+                                    {
+                                        "productName": "Red Hat Enterprise Linux High Availability (for RHEL Server)", 
+                                        "id": "8a26bc8a3e8956d3013e896cb7b20082", 
+                                        "productId": "83"
+                                    }, 
+                                    {
+                                        "productName": "Red Hat Enterprise Linux Server", 
+                                        "id": "8a26bc8a3e8956d3013e896cb7b20080", 
+                                        "productId": "69"
+                                    }, 
+                                    {
+                                        "productName": "Red Hat Enterprise Linux Resilient Storage (for RHEL Server)", 
+                                        "id": "8a26bc8a3e8956d3013e896cb7b20084", 
+                                        "productId": "90"
+                                    }, 
+                                    {
+                                        "productName": "Red Hat Enterprise Linux Load Balancer (for RHEL Server)", 
+                                        "id": "8a26bc8a3e8956d3013e896cb7b20083", 
+                                        "productId": "85"
+                                    }, 
+                                    {
+                                        "productName": "Red Hat Beta", 
+                                        "id": "8a26bc8a3e8956d3013e896cb7b20085", 
+                                        "productId": "180"
+                                    }, 
+                                    {
+                                        "productName": "Red Hat Enterprise Linux Workstation", 
+                                        "id": "8a26bc8a3e8956d3013e896cb7b20081", 
+                                        "productId": "71"
+                                    }
+                                ], 
+                                "updated": "2013-05-09T13:14:20.684+0000", 
+                                "accountNumber": "477931", 
+                                "productName": "Red Hat Employee Subscription", 
+                                "restrictedToUsername": null, 
+                                "exported": 0, 
+                                "created": "2013-05-09T13:13:23.631+0000", 
+                                "consumed": 1, 
+                                "sourceEntitlement": null, 
+                                "attributes": [], 
+                                "quantity": 10
+                            }, 
+                            "quantity": 1
+                        }
+                    ]
+                }, 
+                "date": "2013-05-09T13:15:03.749+0000", 
+                "partiallyCompliantProducts": {}, 
+                "partialStacks": {}, 
+                "compliantUntil": "2013-09-27T04:00:00.000+0000"
+            }, 
+            "organization_id": "2", 
+            "facts": {
+                "lscpu_dot_l2_cache": "", 
+                "net_dot_interface_dot_lo_dot_mac_address": "00:00:00:00:00:00", 
+                "memory_dot_memtotal": "1694720", 
+                "system_dot_certificate_version": "3.1", 
+                "distribution_dot_name": "", 
+                "lscpu_dot_l1d_cache": "", 
+                "systemid": "1000011111", 
+                "lscpu_dot_architecture": "x86_64", 
+                "lscpu_dot_cpu_op-mode(s)": "", 
+                "lscpu_dot_model": "", 
+                "net_dot_interface_dot_lo_dot_netmask": "255.0.0.0", 
+                "lscpu_dot_l3_cache": "", 
+                "lscpu_dot_core(s)_per_socket": "1", 
+                "lscpu_dot_cpu_family": "", 
+                "lscpu_dot_cpu(s)": "1", 
+                "net_dot_interface_dot_eth0_dot_netmask": "255.255.254.0", 
+                "lscpu_dot_l1i_cache": "", 
+                "lscpu_dot_virtualization_type": "", 
+                "net_dot_interface_dot_lo_dot_ipv4_address": "127.0.0.1", 
+                "cpu_dot_cpu_socket(s)": "1", 
+                "cpu_dot_cpu(s)": "1", 
+                "uname_dot_machine": "x86_64", 
+                "net_dot_ipv4_address": "10.96.210.60", 
+                "lscpu_dot_stepping": "", 
+                "lscpu_dot_cpu_socket(s)": "1", 
+                "net_dot_interface_dot_eth0_dot_ipv4_address": "10.96.210.60", 
+                "lscpu_dot_bogomips": "", 
+                "lscpu_dot_cpu_mhz": "", 
+                "net_dot_interface_dot_eth0_dot_mac_address": "12:31:39:16:d1:ce", 
+                "lscpu_dot_hypervisor_vendor": "", 
+                "lscpu_dot_vendor_id": "", 
+                "network_dot_hostname": "domU-12-31-39-16-D1-CE.compute-1.internal", 
+                "lscpu_dot_on-line_cpu(s)_list": "", 
+                "lscpu_dot_byte_order": ""
+            }, 
+            "service_level": "", 
+            "instance_identifier": "server_ident", 
+            "date": "change_time", 
+            "product_info": [
+                {
+                    "account": "477931", 
+                    "product": "SYS0395", 
+                    "contract": "3229260", 
+                    "quantity": 1
+                }
+            ]
+        }

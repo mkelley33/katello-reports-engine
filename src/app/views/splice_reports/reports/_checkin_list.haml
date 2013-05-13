@@ -1,0 +1,41 @@
+
+= content_for :title do
+  #{_(@record['systemid'])}
+
+= content_for :content do
+
+  %h2
+    = _("Checkins")
+  #checkins
+    %table.table
+      %thead
+        %tr
+          -#%th
+          -#  = _("Hostname")
+          %th
+            = _("Status")
+          %th
+            = _("Checkin Time")
+
+      %tbody
+        - for ci in checkins
+          %tr
+            %td
+              %ul
+                %li.panel_link
+                  %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['record_identifier'], :original_id=>@record['record_identifier'])}
+                    = ci['status']
+            %td
+              = ci['created']
+
+
+
+
+
+
+= content_for :navigation do
+  = render_menu(1..2, record_navigation(@filter, @record))
+
+
+
+= render :template => "layouts/tupane_layout"

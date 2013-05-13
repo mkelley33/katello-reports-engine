@@ -27,6 +27,18 @@ module Navigation
           :url => lambda{facts_splice_reports_filter_reports_path(filter.id, :id=>record['record_identifier'])},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
+        },
+        { :key => :record_products,
+          :name =>_("Products"),
+          :url => lambda{products_splice_reports_filter_reports_path(filter.id, :id=>record['record_identifier'])},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :record_checkin_list,
+          :name =>_("System Check-In List"),
+          :url => lambda{checkin_list_splice_reports_filter_reports_path(filter.id, :id=>record['record_identifier'])},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"}
         }
       ]
       menu

@@ -28,15 +28,16 @@ result1 = @coll.aggregate([
 ])
 
 result2 = @coll.aggregate([
-	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 03, 07)}}},
-	{"$match" => { status: "current"}},
+	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
+	{"$match" => { "entitlement_status.status" => "valid"}},
 	{"$group" => {
-	  _id: "$record_identifier",
+	  _id: "$_id",
 	  date: {"$max" => "$created"},
-	  status: {"$last" => "$status"},
+	  status: {"$last" => "$entitlement_status.status"},
 	  identifier: {"$last" => "$instance_identifier"},
 	  satellite: {"$last" => "$splice_server"},
-	  systemid: {"$last" => "$systemid"}
+	  hostname: {"$last" => "$name"},
+	  systemid: {"$last" => "$facts.systemid"}
 		}
 	 },
 	{"$sort" => {status: 1}},	
@@ -54,5 +55,5 @@ result3 = @coll.aggregate([
 result4 = @coll.find({"instance_identifier" => "server_ident1"}, :fields => 
 	["systemid", "status", "hostname", "environment", "created" ]).to_a
 
-a = result4.to_json
+a = result2.to_json
 puts a

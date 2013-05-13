@@ -25,7 +25,12 @@ module SpliceReports
 
     def run_filter_by_id(filter_id, offset)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
-      filtered_systems = get_marketing_product_results(filter, offset)
+
+      search = nil
+      if params["search"] != nil
+        search = params["search"]
+      end
+      filtered_systems = get_marketing_product_results(filter, offset, search)
       logger.info(filtered_systems.length)
       logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems.inspect}")
       return filtered_systems
@@ -71,7 +76,7 @@ module SpliceReports
       "Make believe this data is encrypted\n" + data
     end
 
-    before_filter :find_record, :only=>[:record, :facts]
+    before_filter :find_record, :only=>[:record, :facts, :products, :checkin_list]
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
@@ -80,7 +85,9 @@ module SpliceReports
           :items => lambda{true},
           :record => lambda{true},
           :checkin => lambda{true},
-          :facts=> lambda{true}
+          :facts=> lambda{true},
+          :products=> lambda{true},
+          :checkin_list=> lambda{true},
         }
 
     end
@@ -101,7 +108,6 @@ module SpliceReports
     end
 
     def items
-
      respond_to do |format|
         format.csv do
            filtered_systems = self.run_filter_by_id(params[:filter_id], nil)
@@ -121,7 +127,7 @@ module SpliceReports
       end
     end
 
-    def get_marketing_product_results(filter, offset)
+    def get_marketing_product_results(filter, offset, search)
       
       if filter["hours"] != nil
         end_date = Time.now.utc
@@ -138,23 +144,30 @@ module SpliceReports
         rules << {"$limit" => current_user.page_size}
       end
 
+      if search != nil or search != ""
+        logger.info("Search by filter id and search term: " + search.to_s )
+        rules << {"$match" => { "facts.systemid"=> search }}
+      end
+
       if filter["status"] == 'all'
         #do nothing
       elsif filter["status"] == 'failed'
-        rules << {"$match" =>{ "$or" => [{ :status=> "invalid"}, { :status=> "insufficient"}] } } 
+        rules << {"$match" =>{ "$or" => [{ "entitlement_status.status" => "invalid"},
+                                     { "entitlement_status.status" => "insufficient"}] } } 
       else
-        rules << {"$match" =>  { :status=> filter["status"]}}
+        rules << {"$match" =>  { "entitlement_status.status" => filter["status"]}}
       end
 
       result = @@c.aggregate( [
         {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}},
         {"$group" => {
-                    '_id' => "$record_identifier",
+                    '_id' => "$_id",
                     :date => {"$max" => "$created"},
-                    :status => {"$last" => "$status"},
+                    :status => {"$last" => "$entitlement_status.status"},
                     :identifier => {"$last" => "$instance_identifier"},
                     :splice_server => {"$last" => "$splice_server"},
-                    :systemid => {"$last" => "$systemid"}
+                    :systemid => {"$last" => "$facts.systemid"},
+                    :hostname => {"$last" => "$name"}
                     }
         },
         {"$sort" => {:status => -1}},
@@ -172,7 +185,14 @@ module SpliceReports
     end
 
     def record
-      checkins = find_instance_checkins(@filter, @record['instance_identifier'])
+      #checkins = find_instance_checkins(@filter, @params)
+      debugger
+      checkins = @@c.find({:id => params[:id]},
+                :fields => ["systemid",
+                           "status",
+                           "hostname",
+                           "splice_server",
+                           "created" ]).as_json
       render :partial=>'record', :locals=>{:checkins=>checkins}
     end
 
@@ -187,6 +207,21 @@ module SpliceReports
       render :partial=>'facts'
     end
 
+    def products
+      #debugger
+      @record['product_info'] = @record['product_info'].collect do |p|
+        p
+      end
+
+      render :partial=>'products'
+    end
+    
+    def checkin_list
+      checkins = find_instance_checkins(@filter, @record['instance_identifier'])
+      render :partial=>'checkin_list', :locals=>{:checkins=>checkins}
+    end
+
+
     def find_filter
       @filter = SpliceReports::Filter.find(params[:filter_id])
     end
@@ -195,17 +230,17 @@ module SpliceReports
       @record = @@c.find({"record_identifier" => record_id}).first
     end
 
-    def find_instance_checkins(filter, instance_identifier)
-      result = @@c.find({"instance_identifier" => instance_identifier},
+    def find_instance_checkins(filter, params)
+      debugger
+      result = @@c.find({:id => params[:id]},
                 :fields => ["systemid",
                            "status",
                            "hostname",
-                           "environment",
-                           "record_identifier",
+                           "splice_server",
                            "created" ]).as_json
+      debugger
+      logger.info(result)
     end
-
-
 
   end 
 
