@@ -67,23 +67,29 @@ module SpliceReports
       # Body
       body_lines = systems.map { |system|
         entry = ""
-        fields.each { |field| entry << system[field].to_s << ", " }
+        fields.each do |field| 
+          if field == "_id" and system[field].key?("$oid")
+            entry << system[field]["$oid"] << ", " 
+          else
+            entry << system[field].to_s << ", "
+          end 
+        end
         entry
       }
       csv_data = "#{header}\n#{body_lines.join("\n")}"
     end
 
     def expanded_data(systems)
-      # TODO:  Perform mongo query on each object id and return a 
-      # full json doc for each item with all fields populated
-      systems.to_json
+      system_ids = systems.map { |system| system["_id"] }
+      data = get_object_details(system_ids)
+      data.to_json
     end
 
     def create_zip_file(now, data)
       # Returns a buffer representing contents of a zipfile
       # all processing is done in memory with no temp files written
       buffer = ""
-      dir_name = "export_#{now}"
+      dir_name = "report_#{now}".gsub(":", "-")
       Zip::Archive.open_buffer(buffer, Zip::CREATE) do |archive|
         archive.add_dir(dir_name)
         data.each do |entry|
@@ -121,6 +127,11 @@ module SpliceReports
     end
 
     def encrypt(data)
+      pub_key_path = @@gpg_public_key
+      unless (File.exist?(pub_key_path) and File.file?(pub_key_path) and File.readable?(pub_key_path))
+        raise "Unable to use public key at: #{pub_key_path}"
+      end
+
       Dir.mktmpdir do |tmp_dir|
         keyring = "#{tmp_dir}/keyring"
         raw_file = "#{tmp_dir}/raw_data"
@@ -128,13 +139,13 @@ module SpliceReports
         # Write data to file so we can encrypt it
         File.open(raw_file, 'wb') { |file| file.write(data)}
         # Import the public key to a temporary key ring
-        cmd_import_pub_key = "/usr/bin/gpg --import --no-default-keyring --keyring #{keyring} #{@@gpg_public_key}"
+        cmd_import_pub_key = "/usr/bin/gpg --import --no-default-keyring --keyring #{keyring} #{pub_key_path}"
         system(cmd_import_pub_key)
         # Instead of hard-coding key name, we will ask gpg to us it's name 
         # needed by encryption to specify '-r'/'--recipient'
         key_name = get_gpgkey_name(keyring)
         if key_name.empty?
-          raise "Unable to encrypt data, unable to use configured GPG public key: #{@@gpg_public_key}"
+          raise "Unable to encrypt data, unable to use configured GPG public key: #{pub_key_path}"
         end
         logger.info("Will encrypt data for key: #{key_name}")
         cmd_encrypt ="/usr/bin/gpg --no-default-keyring --keyring #{keyring} --trust-model always --output #{encrypted_file} -ear #{key_name} #{raw_file}"
@@ -200,6 +211,11 @@ module SpliceReports
         end
       end
     end
+
+    def get_object_details(ids)
+      @@c.find({"_id" => {"$in" => ids}})
+    end
+
 
     def get_marketing_product_results(filter, offset, search)
       
@@ -305,7 +321,7 @@ module SpliceReports
                            "name",
                            "splice_server",
                            "created" ]).as_json
-      debugger
+      #debugger
       logger.info(result)
       return result
     end
