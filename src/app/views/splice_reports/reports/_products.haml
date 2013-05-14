@@ -4,9 +4,6 @@
     $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
   });
 
-= content_for :title do
-  #{_('Products')}
-
 = content_for :navigation do
   = render_menu(1..2, record_navigation(@filter, @record))
 

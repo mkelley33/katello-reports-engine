@@ -42,7 +42,6 @@ module SpliceReports
     end
 
     def get_num_summary(systems)
-      debugger
       num_current = 0
       num_invalid = 0
       num_insufficient = 0
@@ -234,14 +233,7 @@ module SpliceReports
 
 
     def get_marketing_product_results(filter, offset, search)
-      
-      if filter["hours"] != nil
-        end_date = Time.now.utc
-        start_date = end_date - filter["hours"].hours
-      elsif filter["start_date"] != nil && filter["end_date"] != nil
-        end_date = filter["end_date"].utc
-        start_date = filter["start_date"].utc 
-      end         
+      start_date, end_date = get_start_end_dates(filter)
       logger.info(start_date.to_s)
       logger.info(end_date.to_s)
       rules = []
@@ -331,20 +323,42 @@ module SpliceReports
       @filter = SpliceReports::Filter.find(params[:filter_id])
     end
     def find_record
-      #debugger
       @record = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
+      logger.info("record found: " + @record.to_s)
     end
 
     def find_instance_checkins(filter, params)
-      #debugger
-      result = @@c.find({:_id => BSON::ObjectId(params[:id])},
-                :fields => ["_id",
+      #This should return all the checkins for an instance with in
+      # the parameteres of the filter
+      logger.info("FIND INSTANCE CHECKINS")
+      start_date, end_date = get_start_end_dates(filter)
+
+      row = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
+      instance_identifier = row["instance_identifier"]
+      result = @@c.find({"instance_identifier" => instance_identifier,
+                        "created" => {"$gt" => start_date, "$lt" => end_date}},
+                         :fields => 
+                          ["_id",
                            "facts.systemid",
                            "entitlement_status.status",
                            "name",
                            "splice_server",
-                           "created" ]).as_json
+                           "created" ])
+      logger.info(result.count)
+      return result.as_json
+
     end
+
+    def get_start_end_dates(filter)
+      if filter["hours"] != nil
+        end_date = Time.now.utc
+        start_date = end_date - filter["hours"].hours
+      elsif filter["start_date"] != nil && filter["end_date"] != nil
+        end_date = filter["end_date"].utc
+        start_date = filter["start_date"].utc 
+      end
+      return start_date, end_date
+    end    
 
   end 
 
