@@ -42,16 +42,17 @@ module SpliceReports
     end
 
     def get_num_summary(systems)
+      debugger
       num_current = 0
       num_invalid = 0
       num_insufficient = 0
       systems.each do | system | 
         case system["status"]
-        when "current"
+        when "valid"
           num_current += 1
         when "invalid"
           num_invalid += 1
-        when "insufficient" 
+        when "partial" 
           num_insufficient += 1
         end
       end
