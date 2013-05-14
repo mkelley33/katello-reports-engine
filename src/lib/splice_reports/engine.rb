@@ -14,6 +14,13 @@ module SpliceReports
       resources.uniq.each{ |f| require f }
  
       ::Navigation::Additions.insert_after(:organizations, SpliceReports::Navigation::ReportFilter)
+      begin
+        SpliceReports::Configuration.load()
+      rescue => e 
+        puts "Unable to load SpliceReports Configuration"
+        puts e.message
+        puts e.backtrace
+      end
     end
   end
 end
