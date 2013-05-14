@@ -21,8 +21,12 @@ module SpliceReports
     before_filter :find_filter
 
     @@c = SpliceReports::MongoConn.new.get_coll_marketing_report_data()
-    # TODO: Determine location of GPG Public Key from a configuration file
-    @@gpg_public_key = "/etc/pki/splice/splice_reports_key.gpg.pub"
+
+    def self.get_gpg_public_key
+      pub_key = SpliceReports::Configuration.config["export"]["public_gpg_key"]
+      logger.info("SpliceReports configured to use public gpg key at: #{pub_key}")
+      return pub_key
+    end
 
     def run_filter_by_id(filter_id, offset)
       filter = SpliceReports::Filter.where(:id=>filter_id).first
@@ -134,7 +138,7 @@ module SpliceReports
     end
 
     def encrypt(data)
-      pub_key_path = @@gpg_public_key
+      pub_key_path = self.class.get_gpg_public_key()
       unless (File.exist?(pub_key_path) and File.file?(pub_key_path) and File.readable?(pub_key_path))
         raise "Unable to use public key at: #{pub_key_path}"
       end
