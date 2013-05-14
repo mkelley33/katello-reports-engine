@@ -1,14 +1,23 @@
-SEC_KEY="/etc/pki/splice/splice_reports_key.gpg.sec"
-
 if [ $# -ne 1 ]; then
     echo "Usage: `basename $0` {encrypted file}"
     exit 1
 fi
 
+IN_FILE=$1
+SEC_KEY="./example/splice_reports_key.gpg.sec"
 OUT_DIR="./output"
 KEY_RING="${OUT_DIR}/keyring"
 OUT_FILE="${OUT_DIR}/decrypted_data"
-IN_FILE=$1
+
+if [ ! -e ${SEC_KEY} ]; then
+    echo "Unable to find secret GPG key at: ${SEC_KEY}"
+    exit 1
+fi
+if [ ! -r ${SEC_KEY} ]; then
+    echo "Unable to read secret GPG key at: ${SEC_KEY}"
+    echo "Consider re-running with 'sudo'"
+    exit 1
+fi
 
 if [ ! -e ${OUT_DIR} ]; then
     mkdir ${OUT_DIR}
@@ -19,16 +28,6 @@ if [ ! -e ${IN_FILE} ]; then
     exit 1
 fi
 
-if [ ! -e ${SEC_KEY} ]; then
-    echo "Unable to find secret GPG key at: ${SEC_KEY}"
-    exit 1
-fi
-
-if [ ! -r ${SEC_KEY} ]; then
-    echo "Unable to read secret GPG key at: ${SEC_KEY}"
-    echo "Consider re-running with 'sudo'"
-    exit 1
-fi
 
 gpg --import --no-default-keyring --secret-keyring ${KEY_RING} ${SEC_KEY}
 gpg --decrypt --no-default-keyring --secret-keyring ${KEY_RING} -o ${OUT_FILE} ${IN_FILE}

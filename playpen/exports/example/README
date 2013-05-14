@@ -1,0 +1,7 @@
+This keypair was generated from ../../gpg/generate_new_keypair.sh
+
+Intent is that when this gets bundled as a RPM the keys are regenerated
+ - Public key is packaged in a RPM
+ - Secret key remains private and stored securely so it may be used to decrypt reports
+
+
