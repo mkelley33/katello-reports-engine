@@ -38,8 +38,8 @@ module SpliceReports
     def get_splice_servers
       @checkin_service = @client['checkin_service']
       @splice_server = @checkin_service['splice_server']
-      ss = @splice_server.find({"hostname" => /^./},:fields => ["hostname"]).to_a
-      splice_servers = ss.collect{|s| s["hostname"]}
+      ss = @splice_server.find({"uuid" => /^./},:fields => ["uuid"]).to_a
+      splice_servers = ss.collect{|s| s["uuid"]}
       return splice_servers
     end
 
