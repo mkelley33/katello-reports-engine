@@ -12,8 +12,8 @@ module SpliceReports
     end
 
     def get_coll_marketing_report_data
-      @results = @client['results']
-      @marketing_report_data   = @results['marketing_report_data']
+      @results = @client['checkin_service']
+      @marketing_report_data   = @results['marketing_product_usage']
       return @marketing_report_data
     end
 
