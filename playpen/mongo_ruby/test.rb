@@ -37,7 +37,7 @@ print "Get a list of all systems \n"
 systems_unique = @coll.distinct("instance_identifier").to_a
 print systems_unique.to_s
 print "\n"
-start_date = Time.utc(2013, 05, 12)
+start_date = Time.utc(2013, 04, 12)
 end_date = Time.utc(2013, 05, 30)
 list = Hash.new
 systems_unique.each do |system|
@@ -50,7 +50,7 @@ systems_unique.each do |system|
 end
 print "list of keys \n"
 print list.keys
-print (systems_unique -  list.keys).to_s
+print (systems_unique -  list.keys).to_s << space
 
 
 print "Find objects w/ invalid status using NOT: "  
@@ -58,7 +58,7 @@ status = @coll.find({"entitlement_status.status" => { "$ne" => "valid"}}, :field
 print status.to_s << space
 
 print "Find objects NOT in a date range:"
-date_range = @coll.find({"date" => { "$not" => {"$gt" => Time.utc(2013, 05, 12), "$lt" => Time.utc(2013, 05, 14)}}}, :fields => ["date"]).to_a
+date_range = @coll.find({"created" => { "$not" => {"$gt" => Time.utc(2013, 05, 12)}}}, :fields => ["created"]).to_a
 print date_range.to_s << space
 
 	

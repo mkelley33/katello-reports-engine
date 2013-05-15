@@ -59,7 +59,7 @@ result4 = @coll.find({"instance_identifier" => "server_ident1"}, :fields =>
 
 result5 = @coll.aggregate([
 	#date_range = @coll.find({"date" => { "$not" => {"$gt" => Time.utc(2013, 05, 12), "$lt" => Time.utc(2013, 05, 14)}}}, :fields => ["date"]).to_a
-	{"$match" => {"created" => { "$not" => {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}}},
+	{"$match" => {"created" => { "$not" => {"$gt" => Time.utc(2013, 05, 14), "$lt" => Time.utc(2013, 05, 16)}}}},
 	{"$group" => {
 	  _id: "$instance_identifier",
 	  record: {"$last" => "$_id"},
