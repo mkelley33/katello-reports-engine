@@ -336,16 +336,24 @@ module SpliceReports
 
       row = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
       instance_identifier = row["instance_identifier"]
-      result = @@c.find({"instance_identifier" => instance_identifier,
-                        "created" => {"$gt" => start_date, "$lt" => end_date}},
-                         :fields => 
-                          ["_id",
-                           "facts.systemid",
-                           "entitlement_status.status",
-                           "name",
-                           "splice_server",
-                           "created" ])
-      logger.info(result.count)
+      result = @@c.find(
+        {
+          "instance_identifier" => instance_identifier,
+          "created" => {"$gt" => start_date, "$lt" => end_date}
+        },
+        {
+          :fields => 
+            ["_id",
+              "facts.systemid",
+              "entitlement_status.status",
+              "name",
+              "splice_server",
+              "created"
+            ],
+          :sort => 
+            ["created", Mongo::DESCENDING],
+          :limit => 50
+        })
       return result.as_json
 
     end
