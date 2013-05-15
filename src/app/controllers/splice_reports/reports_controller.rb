@@ -47,11 +47,11 @@ module SpliceReports
       num_insufficient = 0
       checkins.each do | checkin | 
         case checkin["status"]
-        when "valid"
+        when "current"
           num_current += 1
         when "invalid"
           num_invalid += 1
-        when "partial" 
+        when "insufficient" 
           num_insufficient += 1
         end
       end
@@ -61,8 +61,8 @@ module SpliceReports
               num_total: num_current + num_invalid + num_insufficient}
     end
 
-    def systems_to_csv(checkins)
-      return "" unless systems.length > 0
+    def checkins_to_csv(checkins)
+      return "" unless checkins.length > 0
       # Assuming all arrays have a hash with same keys, also assuming order of keys is same for all entries in array
       fields = checkins[0].keys
       # Header
@@ -84,8 +84,8 @@ module SpliceReports
     end
 
     def expanded_data(checkins)
-      system_ids = checkins.map { |checkin| checkin["record"] }
-      data = get_object_details(system_ids)
+      checkin_ids = checkins.map { |checkin| checkin["record"] }
+      data = get_object_details(checkin_ids)
       data.to_json
     end
 
@@ -205,7 +205,7 @@ module SpliceReports
           # Create a zip file in memory
           now = Time.now.utc.iso8601
           file_name = "report_#{now}.zip"
-          csv_data = systems_to_csv(filtered_checkins.as_json)
+          csv_data = checkins_to_csv(filtered_checkins.as_json)
           metadata = get_export_metadata(now, filtered_checkins, params[:filter_id])
           files = ["export.csv" => csv_data, "metadata" => metadata]
           unless params.include?(:skip_expand) and params[:skip_expand] == "1"
@@ -220,7 +220,9 @@ module SpliceReports
           send_data zipped_data, :type => 'application/zip', :disposition => 'attachment', :filename => file_name
         end
         format.any(:json, :html) do
+          logger.info("Test*************************")
           filtered_checkins = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
+          logger.info("items(): #{filtered_checkins}")
           total = self.run_filter_by_id(params[:filter_id], nil).count
           render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_checkins } 
         end
@@ -231,6 +233,18 @@ module SpliceReports
       @@c.find({"_id" => {"$in" => ids}})
     end
 
+    def translate_checkin_status(value)
+      case value
+      when "valid"
+        "current"
+      when "partial"
+        "insufficient"
+      when "invalid"
+        "invalid"
+      else
+        value
+      end
+    end
 
     def get_marketing_product_results(filter, offset, search)
       start_date, end_date = get_start_end_dates(filter)
@@ -274,12 +288,15 @@ module SpliceReports
         #RULES MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
         #paginated prior      
         ] + rules)
-        logger.info(result.length)
-        result
-
+      logger.info("get_marketing_product_results(): found #{result.count} items")
+      #result
+      # Translate values in DB to what webui expects
+      result.map do |item| 
+       item["status"] = translate_checkin_status(item["status"])
+       item
+      end
     end
     
-
 
     def record
       logger.info(params.to_s)
@@ -331,6 +348,7 @@ module SpliceReports
 
     def find_record
       @record = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
+      @record["entitlement_status"]["status"] = translate_checkin_status(@record["entitlement_status"]["status"])
       @record['facts'] = translate_facts(@record['facts'])
       logger.info("find_record found record from #{'params[:id]'}: " + @record.to_s)
     end
@@ -361,6 +379,10 @@ module SpliceReports
             ["created", Mongo::DESCENDING],
           :limit => 50
         })
+      result = result.map do |item| 
+        item["entitlement_status"]["status"] = translate_checkin_status(item["entitlement_status"]["status"])
+        item
+      end
       return result.as_json
 
     end
