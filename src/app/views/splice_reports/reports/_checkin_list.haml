@@ -22,7 +22,7 @@
             %td
               %ul
                 %li.panel_link
-                  %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['record'].to_s, :original_id=>@record['record'].to_s)}
+                  %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['_id'].to_s, :original_id=>@record['_id'].to_s)}
                     = ci['entitlement_status']['status']
             %td
               = ci['created']

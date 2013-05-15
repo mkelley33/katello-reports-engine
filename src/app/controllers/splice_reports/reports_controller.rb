@@ -34,19 +34,19 @@ module SpliceReports
       if params["search"] != nil
         search = params["search"]
       end
-      filtered_systems = get_marketing_product_results(filter, offset, search)
-      logger.info(filtered_systems.length)
-      logger.info("Splice Reports, id = #{filter_id} filtered_systems: #{filtered_systems.inspect}")
-      #filtered_systems = get_marketing_product_results(filter, offset)
-      return filtered_systems
+      filtered_checkins = get_marketing_product_results(filter, offset, search)
+      logger.info(filtered_checkins.length)
+      logger.info("Splice Reports, id = #{filter_id} filtered_checkins: #{filtered_checkins.inspect}")
+      #filtered_checkins = get_marketing_product_results(filter, offset)
+      return filtered_checkins
     end
 
-    def get_num_summary(systems)
+    def get_num_summary(checkins)
       num_current = 0
       num_invalid = 0
       num_insufficient = 0
-      systems.each do | system | 
-        case system["status"]
+      checkins.each do | checkin | 
+        case checkin["status"]
         when "valid"
           num_current += 1
         when "invalid"
@@ -61,21 +61,21 @@ module SpliceReports
               num_total: num_current + num_invalid + num_insufficient}
     end
 
-    def systems_to_csv(systems)
+    def systems_to_csv(checkins)
       return "" unless systems.length > 0
       # Assuming all arrays have a hash with same keys, also assuming order of keys is same for all entries in array
-      fields = systems[0].keys
+      fields = checkins[0].keys
       # Header
       header = ""
       fields.each { |field| header << field << ", "}
       # Body
-      body_lines = systems.map { |system|
+      body_lines = checkins.map { |checkin|
         entry = ""
         fields.each do |field| 
-          if field == "record" and system[field].key?("$oid")
-            entry << system[field]["$oid"] << ", " 
+          if field == "record" and checkin[field].key?("$oid")
+            entry << checkin[field]["$oid"] << ", " 
           else
-            entry << system[field].to_s << ", "
+            entry << checkin[field].to_s << ", "
           end 
         end
         entry
@@ -83,8 +83,8 @@ module SpliceReports
       csv_data = "#{header}\n#{body_lines.join("\n")}"
     end
 
-    def expanded_data(systems)
-      system_ids = systems.map { |system| system["record"] }
+    def expanded_data(checkins)
+      system_ids = checkins.map { |checkin| checkin["record"] }
       data = get_object_details(system_ids)
       data.to_json
     end
@@ -105,10 +105,10 @@ module SpliceReports
       buffer
     end
 
-    def get_export_metadata(now, systems, filter_id)
+    def get_export_metadata(now, checkins, filter_id)
       data = "Generated at: #{now}\n"
-      data << "Number of Systems: #{systems.size}\n"
-      summary = get_num_summary(systems)
+      data << "Number of checkins: #{checkins.size}\n"
+      summary = get_num_summary(checkins)
       summary.each do |key, value|
         data << "\t#{key}: #{value}\n"
       end
@@ -183,8 +183,8 @@ module SpliceReports
 
     def index
       @filter = SpliceReports::Filter.find(params[:filter_id])
-      filtered_systems = run_filter_by_id(@filter.id, nil).as_json
-      summary = get_num_summary(filtered_systems)
+      filtered_checkins = run_filter_by_id(@filter.id, nil).as_json
+      summary = get_num_summary(filtered_checkins)
 
       #render :partial => "reports/report"
       #render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}
@@ -201,15 +201,15 @@ module SpliceReports
       respond_to do |format|
         format.zip do
           # Grab the data
-          filtered_systems = self.run_filter_by_id(params[:filter_id], nil)
+          filtered_checkins = self.run_filter_by_id(params[:filter_id], nil)
           # Create a zip file in memory
           now = Time.now.utc.iso8601
           file_name = "report_#{now}.zip"
-          csv_data = systems_to_csv(filtered_systems.as_json)
-          metadata = get_export_metadata(now, filtered_systems, params[:filter_id])
+          csv_data = systems_to_csv(filtered_checkins.as_json)
+          metadata = get_export_metadata(now, filtered_checkins, params[:filter_id])
           files = ["export.csv" => csv_data, "metadata" => metadata]
           unless params.include?(:skip_expand) and params[:skip_expand] == "1"
-            expanded_data = expanded_data(filtered_systems)
+            expanded_data = expanded_data(filtered_checkins)
             files.push({"expanded_export.json" => expanded_data})
           end
           zipped_data = create_zip_file(now, files)
@@ -220,9 +220,9 @@ module SpliceReports
           send_data zipped_data, :type => 'application/zip', :disposition => 'attachment', :filename => file_name
         end
         format.any(:json, :html) do
-          filtered_systems = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
+          filtered_checkins = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
           total = self.run_filter_by_id(params[:filter_id], nil).count
-          render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_systems } 
+          render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_checkins } 
         end
       end
     end
