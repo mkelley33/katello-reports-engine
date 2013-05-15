@@ -56,5 +56,23 @@ result3 = @coll.aggregate([
 result4 = @coll.find({"instance_identifier" => "server_ident1"}, :fields => 
 	["systemid", "status", "hostname", "environment", "created" ]).to_a
 
-a = result2.to_json
+
+result5 = @coll.aggregate([
+	#date_range = @coll.find({"date" => { "$not" => {"$gt" => Time.utc(2013, 05, 12), "$lt" => Time.utc(2013, 05, 14)}}}, :fields => ["date"]).to_a
+	{"$match" => {"created" => { "$not" => {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}}},
+	{"$group" => {
+	  _id: "$instance_identifier",
+	  record: {"$last" => "$_id"},
+	  date: {"$max" => "$created"},
+	  status: {"$last" => "$entitlement_status.status"},
+	  identifier: {"$last" => "$instance_identifier"},
+	  satellite: {"$last" => "$splice_server"},
+	  hostname: {"$last" => "$name"},
+	  systemid: {"$last" => "$facts.systemid"}
+		}
+	 },
+	{"$sort" => {status: 1}},	
+])
+
+a = result5.to_json
 puts a

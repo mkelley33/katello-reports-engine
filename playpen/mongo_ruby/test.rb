@@ -33,20 +33,33 @@ print "Find objects w/ invalid status: "
 status = @coll.find({"entitlement_status.status" => "valid"}, :fields => ["entitlement_status.status"]).to_a
 print status.to_s << space
 
-print "Get a list of all systems"
-unique_systems = @coll.distinct("instance_identifier").to_a
-#print unique_systems.to_s
+print "Get a list of all systems \n"
+systems_unique = @coll.distinct("instance_identifier").to_a
+print systems_unique.to_s
+print "\n"
+start_date = Time.utc(2013, 05, 12)
+end_date = Time.utc(2013, 05, 30)
 list = Hash.new
-unique_systems.each do |system|
+systems_unique.each do |system|
   row = @coll.find({"instance_identifier" => system,
-  					"created" => {"$gt" => start_date, "$lt" => end_date},
+  					"created" => {"$gt" => start_date, "$lt" => end_date}},
   				 :fields => ["created"],
   				 :sort => ['created', :asc]).limit(1).to_a
   #print row[0]["created"].to_s
   list[system]=row[0]["created"].to_s
 end
+print "list of keys \n"
+print list.keys
+print (systems_unique -  list.keys).to_s
 
-print list.to_s
+
+print "Find objects w/ invalid status using NOT: "  
+status = @coll.find({"entitlement_status.status" => { "$ne" => "valid"}}, :fields => ["entitlement_status.status"]).to_a
+print status.to_s << space
+
+print "Find objects NOT in a date range:"
+date_range = @coll.find({"date" => { "$not" => {"$gt" => Time.utc(2013, 05, 12), "$lt" => Time.utc(2013, 05, 14)}}}, :fields => ["date"]).to_a
+print date_range.to_s << space
 
 	
 

@@ -251,6 +251,7 @@ module SpliceReports
       logger.info(start_date.to_s)
       logger.info(end_date.to_s)
       rules = []
+      rules_date = []
       if offset
         rules << {"$skip" => offset.to_i}
         rules << {"$limit" => current_user.page_size}
@@ -259,6 +260,13 @@ module SpliceReports
       if search != nil or search != ""
         logger.info("Search by filter id and search term: " + search.to_s )
         rules << {"$match" => { "facts.systemid"=> search }}
+      end
+
+      if filter["inactive"] != nil
+        logger.info("inactive query selected")
+        rules_date << {"$match" => {:created=> { "$not" => {"$gt" => start_date}}}}
+      else
+        rules_date << {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}}
       end
 
       if filter["status"] == 'all'
@@ -270,8 +278,7 @@ module SpliceReports
         rules << {"$match" =>  { "entitlement_status.status" => filter["status"]}}
       end
 
-      result = @@c.aggregate( [
-        {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}},
+      result = @@c.aggregate( rules_date + [
         {"$group" => {
                     '_id' => "$instance_identifier",
                     :record => {"$last" => "$_id"},
@@ -296,7 +303,6 @@ module SpliceReports
        item
       end
     end
-    
 
     def record
       logger.info(params.to_s)
@@ -394,6 +400,9 @@ module SpliceReports
       elsif filter["start_date"] != nil && filter["end_date"] != nil
         end_date = filter["end_date"].utc
         start_date = filter["start_date"].utc 
+      elsif filter["inactive"] != nil
+        end_date = Time.now.utc
+        start_date = end_date - filter["inactive"].days
       end
       return start_date, end_date
     end    
