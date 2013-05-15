@@ -18,10 +18,17 @@
           - else
             = _("Unable to locate matching system.")
   %h5 #{_("Historical Subscription Status Details:")}
+  %br
   .control-group
     .label
-      = label :status, :status, _("Status: ")
-      = @record['entitlement_status']['status']
+      %label
+        = _("Status: ")
+        = @record['entitlement_status']['status']
+        .subs_image_wrapper
+          .subs_image{:class => get_status(@record)} 
+    
+       
+        
 
           
 

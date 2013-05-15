@@ -9,6 +9,19 @@ module SpliceReports
       System.where(:uuid=>uuid).first
     end
 
+    def get_status(record)
+      status = record['entitlement_status']['status']
+      if status == "valid"
+        color = "green"
+      elsif status == "invalid"
+        color = "red"
+      else
+        color = "yellow"
+      end
+      return color
+    end
+        
+
     def system_link(system)
       systems_path() + "#!/?item=#{system.id}&search=id:#{system.id}"
     end
