@@ -5,7 +5,7 @@ module SpliceReports
 
     def find_system(record)
       #logger.info("HELPER Record:" + record.to_s)
-      uuid = record['_id'].to_s
+      uuid = record['instance_identifier'].to_s
       System.where(:uuid=>uuid).first
     end
 
