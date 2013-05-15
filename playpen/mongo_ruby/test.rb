@@ -5,8 +5,8 @@ require 'mongo'
 include Mongo
 
 @client = MongoClient.new('localhost', 27017)
-@db     = @client['results']
-@coll   = @db['marketing_report_data']
+@db     = @client['checkin_service']
+@coll   = @db['marketing_product_usage']
 
 space = "\n"*2
 space
@@ -33,12 +33,23 @@ print "Find objects w/ invalid status: "
 status = @coll.find({"entitlement_status.status" => "valid"}, :fields => ["entitlement_status.status"]).to_a
 print status.to_s << space
 
-print "Find and Modify"
-modify = @coll.find_and_modify({
-	query: {"entitlement_status.status" => "valid"},
-	update: {"id" => "asdf"} 
-	})
+print "Get a list of all systems"
+unique_systems = @coll.distinct("instance_identifier").to_a
+#print unique_systems.to_s
+list = Hash.new
+unique_systems.each do |system|
+  row = @coll.find({"instance_identifier" => system,
+  					"created" => {"$gt" => start_date, "$lt" => end_date},
+  				 :fields => ["created"],
+  				 :sort => ['created', :asc]).limit(1).to_a
+  #print row[0]["created"].to_s
+  list[system]=row[0]["created"].to_s
+end
 
-print modify.to_s
+print list.to_s
+
+	
+
+
 
 

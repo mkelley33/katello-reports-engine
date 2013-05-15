@@ -72,7 +72,7 @@ module SpliceReports
       body_lines = systems.map { |system|
         entry = ""
         fields.each do |field| 
-          if field == "_id" and system[field].key?("$oid")
+          if field == "record" and system[field].key?("$oid")
             entry << system[field]["$oid"] << ", " 
           else
             entry << system[field].to_s << ", "
@@ -84,7 +84,7 @@ module SpliceReports
     end
 
     def expanded_data(systems)
-      system_ids = systems.map { |system| system["_id"] }
+      system_ids = systems.map { |system| system["record"] }
       data = get_object_details(system_ids)
       data.to_json
     end
@@ -259,7 +259,8 @@ module SpliceReports
       result = @@c.aggregate( [
         {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}},
         {"$group" => {
-                    '_id' => "$_id",
+                    '_id' => "$instance_identifier",
+                    :record => {"$last" => "$_id"},
                     :date => {"$max" => "$created"},
                     :status => {"$last" => "$entitlement_status.status"},
                     :identifier => {"$last" => "$instance_identifier"},

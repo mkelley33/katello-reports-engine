@@ -5,8 +5,8 @@ require 'json'
 include Mongo
 
 @client = MongoClient.new('localhost', 27017)
-@db     = @client['results']
-@coll   = @db['marketing_report_data']
+@db     = @client['checkin_service']
+@coll   = @db['marketing_product_usage']
 
 #puts coll.aggregate([
 #  {"$group" => {_id: "$state", total_pop: {"$sum" => "$pop"}}},
@@ -29,9 +29,10 @@ result1 = @coll.aggregate([
 
 result2 = @coll.aggregate([
 	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
-	{"$match" => { "entitlement_status.status" => "valid"}},
+	{"$match" => { "entitlement_status.status" => "invalid"}},
 	{"$group" => {
-	  _id: "$_id",
+	  _id: "$instance_identifier",
+	  record: {"$last" => "$_id"},
 	  date: {"$max" => "$created"},
 	  status: {"$last" => "$entitlement_status.status"},
 	  identifier: {"$last" => "$instance_identifier"},
