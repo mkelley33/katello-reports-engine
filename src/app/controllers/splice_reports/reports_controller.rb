@@ -328,9 +328,9 @@ module SpliceReports
 
     def products
       #debugger
-      @record['product_info'] = @record['product_info'].collect do |p|
-        p
-      end
+      #@record['product_info'] = @record['product_info'].collect do |p|
+      #  p
+      #end
 
       render :partial=>'products'
     end
@@ -376,7 +376,7 @@ module SpliceReports
           :fields => 
             ["_id",
               "facts",
-              "entitlement_status.status",
+              "entitlement_status",
               "name",
               "splice_server",
               "created"
