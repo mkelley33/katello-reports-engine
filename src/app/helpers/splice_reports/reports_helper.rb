@@ -11,7 +11,7 @@ module SpliceReports
 
     def get_status_color(record)
       status = record['entitlement_status']['status']
-      if status == "valid"
+      if status == "current"
         color = "green"
       elsif status == "invalid"
         color = "red"
@@ -23,7 +23,7 @@ module SpliceReports
 
     def get_status_message(record)
       status = record['entitlement_status']['status']
-      if status == "valid"
+      if status == "current"
         message = "Subscriptions are Current"
       elsif status == "invalid"
         message = "Subscriptions are not Current"
