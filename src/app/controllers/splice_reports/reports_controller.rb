@@ -287,15 +287,19 @@ module SpliceReports
       render :partial=>'record', :locals=>{:checkins=>checkins}
     end
 
-    def facts
-      #debugger
-      @record['facts'] = @record['facts'].collect do |f|
+    def translate_facts(facts)
+      facts.collect do |f|
         f[0] = f[0].gsub('_dot_', '.')
         #manualyl adjust systemid to not mess up the rendering
         f[0] = 'system.id' if f[0] == 'systemid'
         f
       end
+    end
 
+
+    def facts
+      #debugger
+      @record['facts'] = translate_facts(@record['facts'])
       render :partial=>'facts'
     end
 
@@ -309,7 +313,8 @@ module SpliceReports
     end
     
      def checkin
-      logger.info("checkin original_id = " + params[:original_id] )
+      logger.info("checkin :id = #{params[:id]} original_id = #{params[:original_id]}" )
+      find_record
       render :partial=>'checkin', :locals=>{:original_id=>params[:original_id]}
     end
 
@@ -323,9 +328,11 @@ module SpliceReports
     def find_filter
       @filter = SpliceReports::Filter.find(params[:filter_id])
     end
+
     def find_record
       @record = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
-      logger.info("record found: " + @record.to_s)
+      @record['facts'] = translate_facts(@record['facts'])
+      logger.info("find_record found record from #{'params[:id]'}: " + @record.to_s)
     end
 
     def find_instance_checkins(filter, params)
@@ -344,7 +351,7 @@ module SpliceReports
         {
           :fields => 
             ["_id",
-              "facts.systemid",
+              "facts",
               "entitlement_status.status",
               "name",
               "splice_server",
