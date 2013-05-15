@@ -9,7 +9,7 @@ module SpliceReports
       System.where(:uuid=>uuid).first
     end
 
-    def get_status(record)
+    def get_status_color(record)
       status = record['entitlement_status']['status']
       if status == "valid"
         color = "green"
@@ -19,6 +19,24 @@ module SpliceReports
         color = "yellow"
       end
       return color
+    end
+
+    def get_status_message(record)
+      status = record['entitlement_status']['status']
+      if status == "valid"
+        message = "Subscriptions are Current"
+      elsif status == "invalid"
+        message = "Subscriptions are not Current"
+      else
+        message = "Subscriptions are Insuffcient"
+      end
+      return message
+    end
+
+    def get_reasons(record)
+      reasons = record['entitlement_status']['reasons']
+      logger.info("REASONS: " + reasons.to_s)
+      return reasons.as_json
     end
         
 

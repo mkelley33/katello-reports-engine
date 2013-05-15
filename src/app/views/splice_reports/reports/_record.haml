@@ -20,12 +20,26 @@
   %h5 #{_("Historical Subscription Status Details:")}
   %br
   .control-group
-    .label
-      %label
-        = _("Status: ")
-        = @record['entitlement_status']['status']
+    .input
+      .product
         .subs_image_wrapper
-          .subs_image{:class => get_status(@record)} 
+          .subs_image{:class => get_status_color(@record)}
+      .value
+        = get_status_message(@record)
+    %table.table
+      %thead
+        %tr
+          %th
+            = _("Product")
+          %th
+            = _("Reason")
+      %tbody
+        - for r in get_reasons(@record)
+          %tr
+            %td
+              = r['attributes']['name']
+            %td
+              = r['message']
     
        
         
