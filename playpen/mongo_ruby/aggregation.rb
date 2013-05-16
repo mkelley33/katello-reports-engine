@@ -30,6 +30,7 @@ result1 = @coll.aggregate([
 result2 = @coll.aggregate([
 	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
 	{"$match" => { "entitlement_status.status" => "invalid"}},
+	{"$match" => { "organization_id" => { "$in" => ["3"]}}},
 	{"$group" => {
 	  _id: "$instance_identifier",
 	  record: {"$last" => "$_id"},
@@ -38,6 +39,7 @@ result2 = @coll.aggregate([
 	  identifier: {"$last" => "$instance_identifier"},
 	  satellite: {"$last" => "$splice_server"},
 	  hostname: {"$last" => "$name"},
+	  org: {"$last" => "$organization_id"},
 	  systemid: {"$last" => "$facts.systemid"}
 		}
 	 },
@@ -74,5 +76,5 @@ result5 = @coll.aggregate([
 	{"$sort" => {status: 1}},	
 ])
 
-a = result5.to_json
+a = result2.to_json
 puts a

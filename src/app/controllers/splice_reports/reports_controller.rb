@@ -248,11 +248,19 @@ module SpliceReports
 
     def get_marketing_product_results(filter, offset, search)
       logger.info("get_marketing_product_results: filter=#{filter}, offset=#{offset}, search=#{search}")
+      logger.info("get_marketing_product_results: organizations=#{filter.organizations}")
+
+      #get org id's
+      org_ids = []
+      filter.organizations.each do |o|
+        org_ids << o.id
+      end
       start_date, end_date = get_start_end_dates(filter)
       logger.info(start_date.to_s)
       logger.info(end_date.to_s)
       rules = []
       rules_date = []
+      rules_org = []
       if offset
         rules << {"$skip" => offset.to_i}
         rules << {"$limit" => current_user.page_size}
@@ -286,6 +294,8 @@ module SpliceReports
         rules << {"$match" =>  { "entitlement_status.status" => filter["status"]}}
       end
 
+      rules_org << {"$match" => { "organization_id" => { "$in" => org_ids }}}
+
       query = [
         {"$group" => {
                     '_id' => "$instance_identifier",
@@ -310,7 +320,7 @@ module SpliceReports
 
       #RULES MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
       #paginated prior  
-      aggregate_query = rules_date + query + rules
+      aggregate_query = rules_date + rules_org + query + rules
       result = @@c.aggregate(aggregate_query)
       #result = @@c.aggregate( rules_date + query + rules )
       logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
