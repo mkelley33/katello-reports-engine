@@ -35,9 +35,6 @@ module SpliceReports
         search = params["search"]
       end
       filtered_checkins = get_marketing_product_results(filter, offset, search)
-      logger.info(filtered_checkins.length)
-      logger.info("Splice Reports, id = #{filter_id} filtered_checkins: #{filtered_checkins.inspect}")
-      #filtered_checkins = get_marketing_product_results(filter, offset)
       return filtered_checkins
     end
 
@@ -220,7 +217,6 @@ module SpliceReports
           send_data zipped_data, :type => 'application/zip', :disposition => 'attachment', :filename => file_name
         end
         format.any(:json, :html) do
-          logger.info("Test*************************")
           filtered_checkins = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
           logger.info("items(): #{filtered_checkins}")
           total = self.run_filter_by_id(params[:filter_id], nil).count
@@ -247,6 +243,7 @@ module SpliceReports
     end
 
     def get_marketing_product_results(filter, offset, search)
+      logger.info("get_marketing_product_results: filter=#{filter}, offset=#{offset}, search=#{search}")
       start_date, end_date = get_start_end_dates(filter)
       logger.info(start_date.to_s)
       logger.info(end_date.to_s)
@@ -259,7 +256,14 @@ module SpliceReports
 
       if search != nil or search != ""
         logger.info("Search by filter id and search term: " + search.to_s )
-        rules << {"$match" => { "facts.systemid"=> search }}
+        rules << {
+          "$match" => { 
+            "$or" => [
+              {"systemid" => {"$regex" => search}},
+              {"hostname" => {"$regex" => search}}
+            ]
+          }
+        }
       end
 
       if filter["inactive"] != nil
@@ -278,7 +282,7 @@ module SpliceReports
         rules << {"$match" =>  { "entitlement_status.status" => filter["status"]}}
       end
 
-      result = @@c.aggregate( rules_date + [
+      query = [
         {"$group" => {
                     '_id' => "$instance_identifier",
                     :record => {"$last" => "$_id"},
@@ -290,12 +294,22 @@ module SpliceReports
                     :hostname => {"$last" => "$name"}
                     }
         },
-        {"$sort" => {:status => -1}},
+        {"$sort" => {:status => -1}}
+      ]
+      if params.key?(:sort_by)
+        sort_order = Mongo::DESCENDING
+        if params[:sort_order]
+          sort_order = Mongo::ASCENDING
+        end
+        query.push({"$sort" => {params[:sort_by] => sort_order}})
+      end
 
-        #RULES MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
-        #paginated prior      
-        ] + rules)
-      logger.info("get_marketing_product_results(): found #{result.count} items")
+      #RULES MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
+      #paginated prior  
+      aggregate_query = rules_date + query + rules
+      result = @@c.aggregate(aggregate_query)
+      #result = @@c.aggregate( rules_date + query + rules )
+      logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
       #result
       # Translate values in DB to what webui expects
       result.map do |item| 
