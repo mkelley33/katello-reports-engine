@@ -297,9 +297,9 @@ module SpliceReports
         {"$sort" => {:status => -1}}
       ]
       if params.key?(:sort_by)
-        sort_order = Mongo::DESCENDING
-        if params[:sort_order]
-          sort_order = Mongo::ASCENDING
+        sort_order = Mongo::ASCENDING
+        if /DESC/i.match(params[:sort_order])
+          sort_order = Mongo::DESCENDING
         end
         query.push({"$sort" => {params[:sort_by] => sort_order}})
       end
