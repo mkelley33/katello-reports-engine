@@ -86,18 +86,32 @@ module SpliceReports
     def create
       filter_params = params[:splice_reports_filter]
       filter_params[:user_id] = current_user.id
-      org_ids = filter_params.delete :organizations
+      org_ids = filter_params[:organizations]
       filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
       filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
-
-      @filter = SpliceReports::Filter.new(params[:splice_reports_filter])
-
+      
+      organizations = []
       if org_ids
-         @filter.organizations << accessible_orgs.where(:id=>org_ids)
+         if accessible_orgs.where(:id=>org_ids).present?
+	   logger.info("found orgs")
+           #bug in form where an empty value is set
+           filter_params[:organizations].delete("") 
+           filter_params[:organizations].each do |o|
+             org = Organization.find(o)    
+             organizations << org
+           end
+         else
+           logger.info("The chosen organization is not accessible and will not be included in the filter")
+           #org_ids = filter_params.delete :organizations
+         end
       end
-
-
-
+      #filter_params[:organizations] =  organizations
+      #@filter = SpliceReports::Filter.new(params[:splice_reports_filter])
+      
+      #delete the old organization param
+      org_ids = filter_params.delete :organizations
+      @filter = SpliceReports::Filter.new(filter_params)
+      @filter.organizations << organizations
       @filter.save!
 
       notify.success _("Filter '%s' was created.") % @filter['name']

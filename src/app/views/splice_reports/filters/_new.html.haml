@@ -18,7 +18,7 @@
     %h4 Filter Criteria:
     = form.select :status, options_for_select(@status_hash.invert), {}, {:label => _("Status:"), :size=>1}
     = form.select :satellite_name, options_for_select(@available_splice_servers_hash.invert), {}, {:label => _("Satellite Server:"), :size=>1}
-    = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:label=> _("Organizations"), :size=>5}
+    = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:multiple=>true, :label=> _("Organizations"), :size=>5}
 
     %br
     %br

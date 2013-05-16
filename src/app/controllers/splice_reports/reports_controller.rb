@@ -169,11 +169,15 @@ module SpliceReports
         {
           :index => lambda{true},
           :items => lambda{true},
+          :new => lambda{true},
+          :details => lambda{true},
           :record => lambda{true},
           :checkin => lambda{true},
           :facts=> lambda{true},
           :products=> lambda{true},
           :checkin_list=> lambda{true},
+          :report=> lambda{true},
+          :show=> lambda{true},
         }
 
     end
