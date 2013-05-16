@@ -253,7 +253,7 @@ module SpliceReports
       #get org id's
       org_ids = []
       filter.organizations.each do |o|
-        org_ids << o.id
+        org_ids << o.id.to_s
       end
       start_date, end_date = get_start_end_dates(filter)
       logger.info(start_date.to_s)
