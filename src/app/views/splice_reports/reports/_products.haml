@@ -1,0 +1,66 @@
+
+:javascript
+  $('td').click(function(){
+    $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+  });
+
+= content_for :navigation do
+  = render_menu(1..2, record_navigation(@filter, @record))
+
+= content_for :content do
+  #record.grid_10
+    #products.grid_8.prefix_1
+    - if not @record["entitlement_status"]["compliantProducts"].empty?
+      %h3 #{_("Compliant Product Info:")}
+      - @record["entitlement_status"]["compliantProducts"].each do |key, values|
+        - values.each do |info|
+          %h5 #{info["pool"]["productName"]}
+          .control-group
+          .label
+            = label :id, :id, _("Start Date:")
+          .input
+            %span.value
+              = "#{info['pool']['startDate']}"
+          .control-group
+          .label
+            = label :id, :id, _("End Date:")
+          .input
+            %span.value
+              = "#{info['pool']['endDate']}"
+          .control-group
+          .label
+            = label :id, :id, _("Consumed")
+          .input
+            %span.value
+              = "#{info['pool']['consumed']} out of #{info['pool']['quantity']}"
+    - elsif not @record["entitlement_status"]["partiallyCompliantProducts"].empty?
+      %h3 #{_("Partially Compliant Product Info:")}
+      - @record["entitlement_status"]["partiallyCompliantProducts"].each do |key, values|
+        - values.each do |info|
+          %h5 #{info["pool"]["productName"]}
+          .control-group
+          .label
+            = label :id, :id, _("Start Date:")
+          .input
+            %span.value
+              = "#{info['pool']['startDate']}"
+          .control-group
+          .label
+            = label :id, :id, _("End Date:")
+          .input
+            %span.value
+              = "#{info['pool']['endDate']}"
+          .control-group
+          .label
+            = label :id, :id, _("Consumed")
+          .input
+            %span.value
+              = "#{info['pool']['consumed']} out of #{info['pool']['quantity']}"
+          .control-group
+
+    - else
+      %h2 #{_("No Product Info Available")}
+
+
+
+= render :template => "layouts/tupane_layout"

@@ -1,16 +1,64 @@
+:javascript
+  $('td').click(function(){
+    $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+  });
 
 = content_for :title do
   #{_("Checkin")}
 
 = content_for :content do
-  #record
+  #record.grid_10
     %form.form
       .control-group
         .label
           %label
             = _("Checkin Time:")
         .value
-          = @filter['created_at']
+          = @record['created']
+      .control-group
+        .label
+          %label
+            = _("Status:")
+        .value
+          = @record['entitlement_status']['status']
+      .control-group
+        .label
+          %label
+            = _("Name:")
+        .value
+          = @record['name']
+      .control-group
+        .label
+          %label
+            = _("Satellite Server:")
+        .value
+          = @record['splice_server']
+
+    %h3
+      = _("Facts:")
+    #facts.grid_8.prefix_1
+      %table#factsTable.scroll-panel
+        %thead
+          %th= _("Group")
+          %th= _("Fact")
+          %th= _("Value")
+        %tbody
+          - group = nil
+          - @record['facts'].sort.each do |fact, value|
+            - new_group = fact.split(".", 2)[0]
+            - if (new_group != group)
+              - group = new_group
+              %tr{:id => group}
+                %td= new_group
+                %td
+                %td
+            %tr{:class => "child-of-#{group}", :id => fact}
+              %td
+              %td= fact
+              %td= value
+      :javascript
+        $("#factsTable").treeTable({initialState: "collapsed", clickableNodeNames: true});
+        $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
 
 
 

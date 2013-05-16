@@ -1,6 +1,5 @@
 
-= content_for :title do
-  #{_(@record['systemid'])}
+
 
 = content_for :content do
   #record
@@ -15,37 +14,37 @@
             .subs_image_wrapper
               .subs_image{:class => "#{current_system.compliance_color}"}
             %a{:href=>system_link(current_system)}
-              = _("Current System")
+              = _("Link to System")
           - else
             = _("Unable to locate matching system.")
-
-
-
-  %h2
-    = _("Checkins")
-  #checkins
+  %h5 #{_("Historical Subscription Status Details:")}
+  %br
+  .control-group
+    .input
+      .product
+        .subs_image_wrapper
+          .subs_image{:class => get_status_color(@record)}
+      .value
+        = get_status_message(@record)
     %table.table
       %thead
         %tr
-          -#%th
-          -#  = _("Hostname")
           %th
-            = _("Status")
+            = _("Product")
           %th
-            = _("Checkin Time")
-
+            = _("Reason")
       %tbody
-        - for ci in checkins
+        - for r in get_reasons(@record)
           %tr
             %td
-              %ul
-                %li.panel_link
-                  %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['record_identifier'], :original_id=>@record['record_identifier'])}
-                    = ci['status']
+              = r['attributes']['name']
             %td
-              = ci['created']
+              = r['message']
+    
+       
+        
 
-
+          
 
 
 

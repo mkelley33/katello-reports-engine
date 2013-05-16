@@ -16,19 +16,21 @@ def setup_database():
     checkin_service = conn["checkin_service"]
     results = conn["results"]
       
-    for collection in ['splice_server', 'product', 'pool']:
+    for collection in ['splice_server', 'marketing_product_usage']:
         checkin_service.drop_collection(collection)
         print 'importing %s collection' % collection
         call(['mongoimport', '--db', 'checkin_service', '-c', collection, '--file', 
               '%s.json' % os.path.join(DUMP_DIR, collection)]
               )
-        
+    """    
     for collection in ['marketing_report_data']:
             results.drop_collection(collection)
             print 'importing %s collection' % collection
             call(['mongoimport', '--db', 'results', '-c', collection, '--file', 
                   '%s.json' % os.path.join(DUMP_DIR, collection)]
                   ) 
+    """
+
             
     conn.disconnect()
 

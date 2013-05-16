@@ -53,11 +53,11 @@ angular.module('Katello').controller('ReportsController',
             angular.forEach(data.systems,
                 function(system){
                     var row = {
-                        'row_id' : system._id,
+                        'row_id' : system.record["$oid"],
                         'show'  : true,
                         'cells': [{
                             //display: system.systemid,
-                            display: $compile('<a ng-click="table.select_item(\'' + '/katello/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system._id + '\',\'' + system._id + '\')">' + system.systemid + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system.record["$oid"] + '\',\'' + system.record["$oid"] + '\')">' + system.systemid + '</a>')($scope),
                             column_id: 'systemid'
                         },{
                             display: system.status,
@@ -84,7 +84,7 @@ angular.module('Katello').controller('ReportsController',
         };
 
         $scope.table                = Nutupane.table;
-        $scope.table.url            = '/katello/splice_reports/filters/' + Splice.filter_id + '/reports/items';
+        $scope.table.url            = KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
@@ -95,7 +95,7 @@ angular.module('Katello').controller('ReportsController',
 
         $scope.table.select_item = function(url, id){
             var system;
-
+            console.log(url)
             if (id) {
                 angular.forEach($scope.table.data.rows, function(row) {
                     if (row.row_id.toString() === id.toString()) {
