@@ -300,7 +300,7 @@ module SpliceReports
         {"$group" => {
                     '_id' => "$instance_identifier",
                     :record => {"$last" => "$_id"},
-                    :date => {"$max" => "$created"},
+                    :date => {"$max" => "$date"},
                     :status => {"$last" => "$entitlement_status.status"},
                     :identifier => {"$last" => "$instance_identifier"},
                     :splice_server => {"$last" => "$splice_server"},
