@@ -92,21 +92,18 @@ module SpliceReports
       
       organizations = []
       if org_ids
-         if accessible_orgs.where(:id=>org_ids).present?
-	   logger.info("found orgs")
-           #bug in form where an empty value is set
-           filter_params[:organizations].delete("") 
-           filter_params[:organizations].each do |o|
-             org = Organization.find(o)    
-             organizations << org
-           end
-         else
-           logger.info("The chosen organization is not accessible and will not be included in the filter")
-           #org_ids = filter_params.delete :organizations
-         end
+        logger.info("found orgs")
+        #bug in form where an empty value is set
+        filter_params[:organizations].delete("") 
+        filter_params[:organizations].each do |o|
+          if accessible_orgs.where(:id=>o).present?
+            org = Organization.find(o)    
+            organizations << org
+          else
+            logger.info("The chosen organization #{o} is not accessible and will not be included in the filter")
+          end
+        end
       end
-      #filter_params[:organizations] =  organizations
-      #@filter = SpliceReports::Filter.new(params[:splice_reports_filter])
       
       #delete the old organization param
       org_ids = filter_params.delete :organizations
