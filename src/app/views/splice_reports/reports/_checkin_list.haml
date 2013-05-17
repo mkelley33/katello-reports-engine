@@ -25,7 +25,8 @@
                   %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['_id']['$oid'].to_s, :original_id=>@record['_id'].to_s)}
                     = ci['entitlement_status']['status']
             %td
-              = ci['created']
+              - date = parse_iso_date(ci)
+              = date
 
 
 

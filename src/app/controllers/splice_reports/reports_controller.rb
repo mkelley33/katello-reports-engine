@@ -280,9 +280,9 @@ module SpliceReports
 
       if filter["inactive"] != nil
         logger.info("inactive query selected")
-        rules_date << {"$match" => {:created=> { "$not" => {"$gt" => start_date}}}}
+        rules_date << {"$match" => {:date=> { "$not" => {"$gt" => start_date}}}}
       else
-        rules_date << {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}}
+        rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
 
       if filter["status"] == 'all'
@@ -398,7 +398,7 @@ module SpliceReports
       result = @@c.find(
         {
           "instance_identifier" => instance_identifier,
-          "created" => {"$gt" => start_date, "$lt" => end_date}
+          "date" => {"$gt" => start_date, "$lt" => end_date}
         },
         {
           :fields => 
@@ -407,10 +407,10 @@ module SpliceReports
               "entitlement_status",
               "name",
               "splice_server",
-              "created"
+              "date"
             ],
           :sort => 
-            ["created", Mongo::DESCENDING],
+            ["date", Mongo::DESCENDING],
           :limit => 50
         })
       result = result.map do |item| 
