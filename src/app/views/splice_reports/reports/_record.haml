@@ -26,20 +26,22 @@
           .subs_image{:class => get_status_color(@record)}
       .value
         = get_status_message(@record)
-    %table.table
-      %thead
-        %tr
-          %th
-            = _("Product")
-          %th
-            = _("Reason")
-      %tbody
-        - for r in get_reasons(@record)
+    #historical_detail
+    -if get_status_color(@record) != "green"
+      %table.table
+        %thead
           %tr
-            %td
-              = r['attributes']['name']
-            %td
-              = r['message']
+            %th
+              = _("Product")
+            %th
+              = _("Reason")
+        %tbody
+          - for r in get_reasons(@record)
+            %tr
+              %td
+                = r['attributes']['name']
+              %td
+                = r['message']
     
        
         
