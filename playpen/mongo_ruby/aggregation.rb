@@ -29,12 +29,12 @@ result1 = @coll.aggregate([
 
 result2 = @coll.aggregate([
 	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
-	{"$match" => { "entitlement_status.status" => "invalid"}},
-	{"$match" => { "organization_id" => { "$in" => ["3"]}}},
+	#{"$match" => { "entitlement_status.status" => "invalid"}},
+	#{"$match" => { "organization_id" => { "$in" => ["3"]}}},
 	{"$group" => {
 	  _id: "$instance_identifier",
 	  record: {"$last" => "$_id"},
-	  date: {"$max" => "$created"},
+	  date: {"$last" => "$created"},
 	  status: {"$last" => "$entitlement_status.status"},
 	  identifier: {"$last" => "$instance_identifier"},
 	  satellite: {"$last" => "$splice_server"},

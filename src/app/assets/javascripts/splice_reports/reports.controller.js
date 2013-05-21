@@ -42,6 +42,10 @@ angular.module('Katello').controller('ReportsController',
             display: 'Satellite Server',
             show: true
         },{
+            id: 'organization_name',
+            display: 'Organization',
+            show: true
+        },{
             id: 'date',
             display: 'Checkin Time',
             show: true
@@ -68,6 +72,9 @@ angular.module('Katello').controller('ReportsController',
                         },{
                             display: system.splice_server,
                             column_id: 'splice_server'
+                        },{
+                            display: system.organization_name,
+                            column_id: 'organization_name'
                         },{
                             display: system.date,
                             column_id: 'date'

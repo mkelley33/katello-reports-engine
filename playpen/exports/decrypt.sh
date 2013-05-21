@@ -32,4 +32,6 @@ fi
 gpg --import --no-default-keyring --secret-keyring ${KEY_RING} ${SEC_KEY}
 gpg --decrypt --no-default-keyring --secret-keyring ${KEY_RING} -o ${OUT_FILE} ${IN_FILE}
 
-
+echo "Ran:"
+echo gpg --import --no-default-keyring --secret-keyring ${KEY_RING} ${SEC_KEY}
+echo gpg --decrypt --no-default-keyring --secret-keyring ${KEY_RING} -o ${OUT_FILE} ${IN_FILE}

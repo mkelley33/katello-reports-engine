@@ -39,9 +39,19 @@ module SpliceReports
       return reasons.as_json
     end
         
+    def parse_iso_date(record)
+      logger.info("record: #{record}")
+      d =  record["date"].to_s
+      logger.info("date: #{d}")
+      return d
+    end
 
     def system_link(system)
       systems_path() + "#!/?item=#{system.id}&search=id:#{system.id}"
+    end
+
+    def get_filter_details(filter)
+      return filter["name"]
     end
 
   end

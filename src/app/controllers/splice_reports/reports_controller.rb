@@ -253,7 +253,7 @@ module SpliceReports
       #get org id's
       org_ids = []
       filter.organizations.each do |o|
-        org_ids << o.id
+        org_ids << o.id.to_s
       end
       start_date, end_date = get_start_end_dates(filter)
       logger.info(start_date.to_s)
@@ -280,11 +280,12 @@ module SpliceReports
 
       if filter["inactive"] != nil
         logger.info("inactive query selected")
-        rules_date << {"$match" => {:created=> { "$not" => {"$gt" => start_date}}}}
+        rules_date << {"$match" => {:date=> { "$not" => {"$gt" => start_date}}}}
       else
-        rules_date << {"$match" => {:created=> {"$gt" => start_date, "$lt" => end_date}}}
+        rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
 
+      filter["status"] = filter["status"].downcase
       if filter["status"] == 'all'
         #do nothing
       elsif filter["status"] == 'failed'
@@ -300,12 +301,13 @@ module SpliceReports
         {"$group" => {
                     '_id' => "$instance_identifier",
                     :record => {"$last" => "$_id"},
-                    :date => {"$max" => "$created"},
+                    :date => {"$max" => "$date"},
                     :status => {"$last" => "$entitlement_status.status"},
                     :identifier => {"$last" => "$instance_identifier"},
                     :splice_server => {"$last" => "$splice_server"},
                     :systemid => {"$last" => "$facts.systemid"},
-                    :hostname => {"$last" => "$name"}
+                    :hostname => {"$last" => "$name"},
+                    :organization_name => {"$last" => "$organization_name"}
                     }
         },
         {"$sort" => {:status => -1}}
@@ -398,7 +400,7 @@ module SpliceReports
       result = @@c.find(
         {
           "instance_identifier" => instance_identifier,
-          "created" => {"$gt" => start_date, "$lt" => end_date}
+          "date" => {"$gt" => start_date, "$lt" => end_date}
         },
         {
           :fields => 
@@ -407,10 +409,10 @@ module SpliceReports
               "entitlement_status",
               "name",
               "splice_server",
-              "created"
+              "date"
             ],
           :sort => 
-            ["created", Mongo::DESCENDING],
+            ["date", Mongo::DESCENDING],
           :limit => 50
         })
       result = result.map do |item| 
