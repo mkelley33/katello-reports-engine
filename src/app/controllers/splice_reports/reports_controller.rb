@@ -306,7 +306,8 @@ module SpliceReports
                     :identifier => {"$last" => "$instance_identifier"},
                     :splice_server => {"$last" => "$splice_server"},
                     :systemid => {"$last" => "$facts.systemid"},
-                    :hostname => {"$last" => "$name"}
+                    :hostname => {"$last" => "$name"},
+                    :organization_name => {"$last" => "$organization_name"}
                     }
         },
         {"$sort" => {:status => -1}}
