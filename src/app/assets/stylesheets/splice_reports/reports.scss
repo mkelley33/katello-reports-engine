@@ -47,3 +47,20 @@
     }
   }
 }
+
+
+.tiptext {
+    background:#FFFF;
+    padding:5px;
+    width:300px;
+}
+.description {
+    display:none;
+    position:absolute;
+    background:#EEE;
+    border:1px solid #000;
+    width:350px;
+    height:150px;
+    z-index : 1;
+    right : 50px;
+}

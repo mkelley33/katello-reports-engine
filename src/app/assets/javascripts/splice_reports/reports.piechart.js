@@ -36,5 +36,12 @@ var plot = function() {
 
 $(document).ready(function() {
    	plot();
+
+   	$("#tiptext").mouseover(function() {
+        console.log("hover")
+        $("#description").show();
+     }).mouseout(function() {
+        $("#description").hide();
+     });
 });
 

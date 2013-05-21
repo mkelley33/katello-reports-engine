@@ -51,8 +51,8 @@ module SpliceReports
     end
 
     def get_filter_details(filter)
-      txt =  "Filter Name: #{filter["name"]},\n 
-             Status: #{filter["status"]}\n "
+      txt =  "<li>Filter Name: #{filter["name"]}</li> 
+             <li>Status: #{filter["status"]}</li> "
     end
 
   end
