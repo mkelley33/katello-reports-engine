@@ -50,5 +50,9 @@ module SpliceReports
       systems_path() + "#!/?item=#{system.id}&search=id:#{system.id}"
     end
 
+    def get_filter_details(filter)
+      return filter["name"]
+    end
+
   end
 end
