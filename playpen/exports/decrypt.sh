@@ -7,7 +7,7 @@ IN_FILE=$1
 SEC_KEY="./example/splice_reports_key.gpg.sec"
 OUT_DIR="./output"
 KEY_RING="${OUT_DIR}/keyring"
-OUT_FILE="${OUT_DIR}/decrypted_data"
+OUT_FILE="${OUT_DIR}/decrypted_data.zip"
 
 if [ ! -e ${SEC_KEY} ]; then
     echo "Unable to find secret GPG key at: ${SEC_KEY}"
