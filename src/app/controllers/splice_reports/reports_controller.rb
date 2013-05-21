@@ -285,6 +285,7 @@ module SpliceReports
         rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
 
+      filter["status"] = filter["status"].downcase
       if filter["status"] == 'all'
         #do nothing
       elsif filter["status"] == 'failed'

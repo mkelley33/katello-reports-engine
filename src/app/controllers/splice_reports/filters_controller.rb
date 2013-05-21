@@ -185,13 +185,12 @@ module SpliceReports
     end
 
     def status_hash
-      status = ["current", "invalid", "insufficient", "failed", "all"]
+      status = ["Current", "Invalid", "Insufficient", "Failed", "All"]
       status_hash = {}
       status.each_with_index { |val, index|
         status_hash[val] = val
       }
       @status_hash =  status_hash
-
     end
 
     def avail_splice_servers_hash
