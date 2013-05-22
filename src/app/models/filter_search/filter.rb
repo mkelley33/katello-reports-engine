@@ -11,6 +11,9 @@ module FilterSearch::Filter
         indexes :name_sort, :type => 'string', :index => :not_analyzed
         indexes :user_id, :type=>'integer', :index=>:not_analyzed
       end
+
+    serialize :status
+
     end
 
     def extended_index_attrs

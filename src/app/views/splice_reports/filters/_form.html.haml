@@ -59,10 +59,10 @@
       %label #{_("Status")}:
     .grid_10.la#filter_status{:title=>@filter[:status],
                                'name' => 'filter[status]',
-                               :class => ("editable edit_select" if editable),
-                               'data-options' => @status_hash.to_json,
-                               'data-url' => splice_reports_filter_path(@filter.id)}
-      = @filter.status
+                               :class => ("editable edit_multiselect" if editable),
+                               'data-url' => splice_reports_filter_path(@filter.id),
+                               'data-options' => @status_hash.to_json}
+      = @filter.status.collect{|s| s}.join(", ")
 
 
   %fieldset

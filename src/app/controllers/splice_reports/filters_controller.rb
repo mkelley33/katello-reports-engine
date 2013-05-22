@@ -90,6 +90,8 @@ module SpliceReports
       filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
       filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
       
+      filter_params[:status].delete("") 
+
       organizations = []
       if org_ids
         logger.info("found orgs")
@@ -138,6 +140,11 @@ module SpliceReports
     def update
       @filter = SpliceReports::Filter.find(params[:id])
       filter_params = params[:filter]
+
+      status = filter_params["status"]
+      #serialize the array to a string
+      #filter_params["status"] = status*","
+
       if filter_params[:organizations]
          org_ids = filter_params[:organizations]
          @filter.organizations.clear
@@ -148,9 +155,10 @@ module SpliceReports
          result = filter_params.values.first
          filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
          filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
-         @filter.update_attributes(filter_params) 
+         
       end
 
+      @filter.update_attributes(filter_params) 
       @filter.save!
       notify.success _("Filter '%s' was updated.") % @filter.name
 
@@ -185,7 +193,7 @@ module SpliceReports
     end
 
     def status_hash
-      status = ["Current", "Invalid", "Insufficient", "Failed", "All"]
+      status = ["Current", "Invalid", "Insufficient"]
       status_hash = {}
       status.each_with_index { |val, index|
         status_hash[val] = val
