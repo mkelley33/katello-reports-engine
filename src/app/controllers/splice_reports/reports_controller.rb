@@ -284,19 +284,16 @@ module SpliceReports
       else
         rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
+      
+      #translate the terms
+      index = filter["status"].index("Current") and filter["status"][index] = "valid"
+      index = filter["status"].index("Invalid") and filter["status"][index] = "invalid"
+      index = filter["status"].index("Insufficient") and filter["status"][index] = "partial"
+      logger.info("FILTER STATUS: #{filter["status"]}")
 
-      filter["status"] = filter["status"].downcase
-      if filter["status"] == 'all'
-        #do nothing
-      elsif filter["status"] == 'failed'
-        rules << {"$match" =>{ "$or" => [{ "entitlement_status.status" => "invalid"},
-                                     { "entitlement_status.status" => "insufficient"}] } } 
-      else
-        rules << {"$match" =>  { "entitlement_status.status" => filter["status"]}}
-      end
-
+      rules_org << {"$match" => { "entitlement_status.status" => { "$in" => filter["status"] }}}
       rules_org << {"$match" => { "organization_id" => { "$in" => org_ids }}}
-
+      
       query = [
         {"$group" => {
                     '_id' => "$instance_identifier",
