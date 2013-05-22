@@ -130,8 +130,10 @@ module SpliceReports
     end
 
     def edit
-
       @filter = SpliceReports::Filter.find(params["id"])
+      if @filter.status.is_a?(Array)
+        @filter.status = @filter.status*","
+      end
       render :partial => "edit", :locals => {:editable => !@filter.locked }
 
     end

@@ -62,7 +62,7 @@
                                :class => ("editable edit_multiselect" if editable),
                                'data-url' => splice_reports_filter_path(@filter.id),
                                'data-options' => @status_hash.to_json}
-      = @filter.status.collect{|s| s}.join(", ")
+      = @filter.status
 
 
   %fieldset

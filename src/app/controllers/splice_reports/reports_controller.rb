@@ -286,12 +286,13 @@ module SpliceReports
       end
       
       #move status back into an array
-      filter["status"] = filter["status"].split(",")
+      if @filter.status.is_a?(String)
+        filter["status"] = filter["status"].split(",")
+      end
       #translate the terms
       index = filter["status"].index("Current") and filter["status"][index] = "valid"
       index = filter["status"].index("Invalid") and filter["status"][index] = "invalid"
       index = filter["status"].index("Insufficient") and filter["status"][index] = "partial"
-      logger.info("FILTER STATUS: #{filter["status"]}")
 
       rules_org << {"$match" => { "entitlement_status.status" => { "$in" => filter["status"] }}}
       rules_org << {"$match" => { "organization_id" => { "$in" => org_ids }}}
