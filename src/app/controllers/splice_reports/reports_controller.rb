@@ -285,6 +285,8 @@ module SpliceReports
         rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
       
+      #move status back into an array
+      filter["status"] = filter["status"].split(",")
       #translate the terms
       index = filter["status"].index("Current") and filter["status"][index] = "valid"
       index = filter["status"].index("Invalid") and filter["status"][index] = "invalid"

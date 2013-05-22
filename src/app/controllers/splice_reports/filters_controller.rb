@@ -141,9 +141,11 @@ module SpliceReports
       @filter = SpliceReports::Filter.find(params[:id])
       filter_params = params[:filter]
 
-      status = filter_params["status"]
-      #serialize the array to a string
-      #filter_params["status"] = status*","
+      if filter_params[:status]
+        status = filter_params["status"]
+        #serialize the array to a string
+        filter_params["status"] = status*","
+      end
 
       if filter_params[:organizations]
          org_ids = filter_params[:organizations]
@@ -155,10 +157,9 @@ module SpliceReports
          result = filter_params.values.first
          filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
          filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
-         
+         @filter.update_attributes(filter_params) 
       end
 
-      @filter.update_attributes(filter_params) 
       @filter.save!
       notify.success _("Filter '%s' was updated.") % @filter.name
 
