@@ -28,7 +28,10 @@ result1 = @coll.aggregate([
 ])
 
 result2 = @coll.aggregate([
-	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
+
+	#{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
+	#{"$match" => { "entitlement_status.status" => { "$in" => ["valid", "invalid", "parital"] }}},
+	{"$match" => { "entitlement_status.status" => { "$in" => ["valid", "invalid", "partial"] }}},
 	#{"$match" => { "entitlement_status.status" => "invalid"}},
 	#{"$match" => { "organization_id" => { "$in" => ["3"]}}},
 	{"$group" => {
@@ -76,5 +79,5 @@ result5 = @coll.aggregate([
 	{"$sort" => {status: 1}},	
 ])
 
-a = result2.to_json
+a = result2.count
 puts a
