@@ -27,7 +27,7 @@ angular.module('Katello').controller('ReportsController',
 
         var columns = [{
             id: 'systemid',
-            display: 'System ID',
+            display: 'Name and ID',
             show: true
         },{
             id: 'status',
@@ -61,7 +61,7 @@ angular.module('Katello').controller('ReportsController',
                         'show'  : true,
                         'cells': [{
                             //display: system.systemid,
-                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system.record["$oid"] + '\',\'' + system.record["$oid"] + '\')">' + system.systemid + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system.record["$oid"] + '\',\'' + system.record["$oid"] + '\')">' + system.hostname + "  " + system.systemid + '</a>')($scope),
                             column_id: 'systemid'
                         },{
                             display: system.status,
