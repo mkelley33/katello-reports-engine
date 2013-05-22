@@ -284,10 +284,10 @@ module SpliceReports
       else
         rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
-      
+
       #move status back into an array
       if @filter.status.is_a?(String)
-        filter["status"] = filter["status"].split(",")
+        filter["status"] = filter["status"].split(", ")
       end
       #translate the terms
       index = filter["status"].index("Current") and filter["status"][index] = "valid"
