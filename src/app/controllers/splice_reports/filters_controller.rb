@@ -132,7 +132,7 @@ module SpliceReports
     def edit
       @filter = SpliceReports::Filter.find(params["id"])
       if @filter.status.is_a?(Array)
-        @filter.status = @filter.status*","
+        @filter.status = @filter.status*", "
       end
       render :partial => "edit", :locals => {:editable => !@filter.locked }
 
@@ -146,7 +146,7 @@ module SpliceReports
       if filter_params[:status]
         status = filter_params["status"]
         #serialize the array to a string
-        filter_params["status"] = status*","
+        filter_params["status"] = status*", "
       end
 
       if filter_params[:organizations]
