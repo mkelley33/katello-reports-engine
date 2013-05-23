@@ -37,11 +37,15 @@ var plot = function() {
 $(document).ready(function() {
    	plot();
 
-   	$("#tiptext").mouseover(function() {
-        console.log("hover")
-        $("#description").show();
-     }).mouseout(function() {
-        $("#description").hide();
-     });
+   	$("#filter_tip").mouseover(function() {
+          console.log("hover")
+          $("#description").show();
+        }).click(function() {
+          $("#description").hide();
+        });
+   	$("#description").click(function() {
+          console.log("hide")
+          $("#description").hide();
+	});
 });
 
