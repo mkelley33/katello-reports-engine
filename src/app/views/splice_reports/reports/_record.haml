@@ -17,6 +17,28 @@
               = _("Link to System")
           - else
             = _("Unable to locate matching system.")
+
+  #record_details        
+    %table.table
+      - current_system = find_system(@record)
+      - if current_system
+        %thead
+          %tr
+            %th
+              = _("Product")
+            %th
+              = _("Reason")
+        %tbody
+          - current_system.compliance['reasons'].each do |reason|
+            %tr
+              %td 
+                = reason['name']
+              %td 
+                = reason['message']
+      - else
+        - logger.info("Current System not found")
+         
+ 
   %h5 #{_("Historical Subscription Status Details:")}
   %br
   .control-group
