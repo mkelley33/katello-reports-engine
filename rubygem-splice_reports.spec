@@ -23,7 +23,7 @@ Release:    1%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
-Source0:    %{gem_name}-%{version}.tar.gz
+Source0:    rubygem-%{gem_name}-%{version}.tar.gz
 Requires:   katello
 Requires:   %{?scl_prefix}ruby(abi) >= %{rubyabi}
 # Need Requires for:
