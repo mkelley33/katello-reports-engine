@@ -2,22 +2,22 @@
 
 
 = content_for :content do
-  %h5 #{_("Latest Subscription Status Details:")}
+  - current_system = find_system(@record)
   #record
-    %form.form
+  %h5 #{_("Latest Subscription Status Details:")}
+  %br
+    - if current_system
       .control-group
-        .label
-          %label
-            = _("Existing System:")
-        .value
-          - current_system = find_system(@record)
-          - if current_system
+        .input
+          .product
             .subs_image_wrapper
               .subs_image{:class => "#{current_system.compliance_color}"}
+          .value
+            = get_checkin(current_system)
             %a{:href=>system_link(current_system)}
-              = _("Link to System")
-          - else
-            = _("Unable to locate matching system.")
+              = _("View System Details")
+    - else
+      = _("Unable to locate matching system.")
 
   #record_details        
     %table.table
@@ -69,13 +69,6 @@
                 = r['attributes']['name']
               %td
                 = r['message']
-    
-       
-        
-
-          
-
-
 
 
 = content_for :navigation do
