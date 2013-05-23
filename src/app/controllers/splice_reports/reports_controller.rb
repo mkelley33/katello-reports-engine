@@ -266,7 +266,7 @@ module SpliceReports
         rules << {"$limit" => current_user.page_size}
       end
 
-      if search != nil or search != ""
+      if not search.nil? and not search.blank?
         logger.info("Search by filter id and search term: " + search.to_s )
         rules << {
           "$match" => { 
