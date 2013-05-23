@@ -2,6 +2,7 @@
 
 
 = content_for :content do
+  %h5 #{_("Latest Subscription Status Details:")}
   #record
     %form.form
       .control-group
@@ -22,19 +23,22 @@
     %table.table
       - current_system = find_system(@record)
       - if current_system
-        %thead
-          %tr
-            %th
-              = _("Product")
-            %th
-              = _("Reason")
-        %tbody
-          - current_system.compliance['reasons'].each do |reason|
+        - if !current_system.compliance['reasons'].empty?
+          %thead
             %tr
-              %td 
-                = reason['attributes']['name']
-              %td 
-                = reason['message']
+              %th
+                = _("Product")
+              %th
+                = _("Reason")
+          %tbody
+            - current_system.compliance['reasons'].each do |reason|
+              %tr
+                %td 
+                  = reason['attributes']['name']
+                %td 
+                  = reason['message']
+        -else
+          - logger.info("System has no compliance data") 
       - else
         - logger.info("Current System not found")
          
