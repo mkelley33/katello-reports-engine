@@ -23,12 +23,13 @@ module SpliceReports
 
     def get_status_message(record)
       status = record['entitlement_status']['status']
+      date = record['date'].to_s.split(" ")
       if status == "current"
-        message = "Subscriptions are Current"
+        message = "Subscriptions were current on #{date[0]} at #{date[1]}"
       elsif status == "invalid"
-        message = "Subscriptions are not Current"
+        message = "Subscriptions were not current on #{date[0]} at #{date[1]}"
       else
-        message = "Subscriptions are Insuffcient"
+        message = "Subscriptions were insuffcient on #{date[0]} at #{date[1]}"
       end
       return message
     end
