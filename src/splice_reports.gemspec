@@ -8,10 +8,10 @@ require "splice_reports/version"
 Gem::Specification.new do |s|
   s.name        = "splice_reports"
   s.version     = SpliceReports::VERSION
-  s.authors     = ["whayutin"]
-  s.email       = ["whayutin@redhat.com"]
+  s.authors     = ["Wes Hayutin", "Justin Sherril", "John Matthews"]
+  s.email       = ["whayutin@redhat.com", "jsherril@redhat.com", "jmatthews@redhat.com", "splice-devel@redhat.com"]
   s.homepage    = "https://github.com/splice/splice-reports"
-  s.summary     = "Summary of SpliceReports."
+  s.summary     = "Rails engine to provide enhanced reports for Katello/SAM."
   s.description = "Description of SpliceReports."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
