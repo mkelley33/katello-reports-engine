@@ -10,7 +10,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    1%{?dist}
+Release:    2%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -75,6 +75,10 @@ GEMFILE
 %{gem_spec}
 
 %changelog
+* Thu May 23 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-2
+- Changing tito to a ReleaseTagger and manual set version.rb to match spec
+  (jwmatthews@gmail.com)
+
 * Thu May 23 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-1
 - Removed some comments from spec (jwmatthews@gmail.com)
 - Update tito config (jwmatthews@gmail.com)
