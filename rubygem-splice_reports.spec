@@ -18,7 +18,7 @@
 
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
-Version:    0.0.3
+Version:    0.0.4
 Release:    1%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
@@ -85,6 +85,9 @@ GEMFILE
 %{gem_spec}
 
 %changelog
+* Thu May 23 2013 John Matthews <jwmatthews@gmail.com> 0.0.4-1
+- Update Source0 so we can build with tito (jwmatthews@gmail.com)
+
 * Thu May 23 2013 John Matthews <jwmatthews@gmail.com> 0.0.3-1
 - Change name of spec to match convention for rubygem packaged rpm
   (jwmatthews@gmail.com)
