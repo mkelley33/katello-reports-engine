@@ -5,8 +5,16 @@
 # splice-reports-katello-engine???
 %global gem_name splice_reports
 
-%define rubyabi 1.9.3
+%define rubyabi 1.9.1
 %global katello_bundlerd_dir /usr/share/katello/bundler.d
+
+#%if 0%{?rhel} == 6 && "%{?scl}" == ""
+#%global gem_dir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
+#%global gem_docdir %{gem_dir}/doc/%{gem_name}-%{version}
+#%global gem_cache %{gem_dir}/cache/%{gem_name}-%{version}.gem
+#%global gem_spec %{gem_dir}/specifications/%{gem_name}-%{version}.gemspec
+#%global gem_instdir %{gem_dir}/gems/%{gem_name}-%{version}
+#%endif
 
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
@@ -22,10 +30,9 @@ Requires:   %{?scl_prefix}ruby(abi) >= %{rubyabi}
 # - mongo
 # - bson
 # - zip
-#Requires: %{?scl_prefix}rubygem(foreman_api)
 Requires:   %{?scl_prefix}rubygems
-#BuildRequires: %{?scl_prefix}rubygems-devel
-#BuildRequires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
+BuildRequires: %{?scl_prefix}rubygems-devel
+BuildRequires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
 BuildRequires: %{?scl_prefix}rubygems
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
@@ -43,13 +50,12 @@ Summary:    Documentation for rubygem-%{gem_name}
 This package contains documentation for rubygem-%{gem_name}.
 
 %prep
-#%setup -n %{pkg_name}-%{version} -q -c -T
 %setup -n %{gem_name}-%{version}
 mkdir -p .%{gem_dir}
 
 %build
-cd src && gem build %{gem_name}.gemspec && cd ..
 %{?scl:scl enable %{scl} "}
+cd src && gem build %{gem_name}.gemspec && cd ..
 gem install --local --install-dir .%{gem_dir} \
             --force src/%{gem_name}-%{version}.gem --no-rdoc --no-ri
 %{?scl:"}
@@ -73,7 +79,7 @@ GEMFILE
 
 %exclude %{gem_instdir}/test
 %exclude %{gem_dir}/cache/%{gem_name}-%{version}.gem
-%exclude %{gem_dir}/bin/ruby_noexec_wrapper
+#%exclude %{gem_dir}/bin/ruby_noexec_wrapper
 
 %files doc
 %{gem_spec}
