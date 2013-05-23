@@ -1,20 +1,11 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 %{!?scl:%global pkg_name %{name}}
 
-# TODO consider name change after things are building
-# splice-reports-katello-engine???
 %global gem_name splice_reports
 
 %define rubyabi 1.9.1
 %global katello_bundlerd_dir /usr/share/katello/bundler.d
 
-#%if 0%{?rhel} == 6 && "%{?scl}" == ""
-#%global gem_dir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
-#%global gem_docdir %{gem_dir}/doc/%{gem_name}-%{version}
-#%global gem_cache %{gem_dir}/cache/%{gem_name}-%{version}.gem
-#%global gem_spec %{gem_dir}/specifications/%{gem_name}-%{version}.gemspec
-#%global gem_instdir %{gem_dir}/gems/%{gem_name}-%{version}
-#%endif
 
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
@@ -50,7 +41,7 @@ Summary:    Documentation for rubygem-%{gem_name}
 This package contains documentation for rubygem-%{gem_name}.
 
 %prep
-%setup -n %{gem_name}-%{version}
+%setup -n rubygem-%{gem_name}-%{version}
 mkdir -p .%{gem_dir}
 
 %build
@@ -79,7 +70,6 @@ GEMFILE
 
 %exclude %{gem_instdir}/test
 %exclude %{gem_dir}/cache/%{gem_name}-%{version}.gem
-#%exclude %{gem_dir}/bin/ruby_noexec_wrapper
 
 %files doc
 %{gem_spec}
