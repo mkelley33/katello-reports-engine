@@ -23,13 +23,13 @@ module SpliceReports
 
     def get_status_message(record)
       status = record['entitlement_status']['status']
-      date = record['date'].to_s.split(" ")
+      date = record['date']
       if status == "current"
-        message = "Subscriptions were current on #{date[0]} at #{date[1]}"
+        message = "Current on " + format_time(date)
       elsif status == "invalid"
-        message = "Subscriptions were not current on #{date[0]} at #{date[1]}"
+        message = "Invalid on " + format_time(date)
       else
-        message = "Subscriptions were insuffcient on #{date[0]} at #{date[1]}"
+        message = "Insuffcient on " + format_time(date)
       end
       return message
     end
@@ -55,6 +55,14 @@ module SpliceReports
       txt =  "<li>Filter Name: #{filter["name"]}</li> 
              <li>Status: #{filter["status"]}</li> "
     end
+   
+    def get_checkin(system)
+      if system.checkin_time
+        return  format_time(system.checkin_time)
+      end
+      _("Never checked in")
+    end
+
 
   end
 end
