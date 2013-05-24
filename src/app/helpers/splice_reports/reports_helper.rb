@@ -8,6 +8,17 @@ module SpliceReports
       uuid = record['instance_identifier'].to_s
       System.where(:uuid=>uuid).first
     end
+ 
+    def get_system_compliance(system)
+      compliance = ""
+      if system.compliance_color == "green"
+        compliance = "Current"
+      elsif system.compliance_color == "yellow"
+        compliance = "Insufficient" 
+      else
+        compliance = "Invalid" 
+      end
+    end
 
     def get_status_color(record)
       status = record['entitlement_status']['status']

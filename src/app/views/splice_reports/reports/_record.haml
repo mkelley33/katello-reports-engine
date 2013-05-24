@@ -13,7 +13,8 @@
             .subs_image_wrapper
               .subs_image{:class => "#{current_system.compliance_color}"}
           .value
-            = get_checkin(current_system)
+            = get_system_compliance(current_system)
+
             %a{:href=>system_link(current_system)}
               = _("View System Details")
     - else
