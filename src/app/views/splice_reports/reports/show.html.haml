@@ -68,7 +68,7 @@
       %li
         = _("Description: ") + @filter['description']
       %li
-        = _("Status: ") + @filter['status']
+        = _("Status: ") + @filter['status'].*(', ')
       %li
         = _("Satellite Server: ") + @filter['satellite_name']
       %li
