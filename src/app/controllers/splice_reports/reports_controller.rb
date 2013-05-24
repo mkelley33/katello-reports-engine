@@ -310,13 +310,15 @@ module SpliceReports
                     :organization_name => {"$last" => "$organization_name"}
                     }
         },
-        {"$sort" => {:status => -1}}
       ]
+ 
       if params.key?(:sort_by)
-        sort_order = Mongo::ASCENDING
+        sort_order = Mongo::DESCENDING
         if /DESC/i.match(params[:sort_order])
-          sort_order = Mongo::DESCENDING
+          sort_order = Mongo::ASCENDING
         end
+        #always sort failing at the top
+        query.push({"$sort" => {:status => Mongo::ASCENDING}})
         query.push({"$sort" => {params[:sort_by] => sort_order}})
       end
 
