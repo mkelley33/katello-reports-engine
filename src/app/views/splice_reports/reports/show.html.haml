@@ -72,11 +72,18 @@
       %li
         = _("Satellite Server: ") + @filter['satellite_name']
       %li
-        = _("Start Date: ") + @filter['start_date']
-      %li
-        = _("End Date: ") + @filter['end_date']
-      %li
-        = _("Hours: ") + @filter['hours']
+        = _("Organizations: ") + @filter.organizations.collect{|o| o.name}.join(', ')
+      - if @filter['start_date'] != nil
+        %li
+          = _("Start Date: ") + @filter['start_date']
+        %li
+          = _("End Date: ") + @filter['end_date']
+      - if @filter['hours'] != nil
+        %li
+          = _("Hours: ") + @filter['hours'].to_s
+      - if @filter['inactive'] != nil
+        %li
+          = _("Inactive: ") + @filter['inactive'].to_s
 
 
         

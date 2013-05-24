@@ -36,7 +36,7 @@ angular.module('Katello').controller('ReportsController',
         },{
             id: 'hostname',
             display: 'Hostname',
-            show: true
+            show: false 
         },{
             id: 'splice_server',
             display: 'Satellite Server',
