@@ -15,6 +15,7 @@ Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
 Source0:    rubygem-%{gem_name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:   katello
 Requires:   %{?scl_prefix}ruby(abi) >= %{rubyabi}
 # Need Requires for:
@@ -41,7 +42,7 @@ Summary:    Documentation for rubygem-%{gem_name}
 This package contains documentation for rubygem-%{gem_name}.
 
 %prep
-%setup -n rubygem-%{gem_name}-%{version}
+%setup -n rubygem-%{gem_name}-%{version} -q
 mkdir -p .%{gem_dir}
 
 %build
@@ -53,6 +54,7 @@ gem install --local --install-dir .%{gem_dir} \
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{gem_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
@@ -62,16 +64,19 @@ cat <<GEMFILE > %{buildroot}%{katello_bundlerd_dir}/%{gem_name}.rb
 gem 'splice_reports'
 GEMFILE
 
+%clean
+rm -rf %{buildroot}
 
 %files
+%defattr(-,root,root,-)
+%dir %{gem_instdir}
 %{gem_instdir}
-%exclude %{gem_cache}
 %{katello_bundlerd_dir}/splice_reports.rb
-
-%exclude %{gem_instdir}/test
-%exclude %{gem_dir}/cache/%{gem_name}-%{version}.gem
+%exclude %{gem_cache}
+%exclude %{gem_dir}/bin/ruby_noexec_wrapper
 
 %files doc
+%defattr(-,root,root,-)
 %{gem_spec}
 
 %changelog
