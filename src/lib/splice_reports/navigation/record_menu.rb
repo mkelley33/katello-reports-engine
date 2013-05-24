@@ -17,7 +17,7 @@ module Navigation
     def record_navigation(filter, record)
       menu = [
         { :key => :record_details,
-          :name =>_("Details"),
+          :name =>_("Subscription Details"),
           :url => lambda{record_splice_reports_filter_reports_path(filter.id, :id=>record['_id'].to_s)},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
@@ -35,7 +35,7 @@ module Navigation
           :options => {:class=>"panel_link"}
         },
         { :key => :record_checkin_list,
-          :name =>_("System Check-In List"),
+          :name =>_("System Check-In's "),
           :url => lambda{checkin_list_splice_reports_filter_reports_path(filter.id, :id=>record['_id'].to_s)},
           :if => lambda{true},
           :options => {:class=>"panel_link"}

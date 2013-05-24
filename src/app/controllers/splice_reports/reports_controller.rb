@@ -419,8 +419,10 @@ module SpliceReports
         })
       result = result.map do |item| 
         item["entitlement_status"]["status"] = translate_checkin_status(item["entitlement_status"]["status"])
+        item["date"] = format_time(item["date"])
         item
       end
+      #debugger
       return result.as_json
 
     end

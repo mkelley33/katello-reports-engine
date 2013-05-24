@@ -22,8 +22,8 @@
 
 
 angular.module('Katello').controller('ReportsController',
-    ['$scope', 'Nutupane', '$location', '$http', '$compile',
-    function($scope, Nutupane, $location, $http, $compile) {
+    ['$scope', 'Nutupane', '$location', '$filter', '$http', '$compile',
+    function($scope, Nutupane, $location, $filter, $http, $compile) {
 
         var columns = [{
             id: 'systemid',
@@ -47,7 +47,7 @@ angular.module('Katello').controller('ReportsController',
             show: true
         },{
             id: 'date',
-            display: 'Checkin Time',
+            display: 'Check-In Time',
             show: true
         }];
 
@@ -56,6 +56,7 @@ angular.module('Katello').controller('ReportsController',
 
             angular.forEach(data.systems,
                 function(system){
+                    var date = new Date(system.date)
                     var row = {
                         'row_id' : system.record["$oid"],
                         'show'  : true,
@@ -76,7 +77,8 @@ angular.module('Katello').controller('ReportsController',
                             display: system.organization_name,
                             column_id: 'organization_name'
                         },{
-                            display: system.date,
+                            //display: $filter('date')(system.date, 'medium'),
+                            display: date.toUTCString().replace("GMT", "+0000"),
                             column_id: 'date'
                         }]
                     };

@@ -14,7 +14,7 @@
           %th
             = _("Status")
           %th
-            = _("Checkin Time")
+            = _("System Check-In Time")
 
       %tbody
         - for ci in checkins
@@ -25,8 +25,7 @@
                   %a{:href=>checkin_splice_reports_filter_reports_path(@filter.id, :id=>ci['_id']['$oid'].to_s, :original_id=>@record['_id'].to_s)}
                     = ci['entitlement_status']['status']
             %td
-              - date = parse_iso_date(ci)
-              = date
+              = ci['date'] 
 
 
 
