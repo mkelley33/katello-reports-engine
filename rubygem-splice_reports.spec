@@ -69,12 +69,11 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{gem_dir}
+%{gem_spec}
 %{katello_bundlerd_dir}/splice_reports.rb
-%exclude %{gem_cache}
 
 %files doc
 %defattr(-,root,root,-)
-%{gem_spec}
 
 %changelog
 * Fri May 24 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-5
