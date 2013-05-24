@@ -14,6 +14,8 @@ $(document).ready(function() {
         $("#hour").hide();
         $("#daterange").hide();
         $("#inactive").hide();
+        //you can only pick one satellite for now.. hide
+        $("#satellite").hide();
 
         //New Filter: Hide the forms that are not selected
         $("#choose_hour").change(function(){
