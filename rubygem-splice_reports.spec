@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    4%{?dist}
+Release:    5%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -77,6 +77,12 @@ rm -rf %{buildroot}
 %{gem_spec}
 
 %changelog
+* Fri May 24 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-5
+- Added Requires for bson_ext, mongo, zipruby (jwmatthews@gmail.com)
+- Merge branch 'master' of github.com:splice/splice-reports
+  (whayutin@redhat.com)
+- fix bug, always sort status with failures at the top (whayutin@redhat.com)
+
 * Fri May 24 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-4
 - Update to include %%{gem_dir} instead of %%{gem_instdir}
   (jwmatthews@gmail.com)
