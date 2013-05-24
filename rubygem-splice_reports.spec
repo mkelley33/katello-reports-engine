@@ -6,7 +6,6 @@
 %define rubyabi 1.9.1
 %global katello_bundlerd_dir /usr/share/katello/bundler.d
 
-
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
@@ -18,11 +17,11 @@ Source0:    rubygem-%{gem_name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:   katello
 Requires:   %{?scl_prefix}ruby(abi) >= %{rubyabi}
-# Need Requires for:
-# - mongo
-# - bson
-# - zip
 Requires:   %{?scl_prefix}rubygems
+Requires:   %{?scl_prefix}rubygem-mongo
+Requires:   %{?scl_prefix}rubygem-bson_ext
+Requires:   %{?scl_prefix}rubygem-zipruby
+
 BuildRequires: %{?scl_prefix}rubygems-devel
 BuildRequires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
 BuildRequires: %{?scl_prefix}rubygems
