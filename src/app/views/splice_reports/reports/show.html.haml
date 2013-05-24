@@ -68,7 +68,10 @@
       %li
         = _("Description: ") + @filter['description']
       %li
-        = _("Status: ") + @filter['status'].*(', ')
+        - if @filter['status'].is_a?(Array)
+          = _("Status: ") + @filter['status'].*(', ')
+        - else
+          = _("Status: ") + @filter['status']
       %li
         = _("Satellite Server: ") + @filter['satellite_name']
       %li
