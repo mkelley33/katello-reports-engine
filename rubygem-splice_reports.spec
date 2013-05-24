@@ -48,7 +48,7 @@ mkdir -p .%{gem_dir}
 %build
 %{?scl:scl enable %{scl} "}
 cd src && gem build %{gem_name}.gemspec && cd ..
-gem install --local --install-dir .%{gem_dir} \
+gem install --local --no-wrappers --install-dir .%{gem_dir} \
             --force src/%{gem_name}-%{version}.gem --no-rdoc --no-ri
 %{?scl:"}
 
@@ -69,11 +69,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%dir %{gem_instdir}
-%{gem_instdir}
+%{gem_dir}
 %{katello_bundlerd_dir}/splice_reports.rb
 %exclude %{gem_cache}
-%exclude %{gem_dir}/bin/ruby_noexec_wrapper
 
 %files doc
 %defattr(-,root,root,-)
