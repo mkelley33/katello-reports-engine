@@ -10,7 +10,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    3%{?dist}
+Release:    4%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -78,6 +78,11 @@ rm -rf %{buildroot}
 %{gem_spec}
 
 %changelog
+* Fri May 24 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-4
+- Update to include %%{gem_dir} instead of %%{gem_instdir}
+  (jwmatthews@gmail.com)
+- few more uxd improvements for details (whayutin@redhat.com)
+
 * Thu May 23 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-3
 - RPM builds and removed rpmlint warnings (jwmatthews@gmail.com)
 - Back to regular tito Builder (jwmatthews@gmail.com)
