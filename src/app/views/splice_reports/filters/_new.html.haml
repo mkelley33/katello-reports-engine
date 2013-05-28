@@ -22,11 +22,11 @@
     %fieldset.clearfix
       .grid_10.prefix_1.fielditem
         .grid_5.la
-          = _("By Number of Hours:")
+          %label #{_("Filter by hours since last check-in:")}
         %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"} 
         %br
         .grid_5.la
-          = _("By Date:")
+          %label #{_("Filter by check-in's in date range:")}
         %input{:type=>:radio, :name=>"time", :id=>"choose_daterange", :value=>"choose_daterange"}
         %br
         
@@ -43,7 +43,7 @@
     %fieldset.clearfix
       .grid_10.prefix_1.fielditem
         .grid_5.la
-          = _("Inactive")
+          %label #{_("Inactive")}
         %input.inactive{:label => _("Inactive:"), :type=>:checkbox, :name=>"inactive", :id=>"inactive"}   
 
     = form.submit _("Save Filter"), :id => :save_filter
