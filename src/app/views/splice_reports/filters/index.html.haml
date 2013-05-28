@@ -1,5 +1,12 @@
-= javascript :splice_reports
-
+= stylesheet 'splice_reports/filters'
 
 .grid_16
+  = help_tip_button
+  = help_tip(_("Report Filters allow a user to view a report of system check-in's that meet " + |
+    			"a filters criteria.  For example you may create filters to view system " + | 
+    			"check-in's from a specific organization or for a specific time period."  )) |
+
+.grid_16#main
   = two_panel(@filters, @panel_options)
+
+= javascript :splice_reports
