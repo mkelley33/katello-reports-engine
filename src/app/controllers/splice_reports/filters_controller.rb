@@ -41,7 +41,7 @@ module SpliceReports
     end
 
     def param_rules
-      items = {:filter => [:name, :description, :status, :satellite_name, :inactive, :hours, :start_date, :end_date, :organizations]}
+      items = {:filter => [:name, :description, :status, :inactive, :satellite_name, :hours, :start_date, :end_date, :organizations]}
       {
         :create => items,
         :update => items
@@ -90,7 +90,14 @@ module SpliceReports
       filter_params[:start_date] = parse_calendar_date(filter_params[:start_date]) unless filter_params[:start_date].blank?
       filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
       
-      filter_params[:status].delete("") 
+      filter_params[:status].delete("")
+
+      if params[:inactive] == "on"
+        logger.info("inactive is on")
+        filter_params[:inactive] = true
+      else
+        filter_params[:inactive] = false
+      end 
 
       organizations = []
       if org_ids
@@ -223,7 +230,7 @@ module SpliceReports
     end
 
     def inactive_for_days_hash
-      days = [nil, 1, 3, 10, 30]
+      days = ['true', 'false']
       days_hash = {}
       days.each_with_index { |val, index|
         days_hash[val] = val

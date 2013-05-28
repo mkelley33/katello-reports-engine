@@ -35,9 +35,6 @@
 
   %input#panel_element_id{:name=>@filter.id, :type=>"hidden", :value=>"filter_#{@filter.id}", "data-ajax_url"=>splice_reports_filter_path(@filter.id)}
 
-  
-  %h5 Filter Name and Description:
-  %br
   %fieldset
   .grid_2.ra
     %label #{_("Name")}:
@@ -51,8 +48,7 @@
                                  'name' => 'filter[description]',
                                  :class=>editable_class(editable),
                                  'data-url' => splice_reports_filter_path(@filter.id)} #{filter[:description]}
-  %h5 Filter Criteria:
-  %br
+
 
   %fieldset
     .grid_2.ra
@@ -82,9 +78,7 @@
              'data-url' => splice_reports_filter_path(@filter.id),
              'data-options' => @accessible_orgs_hash.to_json}
       = @filter.organizations.collect{|o| o.name}.join(", ")
-
-  %h4 Additional Filter Criteria:
-  %br 
+ 
 
   %div#edit_hour
     %fieldset
@@ -97,16 +91,7 @@
                  'data-options' => @number_of_hours_hash.to_json}
         = @filter.hours 
 
-  %div#edit_inactive
-    %fieldset
-      .grid_2.ra
-        %label #{_("Inactive for Days")}
-      .grid_10.la{'name' => 'filter[inactive]',
-                'id' => 'days_inactive',
-                :class => ("editable edit_select" if editable),
-                'data-url' => splice_reports_filter_path(@filter.id),
-                'data-options' => @inactive_for_days_hash.to_json}
-        = @filter.inactive 
+ 
 
   %div#edit_daterange
     %fieldset
@@ -127,19 +112,39 @@
                            'id' => 'end_date',
                            :class=>("editable edit_datepicker" if editable),
                            'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter[:end_date]) || _("None")}
+
+    %fieldset
+      .grid_2.ra
+        %label #{_("Inactive")}:
+      - if @filter.inactive.equal?(true)
+        %input.inactive{:type =>"checkbox",
+                        :value => true,
+                        :checked => true,
+                        :class => "editable",
+                        'data-url' => splice_reports_filter_path(@filter.id)}
+          
+      - else 
+        %input.inactive{:type =>"checkbox",
+                        :value => false,
+                        :checked => false,
+                        :class => "editable",
+                        'data-url' => splice_reports_filter_path(@filter.id)}
+          
+
+
     
   %h4 Export Criteria:
   %div#edit_export
     %fieldset
-      .grid_10.prefix_1.fielditem
+      .grid_2.prefix_1.fielditem
         .grid_5.la
-          = _("Encrypt export:")
+          %label #{_("Encrypt export:")}
           %input#splice_reports_export_encrypt_cbox{:type=>:checkbox, :value=>:false} 
         %br
     %fieldset
       .grid_10.prefix_1.fielditem
         .grid_5.la
-          = _("Skip including expanded JSON data:")
+          %label #{_("Skip including expanded JSON data:")}
           %input#splice_reports_include_json_cbox{:type=>:checkbox, :value=>:true} 
         %br
 

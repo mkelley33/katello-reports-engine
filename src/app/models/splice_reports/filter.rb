@@ -15,9 +15,9 @@ module SpliceReports
 
     def additional_criteria
       has_criteria = true
-       if self.start_date.blank? && self.hours.blank? && self.inactive.blank?
+       if self.start_date.blank? && self.hours.blank? 
         has_criteria = false
-        errors[:base] << "Please choose one of the options from Additional Filter Criteria"
+        errors[:base] << "Please choose either a date range or number of hours"
         return has_criteria
       end
     end
@@ -29,17 +29,8 @@ module SpliceReports
       if !self.start_date.blank? &&  !self.hours.blank?
         custom_msg = "Start Date,  Number of Hours"
         error = true
-      elsif !self.start_date.blank? && !self.inactive.blank?
-        custom_msg = "Start Date,  Inactive"
-        error = true
       elsif !self.end_date.blank? &&  !self.hours.blank?
         custom_msg = "End Date, Number of Hours"
-        error = true
-      elsif !self.end_date.blank? && !self.inactive.blank?
-        custom_msg = "End Date, Inactive"
-        error = true
-      elsif !self.hours.blank? && !self.inactive.blank?
-        custom_msg = "Number of Hours, Inactive"
         error = true
       end
         
