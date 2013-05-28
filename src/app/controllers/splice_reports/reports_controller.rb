@@ -278,7 +278,7 @@ module SpliceReports
         }
       end
 
-      if filter["inactive"] != nil
+      if filter["inactive"] == true
         logger.info("inactive query selected")
         rules_date << {"$match" => {:date=> { "$not" => {"$gt" => start_date}}}}
       else
@@ -434,9 +434,6 @@ module SpliceReports
       elsif filter["start_date"] != nil && filter["end_date"] != nil
         end_date = filter["end_date"].utc
         start_date = filter["start_date"].utc 
-      elsif filter["inactive"] != nil
-        end_date = Time.now.utc
-        start_date = end_date - filter["inactive"].days
       end
       return start_date, end_date
     end    
