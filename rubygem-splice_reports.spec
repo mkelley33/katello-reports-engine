@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    6%{?dist}
+Release:    7%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,18 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed May 29 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-7
+- Add config file and gpg pub key to RPM (jwmatthews@gmail.com)
+- add a line break if filter tip orgs is too long (whayutin@redhat.com)
+- remove check boxes from table (whayutin@redhat.com)
+- clean up new filter page, use labels (whayutin@redhat.com)
+- update report controller for the inactive boolean (whayutin@redhat.com)
+- changed inactive from an integer to a boolean, changed db, model, controller
+  and views (whayutin@redhat.com)
+- Merge branch 'master' of github.com:splice/splice-reports
+  (whayutin@redhat.com)
+- adding help tip for filter creation (whayutin@redhat.com)
+
 * Fri May 24 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-6
 - Include gem_spec in files of .spec (jwmatthews@gmail.com)
 - fix for type conversion error on tool tip (whayutin@redhat.com)
