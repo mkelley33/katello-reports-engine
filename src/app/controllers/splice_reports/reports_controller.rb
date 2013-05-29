@@ -117,7 +117,6 @@ module SpliceReports
         }
       ] 
       
-      debugger
       aggregate_query = rules_date + query
       result = @@c.aggregate(aggregate_query) 
       logger.info("Dashboard counts get_status_counts for filter #{filter.id} result: #{result}")
