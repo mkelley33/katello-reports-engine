@@ -85,11 +85,13 @@ query = [
 	{"$match" => { "organization_id" => { "$in" => ["1", "2", "3", "4"]}}},
 	#{"$match" => { "entitlement_status.status" => "valid"}},
 	{"$group" => {
-	  _id:  {status:  "$entitlement_status.status", ident: "$instance_identifier" },
+	  record: {"$last" => "$_id"},
+	  _id:  {status:  "$entitlement_status.status", ident: "$instance_identifier", date:  "$created" },
 		}
 	 },
 	{"$group" => {
 	  _id: "$_id.status", 
+	  date: {"$max" => "$_id.date"},
     count: {"$sum" => 1}
 		}
   },

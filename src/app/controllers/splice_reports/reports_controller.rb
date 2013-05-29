@@ -94,15 +94,17 @@ module SpliceReports
       #     },
       # 
       #   ]
-      query = [
-        
+      
+     query = [
+
         {"$match" => { "organization_id" => { "$in" => org_ids }}},
         {"$group" => {
-          _id:  {status:  "$entitlement_status.status", ident: "$instance_identifier" },
-          }
-        },
+          _id:  {status:  "$entitlement_status.status", ident: "$instance_identifier", date: "$created" },
+                }
+         },
         {"$group" => {
           _id: "$_id.status", 
+          date: {"$max" => "$_id.date"},
           count: {"$sum" => 1}
           }
         },
@@ -110,10 +112,12 @@ module SpliceReports
           _id: 0,
           status: "$_id",
           count: 1
-          } 
-        }
-       ]
 
+         } 
+        }
+      ] 
+      
+      debugger
       aggregate_query = rules_date + query
       result = @@c.aggregate(aggregate_query) 
       logger.info("Dashboard counts get_status_counts for filter #{filter.id} result: #{result}")
