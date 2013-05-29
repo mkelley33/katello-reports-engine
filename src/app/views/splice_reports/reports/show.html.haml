@@ -64,29 +64,32 @@
     %span
       %h5 
         = "Filter:  #{@filter['name'].capitalize}" 
-    %ul{:class => "popup_filter"}
-      %li
-        = _("Description: ") + @filter['description']
-      %li
-        - if @filter['status'].is_a?(Array)
-          = _("Status: ") + @filter['status'].*(', ')
-        - else
-          = _("Status: ") + @filter['status']
-      %li
-        = _("Satellite Server: ") + @filter['satellite_name']
-      %li
-        = _("Organizations: ") + @filter.organizations.collect{|o| o.name}.join(', ')
-      - if @filter['start_date'] != nil
+      %ul{:class => "popup_filter"}
         %li
-          = _("Start Date: ") + @filter['start_date']
+          = _("Description: ") + @filter['description']
         %li
-          = _("End Date: ") + @filter['end_date']
-      - if @filter['hours'] != nil
+          - if @filter['status'].is_a?(Array)
+            = _("Status: ") + @filter['status'].*(', ')
+          - else
+            = _("Status: ") + @filter['status']
         %li
-          = _("Hours: ") + @filter['hours'].to_s
-      - if @filter['inactive'] != nil
+          = _("Satellite Server: ") + @filter['satellite_name']
+        - orgs =  @filter.organizations.collect{|o| o.name}.join(', ')
         %li
-          = _("Inactive: ") + @filter['inactive'].to_s
+          = _("Organizations: ") + orgs
+        - if (orgs.length > 60)
+          %br
+        - if @filter['start_date'] != nil
+          %li
+            = _("Start Date: ") + @filter['start_date']
+          %li
+            = _("End Date: ") + @filter['end_date']
+        - if @filter['hours'] != nil
+          %li
+            = _("Hours: ") + @filter['hours'].to_s
+        - if @filter['inactive'] != nil
+          %li
+            = _("Inactive: ") + @filter['inactive'].to_s
 
 
         
