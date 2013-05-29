@@ -54,20 +54,28 @@ gem install --local --no-wrappers --install-dir .%{gem_dir} \
 
 %install
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/etc/splice
+mkdir -p %{buildroot}/etc/pki/splice
 mkdir -p %{buildroot}%{gem_dir}
+mkdir -p %{buildroot}%{katello_bundlerd_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
-mkdir -p %{buildroot}%{katello_bundlerd_dir}
 cat <<GEMFILE > %{buildroot}%{katello_bundlerd_dir}/%{gem_name}.rb
 gem 'splice_reports'
 GEMFILE
 
+cp etc/splice/splice_reports.yml %{buildroot}/etc/splice/
+
+# TODO this will be replaced with a RPM that delivers the public key
+cp playpen/exports/example/splice_reports_key.gpg.pub %{buildroot}/etc/pki/splice
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%config /etc/splice/splice_reports.yml
+/etc/pki/splice/splice_reports_key.gpg.pub
 %{gem_dir}
 %{gem_spec}
 %{katello_bundlerd_dir}/splice_reports.rb
