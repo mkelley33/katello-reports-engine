@@ -37,25 +37,58 @@ module SpliceReports
       filtered_checkins = get_marketing_product_results(filter, offset, search)
       return filtered_checkins
     end
-
-    def get_num_summary(checkins)
+    
+    def get_num_summary(filter)
       num_current = 0
       num_invalid = 0
       num_insufficient = 0
-      checkins.each do | checkin | 
-        case checkin["status"]
-        when "current"
-          num_current += 1
-        when "invalid"
-          num_invalid += 1
-        when "insufficient" 
-          num_insufficient += 1
-        end
-      end
+ 
+      num_current = get_status_counts(filter, "valid")
+      num_invalid = get_status_counts(filter, "invalid")
+      num_insufficient = get_status_counts(filter, "partial")
+    
       return {num_current: num_current, 
               num_invalid: num_invalid, 
               num_insufficient: num_insufficient,
               num_total: num_current + num_invalid + num_insufficient}
+
+    end
+   
+    def get_status_counts(filter, status)
+      rules_date = []
+      org_ids = []
+      start_date, end_date = get_start_end_dates(filter)
+      filter.organizations.each do |o|
+        org_ids << o.id.to_s
+      end
+
+      if filter["inactive"] == true
+        logger.info("inactive query selected")
+        rules_date << {"$match" => {:date=> { "$not" => {"$gt" => start_date}}}}
+      else
+        rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
+      end
+
+      query = [
+            {"$match" => { "organization_id" => { "$in" => org_ids }}},
+            {"$match" => { "entitlement_status.status" => status }},
+            {"$group" => {
+              _id: nil,
+              count: {"$sum" => 1}
+             }
+           },
+    
+      ]
+
+      aggregate_query =  query + rules_date 
+      result = @@c.aggregate(aggregate_query) 
+      logger.info("Dashboard counts get_status_counts for #{status} result: #{result}")
+      if result.empty?
+        count = 0
+      else
+        count = result[0]["count"]
+      end
+   
     end
 
     def checkins_to_csv(checkins)
@@ -184,8 +217,9 @@ module SpliceReports
 
     def index
       @filter = SpliceReports::Filter.find(params[:filter_id])
-      filtered_checkins = run_filter_by_id(@filter.id, nil).as_json
-      summary = get_num_summary(filtered_checkins)
+      #filtered_checkins = run_filter_by_id(@filter.id, nil).as_json
+      #summary = get_num_summary(filtered_checkins)
+      summary = get_num_summary(@filter)
 
       #render :partial => "reports/report"
       #render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}

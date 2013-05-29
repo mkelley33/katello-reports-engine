@@ -79,5 +79,19 @@ result5 = @coll.aggregate([
 	{"$sort" => {status: 1}},	
 ])
 
-a = result2.count
+query = [
+
+	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
+	#{"$match" => { "entitlement_status.status" => { "$in" => ["valid", "invalid", "parital"] }}},
+	{"$match" => { "entitlement_status.status" => "invalid"}},
+	#{"$match" => { "organization_id" => { "$in" => ["3"]}}},
+	{"$group" => {
+	  _id: nil,
+    count: {"$sum" => 1} 
+		}
+	 },
+]
+
+result6 = @coll.aggregate(query)
+a = result6.to_a
 puts a
