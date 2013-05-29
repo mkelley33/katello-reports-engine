@@ -99,11 +99,13 @@ module SpliceReports
 
         {"$match" => { "organization_id" => { "$in" => org_ids }}},
         {"$group" => {
-          _id:  {status:  "$entitlement_status.status", ident: "$instance_identifier", date: "$created" },
-                }
+          _id:  { ident: "$instance_identifier"},
+                date: {"$max" => "$date"},
+                status: {"$last" => "$entitlement_status.status"}},
          },
+        {"$sort" => { _id: 1}},
         {"$group" => {
-          _id: "$_id.status", 
+          _id: "$status", 
           date: {"$max" => "$_id.date"},
           count: {"$sum" => 1}
           }
