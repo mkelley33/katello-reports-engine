@@ -42,10 +42,24 @@ module SpliceReports
       num_current = 0
       num_invalid = 0
       num_insufficient = 0
- 
-      num_current = get_status_counts(filter, "valid")
-      num_invalid = get_status_counts(filter, "invalid")
-      num_insufficient = get_status_counts(filter, "partial")
+      
+      counts  = get_status_counts(filter)
+      if !counts.empty?
+        counts_hash = Hash.new
+        counts.each do |c|
+         counts_hash[c["status"]] = c["count"]  
+        end
+        
+        if filter.status.include? "Current"
+          num_current = counts_hash["valid"]
+        end
+        if filter.status.include? "Invalid"
+          num_invalid = counts_hash["invalid"]
+        end
+        if filter.status.include? "Insufficient"
+          num_insufficient = counts_hash["partial"]
+        end
+      end
     
       return {num_current: num_current, 
               num_invalid: num_invalid, 
@@ -54,7 +68,7 @@ module SpliceReports
 
     end
    
-    def get_status_counts(filter, status)
+    def get_status_counts(filter)
       rules_date = []
       org_ids = []
       start_date, end_date = get_start_end_dates(filter)
@@ -69,125 +83,140 @@ module SpliceReports
         rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
 
+      #query = [
+      #      {"$match" => { "organization_id" => { "$in" => org_ids }}},
+      #      {"$group" => {
+      #        _id: nil,
+      #        :identifier => {"$last" => "$instance_identifier"},
+      #        :date => {"$max" => "$date"},
+      #        count: {"$sum" => 1}
+      #       }
+      #     },
+      # 
+      #   ]
       query = [
-            {"$match" => { "organization_id" => { "$in" => org_ids }}},
-            {"$match" => { "entitlement_status.status" => status }},
-            {"$group" => {
-              _id: nil,
-              count: {"$sum" => 1}
-             }
-           },
-    
-      ]
+        
+        {"$match" => { "organization_id" => { "$in" => org_ids }}},
+        {"$group" => {
+          _id:  {status:  "$entitlement_status.status", ident: "$instance_identifier" },
+          }
+        },
+        {"$group" => {
+          _id: "$_id.status", 
+          count: {"$sum" => 1}
+          }
+        },
+        {"$project" => {
+          _id: 0,
+          status: "$_id",
+          count: 1
+          } 
+        }
+       ]
 
-      aggregate_query =  query + rules_date 
+      aggregate_query = rules_date + query
       result = @@c.aggregate(aggregate_query) 
-      logger.info("Dashboard counts get_status_counts for #{status} result: #{result}")
-      if result.empty?
-        count = 0
-      else
-        count = result[0]["count"]
+      logger.info("Dashboard counts get_status_counts for filter #{filter.id} result: #{result}")
+      return result 
+    end
+
+      def checkins_to_csv(checkins)
+        return "" unless checkins.length > 0
+        # Assuming all arrays have a hash with same keys, also assuming order of keys is same for all entries in array
+        fields = checkins[0].keys
+        # Header
+        header = ""
+        fields.each { |field| header << field << ", "}
+        # Body
+        body_lines = checkins.map { |checkin|
+          entry = ""
+          fields.each do |field| 
+            if field == "record" and checkin[field].key?("$oid")
+              entry << checkin[field]["$oid"] << ", " 
+            else
+              entry << checkin[field].to_s << ", "
+            end 
+          end
+          entry
+        }
+        csv_data = "#{header}\n#{body_lines.join("\n")}"
       end
-   
-    end
 
-    def checkins_to_csv(checkins)
-      return "" unless checkins.length > 0
-      # Assuming all arrays have a hash with same keys, also assuming order of keys is same for all entries in array
-      fields = checkins[0].keys
-      # Header
-      header = ""
-      fields.each { |field| header << field << ", "}
-      # Body
-      body_lines = checkins.map { |checkin|
-        entry = ""
-        fields.each do |field| 
-          if field == "record" and checkin[field].key?("$oid")
-            entry << checkin[field]["$oid"] << ", " 
-          else
-            entry << checkin[field].to_s << ", "
-          end 
-        end
-        entry
-      }
-      csv_data = "#{header}\n#{body_lines.join("\n")}"
-    end
+      def expanded_data(checkins)
+        checkin_ids = checkins.map { |checkin| checkin["record"] }
+        data = get_object_details(checkin_ids)
+        data.to_json
+      end
 
-    def expanded_data(checkins)
-      checkin_ids = checkins.map { |checkin| checkin["record"] }
-      data = get_object_details(checkin_ids)
-      data.to_json
-    end
-
-    def create_zip_file(now, data)
-      # Returns a buffer representing contents of a zipfile
-      # all processing is done in memory with no temp files written
-      buffer = ""
-      dir_name = "report_#{now}".gsub(":", "-")
-      Zip::Archive.open_buffer(buffer, Zip::CREATE) do |archive|
-        archive.add_dir(dir_name)
-        data.each do |entry|
-          entry.each do |filename, blob| 
-            archive.add_buffer("#{dir_name}/#{filename}", blob)
+      def create_zip_file(now, data)
+        # Returns a buffer representing contents of a zipfile
+        # all processing is done in memory with no temp files written
+        buffer = ""
+        dir_name = "report_#{now}".gsub(":", "-")
+        Zip::Archive.open_buffer(buffer, Zip::CREATE) do |archive|
+          archive.add_dir(dir_name)
+          data.each do |entry|
+            entry.each do |filename, blob| 
+              archive.add_buffer("#{dir_name}/#{filename}", blob)
+            end
           end
         end
+        buffer
       end
-      buffer
-    end
 
-    def get_export_metadata(now, checkins, filter_id)
-      data = "Generated at: #{now}\n"
-      data << "Number of checkins: #{checkins.size}\n"
-      summary = get_num_summary(checkins)
-      summary.each do |key, value|
-        data << "\t#{key}: #{value}\n"
-      end
-      filter = SpliceReports::Filter.find(filter_id)
-      if filter
-        data << "Filter Info\n"
-        filter.attributes.each do |key, value|
+      def get_export_metadata(now, checkins, filter_id)
+        data = "Generated at: #{now}\n"
+        data << "Number of checkins: #{checkins.size}\n"
+        summary = get_num_summary(checkins)
+        summary.each do |key, value|
           data << "\t#{key}: #{value}\n"
         end
-      end
-      data
-    end
-
-    def get_gpgkey_name(keyring)
-      output = `/usr/bin/gpg --no-default-keyring --keyring #{keyring} --list-keys`
-      logger.info("Output = #{output}")
-      lines = output.split("\n")
-      lines.each do |line|
-        #Matching string such as: "uid                  key-a (key-a generated ....)"
-        match = line.match(/^uid\s*(.*)\(/)
-        if match
-          return match[1]
+        filter = SpliceReports::Filter.find(filter_id)
+        if filter
+          data << "Filter Info\n"
+          filter.attributes.each do |key, value|
+            data << "\t#{key}: #{value}\n"
+          end
         end
-      end
-      logger.warn("Unable to find a GPG key name from: #{output}")
-      return ""
-    end
-
-    def encrypt(data)
-      pub_key_path = self.class.get_gpg_public_key()
-      unless (File.exist?(pub_key_path) and File.file?(pub_key_path) and File.readable?(pub_key_path))
-        raise "Unable to use public key at: #{pub_key_path}"
+        data
       end
 
-      Dir.mktmpdir do |tmp_dir|
-        keyring = "#{tmp_dir}/keyring"
-        raw_file = "#{tmp_dir}/raw_data"
-        encrypted_file ="#{tmp_dir}/encrypted_data"
-        # Write data to file so we can encrypt it
-        File.open(raw_file, 'wb') { |file| file.write(data)}
-        # Import the public key to a temporary key ring
-        cmd_import_pub_key = "/usr/bin/gpg --import --no-default-keyring --keyring #{keyring} #{pub_key_path}"
-        system(cmd_import_pub_key)
-        # Instead of hard-coding key name, we will ask gpg to us it's name 
-        # needed by encryption to specify '-r'/'--recipient'
-        key_name = get_gpgkey_name(keyring)
-        if key_name.empty?
-          raise "Unable to encrypt data, unable to use configured GPG public key: #{pub_key_path}"
+      def get_gpgkey_name(keyring)
+        output = `/usr/bin/gpg --no-default-keyring --keyring #{keyring} --list-keys`
+        logger.info("Output = #{output}")
+        lines = output.split("\n")
+        lines.each do |line|
+          #Matching string such as: "uid                  key-a (key-a generated ....)"
+          match = line.match(/^uid\s*(.*)\(/)
+          if match
+            return match[1]
+          end
         end
+        logger.warn("Unable to find a GPG key name from: #{output}")
+        return ""
+      end
+
+      def encrypt(data)
+        pub_key_path = self.class.get_gpg_public_key()
+        unless (File.exist?(pub_key_path) and File.file?(pub_key_path) and File.readable?(pub_key_path))
+          raise "Unable to use public key at: #{pub_key_path}"
+        end
+
+        Dir.mktmpdir do |tmp_dir|
+          keyring = "#{tmp_dir}/keyring"
+          raw_file = "#{tmp_dir}/raw_data"
+          encrypted_file ="#{tmp_dir}/encrypted_data"
+          # Write data to file so we can encrypt it
+          File.open(raw_file, 'wb') { |file| file.write(data)}
+          # Import the public key to a temporary key ring
+          cmd_import_pub_key = "/usr/bin/gpg --import --no-default-keyring --keyring #{keyring} #{pub_key_path}"
+          system(cmd_import_pub_key)
+          # Instead of hard-coding key name, we will ask gpg to us it's name 
+          # needed by encryption to specify '-r'/'--recipient'
+          key_name = get_gpgkey_name(keyring)
+          if key_name.empty?
+            raise "Unable to encrypt data, unable to use configured GPG public key: #{pub_key_path}"
+          end
         logger.info("Will encrypt data for key: #{key_name}")
         cmd_encrypt ="/usr/bin/gpg --no-default-keyring --keyring #{keyring} --trust-model always --output #{encrypted_file} -ear #{key_name} #{raw_file}"
         system(cmd_encrypt)

@@ -82,14 +82,24 @@ result5 = @coll.aggregate([
 query = [
 
 	{"$match" => {created: {"$gt" => Time.utc(2013, 01, 05), "$lt" => Time.utc(2013, 06, 07)}}},
-	#{"$match" => { "entitlement_status.status" => { "$in" => ["valid", "invalid", "parital"] }}},
-	{"$match" => { "entitlement_status.status" => "invalid"}},
-	#{"$match" => { "organization_id" => { "$in" => ["3"]}}},
+	{"$match" => { "organization_id" => { "$in" => ["1", "2", "3", "4"]}}},
+	#{"$match" => { "entitlement_status.status" => "valid"}},
 	{"$group" => {
-	  _id: nil,
-    count: {"$sum" => 1} 
+	  _id:  {status:  "$entitlement_status.status", ident: "$instance_identifier" },
 		}
 	 },
+	{"$group" => {
+	  _id: "$_id.status", 
+    count: {"$sum" => 1}
+		}
+  },
+  {"$project" => {
+    _id: 0,
+    status: "$_id",
+    count: 1
+
+   } 
+  }
 ]
 
 result6 = @coll.aggregate(query)
