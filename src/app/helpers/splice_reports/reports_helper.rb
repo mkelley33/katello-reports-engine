@@ -44,6 +44,33 @@ module SpliceReports
       end
       return message
     end
+    
+    def get_spacewalk_link(record)
+      debugger
+      if record['facts'].to_s.include? 'spacewalk-server-hostname'
+        space_url = ""
+        spacewalk_server = ""
+        system_id = ""
+        #i = 0
+        record['facts'].each do |f| 
+          #logger.info(i) 
+          #logger.info(f[0])
+          if f[0].include? "spacewalk-server-hostname"
+            spacewalk_server = f[1]
+          end
+          if f[0].include? "system.id"
+            system_id = f[1]
+          end
+          #i += 1
+        end
+        space_url = "https://#{spacewalk_server}/rhn/systems/details/Overview.do?sid=#{system_id}"
+        logger.info("space_url: #{space_url}")
+        return space_url
+      else
+        return nil
+      end  
+
+    end
 
     def get_reasons(record)
       reasons = record['entitlement_status']['reasons']
