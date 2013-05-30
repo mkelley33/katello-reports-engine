@@ -99,7 +99,7 @@ angular.module('Katello').controller('ReportsController',
         $scope.table.data.columns   = columns;
 
         var allColumns = $scope.table.data.columns.slice(0);
-        var nameColumn = $scope.table.data.columns.slice(0).splice(0, 1);
+        var shownColumn = $scope.table.data.columns.slice(0).splice(0, 2);
 
 
         $scope.table.select_item = function(url, id){
@@ -126,7 +126,7 @@ angular.module('Katello').controller('ReportsController',
                 // Only reset the active_item if an ID is provided
                 if (id) {
                     // Remove all columns except name and replace them with the details pane
-                    $scope.table.data.columns = nameColumn;
+                    $scope.table.data.columns = shownColumn;
                     $scope.table.select_all(false);
                     $scope.table.active_item = system;
                     $scope.table.active_item.selected  = false;
