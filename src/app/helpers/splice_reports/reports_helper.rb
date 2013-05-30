@@ -46,7 +46,6 @@ module SpliceReports
     end
     
     def get_spacewalk_link(record)
-      debugger
       if record['facts'].to_s.include? 'spacewalk-server-hostname'
         space_url = ""
         spacewalk_server = ""

@@ -22,8 +22,9 @@
       = _("Unable to locate matching system.")
 
     - if spacewalk_system
+      = " :: "
       %a{:href=>spacewalk_system}
-        = _(" :: View System Details in RHN Satellite ")
+        = _(" View System Details in RHN Satellite ")
     - else
       - logger.info("no satellite server found in record")
 
