@@ -34,7 +34,7 @@ module SpliceReports
 
     def get_status_message(record)
       status = record['entitlement_status']['status']
-      date = record['date']
+      date = record['checkin_date']
       if status == "current"
         message = "Current on " + format_time(date)
       elsif status == "invalid"

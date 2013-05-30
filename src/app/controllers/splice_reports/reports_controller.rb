@@ -79,9 +79,9 @@ module SpliceReports
 
       if filter["inactive"] == true
         logger.info("inactive query selected")
-        rules_date << {"$match" => {:date=> { "$not" => {"$gt" => start_date}}}}
+        rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
       else
-        rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
+        rules_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
       
      query = [
@@ -89,12 +89,12 @@ module SpliceReports
         {"$match" => { "organization_id" => { "$in" => org_ids }}},
         {"$group" => {
           _id:  { ident: "$instance_identifier"},
-                date: {"$max" => "$date"},
+                checkin_date: {"$max" => "$checkin_date"},
                 status: {"$last" => "$entitlement_status.status"}},
          },
         {"$group" => {
           _id: "$status", 
-          date: {"$max" => "$_id.date"},
+          checkin_date: {"$max" => "$_id.checkin_date"},
           count: {"$sum" => 1}
           }
         },
@@ -109,7 +109,7 @@ module SpliceReports
       
       aggregate_query = rules_date + query
       result = @@c.aggregate(aggregate_query) 
-      logger.info("Dashboard counts get_status_counts for filter #{filter.id} result: #{result}")
+      logger.info("Dashboard: counts get_status_counts for filter #{filter.id} result: #{result}")
       return result 
     end
 
@@ -338,9 +338,9 @@ module SpliceReports
 
       if filter["inactive"] == true
         logger.info("inactive query selected")
-        rules_date << {"$match" => {:date=> { "$not" => {"$gt" => start_date}}}}
+        rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
       else
-        rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
+        rules_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
 
       #move status back into an array
@@ -359,7 +359,7 @@ module SpliceReports
         {"$group" => {
                     _id: { ident: "$instance_identifier"},
                     record: {"$last" => "$_id"},
-                    date: {"$max" => "$date"},
+                    checkin_date: {"$max" => "$checkin_date"},
                     status: {"$last" => "$entitlement_status.status"},
                     identifier: {"$last" => "$instance_identifier"},
                     splice_server: {"$last" => "$splice_server"},
@@ -368,7 +368,7 @@ module SpliceReports
                     organization_name: {"$last" => "$organization_name"}
                     }
         },
-        {"$sort" => { date: -1}},
+        {"$sort" => { checkin_date: -1}},
       ]
  
       if params.key?(:sort_by)
@@ -461,7 +461,7 @@ module SpliceReports
       result = @@c.find(
         {
           "instance_identifier" => instance_identifier,
-          "date" => {"$gt" => start_date, "$lt" => end_date}
+          "checkin_date" => {"$gt" => start_date, "$lt" => end_date}
         },
         {
           :fields => 
@@ -470,15 +470,15 @@ module SpliceReports
               "entitlement_status",
               "name",
               "splice_server",
-              "date"
+              "checkin_date"
             ],
           :sort => 
-            ["date", Mongo::DESCENDING],
+            ["checkin_date", Mongo::DESCENDING],
           :limit => 50
         })
       result = result.map do |item| 
         item["entitlement_status"]["status"] = translate_checkin_status(item["entitlement_status"]["status"])
-        item["date"] = format_time(item["date"])
+        item["checkin_date"] = format_time(item["checkin_date"])
         item
       end
       #debugger

@@ -56,7 +56,7 @@ angular.module('Katello').controller('ReportsController',
 
             angular.forEach(data.systems,
                 function(system){
-                    var date = new Date(system.date)
+                    var date = new Date(system.checkin_date)
                     var row = {
                         'row_id' : system.record["$oid"],
                         'show'  : true,
