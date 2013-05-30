@@ -26,17 +26,17 @@ angular.module('Katello').controller('ReportsController',
     function($scope, Nutupane, $location, $filter, $http, $compile) {
 
         var columns = [{
+            id: 'hostname',
+            display: 'Hostname',
+            show: true 
+        },{
             id: 'systemid',
-            display: 'Name and ID',
+            display: 'System ID',
             show: true
         },{
             id: 'status',
             display: 'Status',
             show: true
-        },{
-            id: 'hostname',
-            display: 'Hostname',
-            show: false 
         },{
             id: 'splice_server',
             display: 'Satellite Server',
@@ -62,14 +62,14 @@ angular.module('Katello').controller('ReportsController',
                         'show'  : true,
                         'cells': [{
                             //display: system.systemid,
-                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system.record["$oid"] + '\',\'' + system.record["$oid"] + '\')">' + system.hostname + "  " + system.systemid + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/record/?id=' + system.record["$oid"] + '\',\'' + system.record["$oid"] + '\')">' + system.hostname +  '</a>')($scope),
+                            column_id: 'hostname'
+                        },{
+                            display: system.systemid,
                             column_id: 'systemid'
                         },{
                             display: system.status,
                             column_id: 'status'
-                        },{
-                            display: system.hostname,
-                            column_id: 'hostname'
                         },{
                             display: system.splice_server,
                             column_id: 'splice_server'
