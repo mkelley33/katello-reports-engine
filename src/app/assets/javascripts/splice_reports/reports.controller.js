@@ -120,6 +120,7 @@ angular.module('Katello').controller('ReportsController',
                 }
             })
             .then(function(response){
+                $("#nutupane-details").show(); 
                 $scope.table.visible = false;
 
                 // Only reset the active_item if an ID is provided
@@ -128,8 +129,8 @@ angular.module('Katello').controller('ReportsController',
                     $scope.table.data.columns = nameColumn;
                     $scope.table.select_all(false);
                     $scope.table.active_item = system;
-                    $scope.table.active_item.selected  = true;
-                    $scope.rowSelect = false;
+                    $scope.table.active_item.selected  = false;
+                    $scope.rowSelect = true;
                 }
                 $scope.table.active_item.html = response.data;
             });
@@ -139,6 +140,7 @@ angular.module('Katello').controller('ReportsController',
             $scope.table.visible = true;
             // Restore the former columns
             $scope.table.data.columns = allColumns;
+            $("#nutupane-details").hide(); 
         };
         $scope.close_item = function () {
             $location.search("");
