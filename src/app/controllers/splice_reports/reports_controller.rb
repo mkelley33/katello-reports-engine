@@ -52,13 +52,13 @@ module SpliceReports
         end
         
         if filter.status.include? "Current"
-          num_current = counts_hash["valid"]
+            num_current = counts_hash["valid"] if counts_hash["valid"]
         end
         if filter.status.include? "Invalid"
-          num_invalid = counts_hash["invalid"]
+          num_invalid = counts_hash["invalid"] if counts_hash["invalid"]
         end
         if filter.status.include? "Insufficient"
-          num_insufficient = counts_hash["partial"]
+          num_insufficient = counts_hash["partial"] if counts_hash["partial"]
         end
       end
     
