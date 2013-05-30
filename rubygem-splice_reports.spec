@@ -15,7 +15,7 @@ License:    GPLv2
 URL:        https://github.com/splice/splice-reports
 Source0:    rubygem-%{gem_name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:   katello
+#Requires:   katello
 Requires:   %{?scl_prefix}ruby(abi) >= %{rubyabi}
 Requires:   %{?scl_prefix}rubygems
 Requires:   %{?scl_prefix}rubygem-mongo
