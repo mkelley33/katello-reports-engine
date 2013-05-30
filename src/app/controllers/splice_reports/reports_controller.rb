@@ -38,7 +38,8 @@ module SpliceReports
       return filtered_checkins
     end
     
-    def get_num_summary(filter)
+    def get_num_summary(filter_id)
+      filter = SpliceReports::Filter.where(:id=>filter_id).first
       num_current = 0
       num_invalid = 0
       num_insufficient = 0
@@ -82,18 +83,6 @@ module SpliceReports
       else
         rules_date << {"$match" => {:date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
-
-      #query = [
-      #      {"$match" => { "organization_id" => { "$in" => org_ids }}},
-      #      {"$group" => {
-      #        _id: nil,
-      #        :identifier => {"$last" => "$instance_identifier"},
-      #        :date => {"$max" => "$date"},
-      #        count: {"$sum" => 1}
-      #       }
-      #     },
-      # 
-      #   ]
       
      query = [
 
@@ -171,7 +160,7 @@ module SpliceReports
       def get_export_metadata(now, checkins, filter_id)
         data = "Generated at: #{now}\n"
         data << "Number of checkins: #{checkins.size}\n"
-        summary = get_num_summary(checkins)
+        summary = get_num_summary(filter_id)
         summary.each do |key, value|
           data << "\t#{key}: #{value}\n"
         end
@@ -252,7 +241,7 @@ module SpliceReports
       @filter = SpliceReports::Filter.find(params[:filter_id])
       #filtered_checkins = run_filter_by_id(@filter.id, nil).as_json
       #summary = get_num_summary(filtered_checkins)
-      summary = get_num_summary(@filter)
+      summary = get_num_summary(@filter.id)
 
       #render :partial => "reports/report"
       #render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}
@@ -290,7 +279,8 @@ module SpliceReports
         format.any(:json, :html) do
           filtered_checkins = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
           logger.info("items(): #{filtered_checkins}")
-          total = self.run_filter_by_id(params[:filter_id], nil).count
+          #total = self.run_filter_by_id(params[:filter_id], nil).count
+          total = self.get_num_summary(params[:filter_id])[:num_total]
           render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_checkins } 
         end
       end
