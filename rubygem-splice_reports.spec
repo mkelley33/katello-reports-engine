@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    7%{?dist}
+Release:    8%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,34 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Thu May 30 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-8
+- Removing Katello requires as we work through some packaging problems with
+  asset precompiling with Katello (jwmatthews@gmail.com)
+- made change so hostname and id are shown when details are opened
+  (whayutin@redhat.com)
+- refactor for mpu change from date -> checkin_date (whayutin@redhat.com)
+- fixed nutupane rendering issue where details was rendered under the table
+  (whayutin@redhat.com)
+- seperating hostname and system id, eric is putting in a change to alchemy so
+  two columns can be displayed, commit f988c9fdbc466e74c5605bde0d81f2001554d180
+  (whayutin@redhat.com)
+- reduced the number of times the report query is called from two to one
+  (whayutin@redhat.com)
+- move the filter description up the page (whayutin@redhat.com)
+- fixed bug in report query that on individual status queries would show the
+  lastest + status instead of just the latest checkin (whayutin@redhat.com)
+- Finally have the counts right for the dashboard, only using the latest
+  checkin now (whayutin@redhat.com)
+- clean up (whayutin@redhat.com)
+- the aggregation for counts are picking up additional unique checkins w/ diff
+  status (whayutin@redhat.com)
+- found a better way to aggregate the status counts w/o having to hit the db
+  three times (whayutin@redhat.com)
+- Merge branch 'master' of github.com:splice/splice-reports
+  (whayutin@redhat.com)
+- changed dashboard counts, no longer loops through array. Gets counts from
+  mongo directly (whayutin@redhat.com)
+
 * Wed May 29 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-7
 - Add config file and gpg pub key to RPM (jwmatthews@gmail.com)
 - add a line break if filter tip orgs is too long (whayutin@redhat.com)
