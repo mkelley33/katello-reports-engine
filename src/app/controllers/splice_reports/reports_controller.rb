@@ -103,7 +103,6 @@ module SpliceReports
                 date: {"$max" => "$date"},
                 status: {"$last" => "$entitlement_status.status"}},
          },
-        {"$sort" => { _id: 1}},
         {"$group" => {
           _id: "$status", 
           date: {"$max" => "$_id.date"},
@@ -329,6 +328,7 @@ module SpliceReports
       rules = []
       rules_date = []
       rules_org = []
+      rules_status = []
       if offset
         rules << {"$skip" => offset.to_i}
         rules << {"$limit" => current_user.page_size}
@@ -362,22 +362,23 @@ module SpliceReports
       index = filter["status"].index("Invalid") and filter["status"][index] = "invalid"
       index = filter["status"].index("Insufficient") and filter["status"][index] = "partial"
 
-      rules_org << {"$match" => { "entitlement_status.status" => { "$in" => filter["status"] }}}
+      rules_status << {"$match" => { "status" => { "$in" => filter["status"] }}}
       rules_org << {"$match" => { "organization_id" => { "$in" => org_ids }}}
       
       query = [
         {"$group" => {
-                    '_id' => "$instance_identifier",
-                    :record => {"$last" => "$_id"},
-                    :date => {"$max" => "$date"},
-                    :status => {"$last" => "$entitlement_status.status"},
-                    :identifier => {"$last" => "$instance_identifier"},
-                    :splice_server => {"$last" => "$splice_server"},
-                    :systemid => {"$last" => "$facts.systemid"},
-                    :hostname => {"$last" => "$name"},
-                    :organization_name => {"$last" => "$organization_name"}
+                    _id: { ident: "$instance_identifier"},
+                    record: {"$last" => "$_id"},
+                    date: {"$max" => "$date"},
+                    status: {"$last" => "$entitlement_status.status"},
+                    identifier: {"$last" => "$instance_identifier"},
+                    splice_server: {"$last" => "$splice_server"},
+                    systemid: {"$last" => "$facts.systemid"},
+                    hostname: {"$last" => "$name"},
+                    organization_name: {"$last" => "$organization_name"}
                     }
         },
+        {"$sort" => { date: -1}},
       ]
  
       if params.key?(:sort_by)
@@ -392,7 +393,7 @@ module SpliceReports
 
       #RULES MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
       #paginated prior  
-      aggregate_query = rules_date + rules_org + query + rules
+      aggregate_query = rules_date + rules_org + query + rules_status + rules
       result = @@c.aggregate(aggregate_query)
       #result = @@c.aggregate( rules_date + query + rules )
       logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
