@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    10%{?dist}
+Release:    11%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri May 31 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-11
+- Adding an initializer to help with precompiling assets (jwmatthews@gmail.com)
+- updated RHN Satellite to RH Satellite (whayutin@redhat.com)
+
 * Fri May 31 2013 Unknown name <whayutin@redhat.com> 0.0.5-10
 - updating css and haml.. to adjust width of _form and _new filter..
   (whayutin@redhat.com)
