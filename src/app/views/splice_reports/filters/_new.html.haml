@@ -4,13 +4,13 @@
   #{_("New Filter")}
 
 = content_for :content do
-  .grid_10
+  .grid_11
   = kt_form_for SpliceReports::Filter.new, :id => "new filter" do |form|
 
     = form.text_field :name, :label => _("Name:")
     = form.text_field :description, :label => _("Description:")
 
-    .grid_2.ra
+    .grid_3.ra
     #criteria
     = form.select :status, options_for_select(@status_hash.invert), {}, {:label => _("Status:"), :size=>1, :multiple=>true, :size => 2}
     #satellite
@@ -20,7 +20,7 @@
 
     
     %fieldset.clearfix
-      .grid_10.prefix_1.fielditem
+      .grid_11.prefix_1.fielditem
         .grid_5.la
           %label #{_("Filter by hours since last check-in:")}
         %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"} 
@@ -38,7 +38,7 @@
       = form.text_field :start_date, :label => _("Start Date:"), :class=>'datepicker'
       = form.text_field :end_date, :label => _("End Date:"),:class=>'datepicker'
     
-    .grid_2.ra
+    .grid_3.ra
     #inactive
     %fieldset.clearfix
       .grid_10.prefix_1.fielditem
