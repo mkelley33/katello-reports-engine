@@ -2,9 +2,13 @@
 module SpliceReports
   class Engine < ::Rails::Engine
 
-
     config.to_prepare do
       User.send :include, SpliceReports::UserExtensions
+    end
+    
+    initializer "splice_reports.assets.precompile", :group => :all do |app|
+      app.config.assets.precompile << SpliceReports::Engine.root.join('app', 'assets', 'javascripts')
+      app.config.assets.precompile << SpliceReports::Engine.root.join('app', 'assets', 'stylesheets')
     end
 
     initializer :finisher_hook do |engine|
