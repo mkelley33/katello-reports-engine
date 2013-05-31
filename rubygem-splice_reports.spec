@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    9%{?dist}
+Release:    10%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri May 31 2013 Unknown name <whayutin@redhat.com> 0.0.5-10
+- updating css and haml.. to adjust width of _form and _new filter..
+  (whayutin@redhat.com)
+
 * Fri May 31 2013 Unknown name <whayutin@redhat.com> 0.0.5-9
 - bug in nutupane css that slightly misrenders the details page, override css.
   Also added some padding to the filter edit page (whayutin@redhat.com)
