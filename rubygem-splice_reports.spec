@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    8%{?dist}
+Release:    9%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,16 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri May 31 2013 Unknown name <whayutin@redhat.com> 0.0.5-9
+- bug in nutupane css that slightly misrenders the details page, override css.
+  Also added some padding to the filter edit page (whayutin@redhat.com)
+- move satellite link to the right of the details page (whayutin@redhat.com)
+- clean up (whayutin@redhat.com)
+- add link to spacewalk system details (whayutin@redhat.com)
+- Merge branch 'master' of github.com:splice/splice-reports
+  (whayutin@redhat.com)
+- add check to see if query returned value for status (whayutin@redhat.com)
+
 * Thu May 30 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-8
 - Removing Katello requires as we work through some packaging problems with
   asset precompiling with Katello (jwmatthews@gmail.com)
