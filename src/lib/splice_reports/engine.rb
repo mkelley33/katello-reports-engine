@@ -29,6 +29,13 @@ module SpliceReports
         puts e.message
         puts e.backtrace
       end
+      begin
+        SpliceReports::Engine.load_seed()
+      rescue  => e
+        puts "SpliceReports Unable to load seed data"
+        puts e.message
+        puts e.backtrace
+      end
     end
   end
 end
