@@ -1,0 +1,23 @@
+@import "katello_base";
+
+
+#panel_link a:selected {
+  color: #00546b;
+  font-weight: bold;
+  border-bottom: 3px solid #005870;
+  padding-bottom: 3px;
+}
+
+nav.subnav > ul li a.selected {
+  color: #00546b;
+  font-weight: bold;
+  border-bottom: 3px solid #005870;
+  padding-bottom: 3px;
+}
+
+.record_details {
+  color: #00546b;
+  font-weight: bold;
+  border-bottom: 3px solid #005870;
+  padding-bottom: 3px;
+}
