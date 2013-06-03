@@ -113,22 +113,24 @@
                            :class=>("editable edit_datepicker" if editable),
                            'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter[:end_date]) || _("None")}
 
+  %div#edit_hour
     %fieldset
       .grid_2.ra
-        %label #{_("Inactive")}:
+        %label #{_("Inactive:")}
       - if @filter.inactive.equal?(true)
-        %input.inactive{:type =>"checkbox",
-                        :value => true,
-                        :checked => true,
-                        :class => "editable",
-                        'data-url' => splice_reports_filter_path(@filter.id)}
-          
+        .grid_10.la{'name' => 'filter[inactive]',
+                'id' => 'inactive',
+                 :class => ("editable edit_select" if editable),
+                 'data-url' => splice_reports_filter_path(@filter.id), 
+                 'data-options' => @inactive_hash.to_json}
+          = "true" 
       - else 
-        %input.inactive{:type =>"checkbox",
-                        :value => false,
-                        :checked => false,
-                        :class => "editable",
-                        'data-url' => splice_reports_filter_path(@filter.id)}
+        .grid_10.la{'name' => 'filter[inactive]',
+                'id' => 'inactive',
+                 :class => ("editable edit_select" if editable),
+                 'data-url' => splice_reports_filter_path(@filter.id), 
+                 'data-options' => @inactive_hash.to_json}
+          = "false" 
           
 
 

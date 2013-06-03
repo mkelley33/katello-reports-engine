@@ -19,7 +19,7 @@ module SpliceReports
     before_filter :status_hash
     before_filter :avail_splice_servers_hash
     before_filter :number_of_hours_hash
-    before_filter :inactive_for_days_hash
+    before_filter :inactive_hash
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
@@ -229,13 +229,13 @@ module SpliceReports
       @number_of_hours_hash = num_hash
     end
 
-    def inactive_for_days_hash
+    def inactive_hash
       days = ['true', 'false']
       days_hash = {}
       days.each_with_index { |val, index|
-        days_hash[val] = val
+        days_hash[val] = val.to_s
       }
-      @inactive_for_days_hash = days_hash
+      @inactive_hash = days_hash
     end
 
     def accessible_orgs
