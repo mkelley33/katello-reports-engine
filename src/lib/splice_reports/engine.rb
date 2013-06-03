@@ -5,7 +5,11 @@ module SpliceReports
     config.to_prepare do
       User.send :include, SpliceReports::UserExtensions
     end
-    
+
+    initializer "splice_reports.load_app_instance_data" do |app|
+        app.config.paths['db/migrate'] += SpliceReports::Engine.paths['db/migrate'].existent
+    end
+
     initializer "splice_reports.assets.precompile", :group => :all do |app|
       app.config.assets.precompile << SpliceReports::Engine.root.join('app', 'assets', 'javascripts')
       app.config.assets.precompile << SpliceReports::Engine.root.join('app', 'assets', 'stylesheets')
