@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    11%{?dist}
+Release:    12%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Jun 03 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-12
+- Update initializer so our db migrations will run when katello runs their own
+  (jwmatthews@gmail.com)
+
 * Fri May 31 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-11
 - Adding an initializer to help with precompiling assets (jwmatthews@gmail.com)
 - updated RHN Satellite to RH Satellite (whayutin@redhat.com)
