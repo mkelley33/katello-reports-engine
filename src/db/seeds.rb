@@ -1,1 +1,1 @@
-SpliceReports::Filter.new(:name =>"Red Hat Default Report", :description => "The default report that will be sent back to Red Hat representatives", :locked => true, hours: 5, :status => "all", :satellite_name => "any")
+SpliceReports::Filter.find_or_create_by_name(:name =>"Red Hat Default Report", :description => "The default report that will be sent back to Red Hat representatives", :locked => true, hours: 24, :status => "all", :satellite_name => "Any")
