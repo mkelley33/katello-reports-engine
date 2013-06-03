@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    12%{?dist}
+Release:    13%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,18 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Jun 03 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-13
+- Adding a workaround so each time our Rails engine is loaded it will execute
+  seed.rb This workaround is intended to be removed once Katello adds support
+  to load seed data from all the engines (jwmatthews@gmail.com)
+- seeds.rb will only create a new default filter if one is not found
+  (whayutin@redhat.com)
+- empty out orgs before adding them (whayutin@redhat.com)
+- allow default redhat report w/ any will pull all available orgs
+  (whayutin@redhat.com)
+- inactive status now can be edited like the other fields (whayutin@redhat.com)
+- uploading sample data (whayutin@redhat.com)
+
 * Mon Jun 03 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-12
 - Update initializer so our db migrations will run when katello runs their own
   (jwmatthews@gmail.com)
