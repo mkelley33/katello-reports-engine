@@ -138,7 +138,7 @@ module SpliceReports
 
     def edit
       @filter = SpliceReports::Filter.find(params["id"])
-      if @filter.name == "Red Hat Default Report"
+      if @filter.locked == true 
          @filter.organizations  = [] 
          @filter.organizations << accessible_orgs
       end
