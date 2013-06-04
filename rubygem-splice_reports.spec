@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    14%{?dist}
+Release:    15%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Tue Jun 04 2013 wes hayutin <whayutin@redhat.com> 0.0.5-15
+- update to seeds (whayutin@redhat.com)
+- change RH Satellite -> Red Hat Satellite (whayutin@redhat.com)
+
 * Tue Jun 04 2013 wes hayutin <whayutin@redhat.com> 0.0.5-14
 - add status to default reprots, and add inactive report (whayutin@redhat.com)
 
