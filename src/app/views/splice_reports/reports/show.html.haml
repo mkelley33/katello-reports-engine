@@ -13,53 +13,56 @@
                             {data:#{escape_javascript(num_current.to_s)}, color:"#9ccc50"}]; //green   valid
 
                             
+%h1
+  = _("Enhanced Entitlement Report")
+
+.sixty
+  .dash
+    .dashhead
+    .fr
+      %span.tipsy-icon.info{:id => "filter_tip"}
+    .fl.clear.portal
+    #dashboard_subscriptions.big_widget
+      .left_side
+        .line
+        .stats
+          %hr
+          %ul
+            %li
+              %span
+                .icon.red_icon.fl
+                %h5
+                  #{_("Invalid Subscriptions")}
+              .sub_count.fr
+                #{num_invalid}
+            %li
+              %span
+                .icon.yellow_icon.fl
+                %h5
+                  #{_("Insufficient Subscriptions")}
+              .sub_count.fr
+                #{num_insufficient}
+            %li
+              %span
+                .icon.green_icon.fl
+                %h5
+                  #{_("Current Subscriptions")}
+              .sub_count.fr
+                #{num_current}
+          %hr
+            .sys_count.fr
+              #{num_total}
+
+            %h4.fr
+              #{_("Total Systems")}
+
+      .right_side
+        #overlay
+        #sub_graph
+    
+
 %div{ 'ng-controller' => 'ReportsController' }
-  %h1
-    = _("Enhanced Entitlement Report")
   
-  .sixty
-    .dash
-      .dashhead
-      .fl.clear.portal
-      #dashboard_subscriptions.big_widget
-        .left_side
-          .line
-          .stats
-            %hr
-            %ul
-              %li
-                %span
-                  .icon.red_icon.fl
-                  %h5
-                    #{_("Invalid Subscriptions")}
-                .sub_count.fr
-                  #{num_invalid}
-              %li
-                %span
-                  .icon.yellow_icon.fl
-                  %h5
-                    #{_("Insufficient Subscriptions")}
-                .sub_count.fr
-                  #{num_insufficient}
-              %li
-                %span
-                  .icon.green_icon.fl
-                  %h5
-                    #{_("Current Subscriptions")}
-                .sub_count.fr
-                  #{num_current}
-            %hr
-              .sys_count.fr
-                #{num_total}
-
-              %h4.fr
-                #{_("Total Systems")}
-
-        .right_side
-          #overlay
-          #sub_graph
-
-  %span.tipsy-icon.info{:id => "filter_tip"}
   %div{:class => "description", :id => "description"}
     %span
       %h5 
@@ -92,13 +95,10 @@
             = _("Inactive: ") + @filter['inactive'].to_s
 
 
-        
+      
 
   -#%a{:href=>splice_reports_filters_path() + "#/!=&list_search=id:44&panel=filter_"+@filter.id.to_s} 
   -#  = "filter:" + @filter.name.to_s
-
-      
-
 
   %div{ 'alch-table-toolbar' => 'table' }
   %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'ng-class' => '{ "table-mask" : table.working, "details-visible": !table.visible}' }

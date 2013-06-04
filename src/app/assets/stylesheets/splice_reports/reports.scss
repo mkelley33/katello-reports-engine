@@ -49,6 +49,10 @@
 }
 
 
+.filter_tip {
+  float: right;
+}
+
 .tiptext {
     background:#FFFF;
     padding : 5px;
@@ -80,7 +84,15 @@ ul.popup_filter {
     }
   }
 
+.table.details-visible {
+  width: 14%;
+}
 
 .nutupane-details-open {
-  width: 85.7%;
+    width: 85.7% !important;
+}
+
+
+.sixty {
+  float: none;
 }
