@@ -381,9 +381,11 @@ module SpliceReports
         query.push({"$sort" => {params[:sort_by] => sort_order}})
       end
 
-      #RULES MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
+      #"rules" MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
       #paginated prior  
-      aggregate_query = rules_date + rules_org + query + rules_status + rules
+      #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
+      #duplicate entries in the various reports.  
+      aggregate_query = rules_org + query + rules_date + rules_status + rules
       result = @@c.aggregate(aggregate_query)
       #result = @@c.aggregate( rules_date + query + rules )
       logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
