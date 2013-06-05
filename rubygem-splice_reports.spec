@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    15%{?dist}
+Release:    16%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jun 05 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-16
+- Getting ready to build in brew (jwmatthews@gmail.com)
+- add some spacing if the filter description is very long (whayutin@redhat.com)
+- fixed some report table rendering issues in firefox (whayutin@redhat.com)
+- updated report rules ordering to fix an older checkin showing up in inactive
+  reports (whayutin@redhat.com)
+
 * Tue Jun 04 2013 wes hayutin <whayutin@redhat.com> 0.0.5-15
 - update to seeds (whayutin@redhat.com)
 - change RH Satellite -> Red Hat Satellite (whayutin@redhat.com)
