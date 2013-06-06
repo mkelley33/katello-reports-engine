@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    16%{?dist}
+Release:    17%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Thu Jun 06 2013 wes hayutin <whayutin@redhat.com> 0.0.5-17
+- added tool tips for filter creation (whayutin@redhat.com)
+
 * Wed Jun 05 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-16
 - Getting ready to build in brew (jwmatthews@gmail.com)
 - add some spacing if the filter description is very long (whayutin@redhat.com)
