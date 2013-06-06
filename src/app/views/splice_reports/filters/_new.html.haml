@@ -1,5 +1,11 @@
 = javascript  'widgets/jquery.jeditable.helpers', 'splice_reports/filter_create'
 
+= stylesheet 'splice_reports/filters'
+
+
+
+
+
 = content_for :title do
   #{_("New Filter")}
 
@@ -22,11 +28,12 @@
     %fieldset.clearfix
       .grid_11.prefix_1.fielditem
         .grid_5.la
-          %label #{_("Filter by hours since last check-in:")}
-        %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"} 
+          %label #{_("Search Previous Number of Hours:")}
+        %input{:type=>:radio, :name=>"time", :id=>"choose_hour", :value=>"choose_hour"}
+        %span.tipsify.details_icon-grey{:id => "tip_time", :title => tip_time_text}
         %br
         .grid_5.la
-          %label #{_("Filter by check-in's in date range:")}
+          %label #{_("Search by Date Range:")}
         %input{:type=>:radio, :name=>"time", :id=>"choose_daterange", :value=>"choose_daterange"}
         %br
         
@@ -45,6 +52,7 @@
         .grid_5.la
           %label #{_("Inactive")}
         %input.inactive{:label => _("Inactive:"), :type=>:checkbox, :name=>"inactive", :id=>"inactive"}   
+          %span.tipsify.details_icon-grey{:id => "tip_inactive", :title => tip_inactive_text}
 
     = form.submit _("Save Filter"), :id => :save_filter
     

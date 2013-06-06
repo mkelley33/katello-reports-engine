@@ -38,13 +38,11 @@ $(document).ready(function() {
    	plot();
 
    	$("#filter_tip").mouseover(function() {
-          console.log("hover")
           $("#description").show();
         }).click(function() {
           $("#description").hide();
         });
    	$("#description").click(function() {
-          console.log("hide")
           $("#description").hide();
 	});
 });
