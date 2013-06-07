@@ -385,7 +385,7 @@ module SpliceReports
       #paginated prior  
       #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
       #duplicate entries in the various reports.  
-      aggregate_query = rules_org + query + rules_date + rules_status + rules
+      aggregate_query = rules_org + rules_date + query + rules_status + rules
       result = @@c.aggregate(aggregate_query)
       #result = @@c.aggregate( rules_date + query + rules )
       logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
