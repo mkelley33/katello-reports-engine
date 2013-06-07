@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    17%{?dist}
+Release:    18%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri Jun 07 2013 wes hayutin <whayutin@redhat.com> 0.0.5-18
+- moving the matching date range before the mongo agg. grouping to fix a bug
+  where checkins were not found, however the checkin count was found
+  (whayutin@redhat.com)
+- updated system not found message (whayutin@redhat.com)
+
 * Thu Jun 06 2013 wes hayutin <whayutin@redhat.com> 0.0.5-17
 - added tool tips for filter creation (whayutin@redhat.com)
 
