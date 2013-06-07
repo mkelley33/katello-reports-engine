@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    18%{?dist}
+Release:    19%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri Jun 07 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-19
+- 
+
 * Fri Jun 07 2013 wes hayutin <whayutin@redhat.com> 0.0.5-18
 - moving the matching date range before the mongo agg. grouping to fix a bug
   where checkins were not found, however the checkin count was found
