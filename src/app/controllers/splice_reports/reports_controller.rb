@@ -316,9 +316,12 @@ module SpliceReports
       logger.info(start_date.to_s)
       logger.info(end_date.to_s)
       rules = []
-      rules_date = []
+      rules_active = []
+      rules_inactive = []
       rules_org = []
       rules_status = []
+      rules_not_deleted = []
+      rules_deleted = []
       if offset
         rules << {"$skip" => offset.to_i}
         rules << {"$limit" => current_user.page_size}
@@ -336,12 +339,14 @@ module SpliceReports
         }
       end
 
-      if filter["inactive"] == true
-        logger.info("inactive query selected")
-        rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
-      else
-        rules_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
-      end
+      
+      rules_inactive << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
+      
+      rules_active << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
+
+      rules_not_deleted << { "$match" => { "deleted" => { "$exists" => false }}}
+      rules_deleted << {"$match" => { "deleted" => "true"}}
+      
 
       #move status back into an array
       if @filter.status.is_a?(String)
@@ -364,6 +369,7 @@ module SpliceReports
                     identifier: {"$last" => "$instance_identifier"},
                     splice_server: {"$last" => "$splice_server"},
                     systemid: {"$last" => "$facts.systemid"},
+                    deleted: {"$last" => "$facts.deleted"},
                     hostname: {"$last" => "$name"},
                     organization_name: {"$last" => "$organization_name"}
                     }
@@ -385,10 +391,17 @@ module SpliceReports
       #paginated prior  
       #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
       #duplicate entries in the various reports.  
-      aggregate_query = rules_org + rules_date + query + rules_status + rules
-      result = @@c.aggregate(aggregate_query)
-      #result = @@c.aggregate( rules_date + query + rules )
-      logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
+      active_query = rules_org  + query + rules_not_deleted + rules_active + rules_status + rules
+      active_result = @@c.aggregate(active_query)
+
+      inactive_query = rules_org  + query + rules_inactive + rules_status + rules
+      inactive_result = @@c.aggregate(inactive_query)
+
+      deleted_query = rules_org  + query + rules_deleted  + rules_status + rules
+      deleted_result = @@c.aggregate(deleted_query)
+      
+      result = active_result + inactive_result + deleted_result
+      logger.info("get_marketing_product_results():\nQuery: #{active_query}\nResults #{result.count} items")
       #result
       # Translate values in DB to what webui expects
       result.map do |item| 
