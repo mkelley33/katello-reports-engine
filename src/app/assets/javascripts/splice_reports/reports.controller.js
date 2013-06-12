@@ -21,9 +21,9 @@
 //= require "widgets/auto_complete"
 
 
-angular.module('Katello').controller('ReportsController',
-    ['$scope', 'Nutupane', '$location', '$filter', '$http', '$compile',
-    function($scope, Nutupane, $location, $filter, $http, $compile) {
+angular.module('Katello.systems').controller('ReportsController',
+    ['$scope', 'Nutupane', '$location', '$filter', '$http', '$compile', 'Routes',
+    function($scope, Nutupane, $location, $filter, $http, $compile, Routes) {
 
         var columns = [{
             id: 'hostname',
@@ -92,8 +92,11 @@ angular.module('Katello').controller('ReportsController',
             };
         };
 
-        $scope.table                = Nutupane.table;
-        $scope.table.url            = KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
+        var nutupane                = new Nutupane();
+
+        $scope.table                = nutupane.table;
+        //$scope.table.url            = KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
+        $scope.table.url            = Routes.root_path() + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
@@ -153,6 +156,6 @@ angular.module('Katello').controller('ReportsController',
             $scope.select_item($location.search().item);
         }
 
-        Nutupane.get();
+        nutupane.get();
     }]
 );
