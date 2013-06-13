@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    19%{?dist}
+Release:    20%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,11 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Thu Jun 13 2013 wes hayutin <whayutin@redhat.com> 0.0.5-20
+- moved date back to after the mongo group, also reverted the count to cycle
+  through the systems.  This is much slower but with deleted and inactive
+  systems getting added we need to simplify (whayutin@redhat.com)
+
 * Fri Jun 07 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-19
 - 
 
