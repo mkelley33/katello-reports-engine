@@ -38,79 +38,24 @@ module SpliceReports
       return filtered_checkins
     end
     
-    def get_num_summary(filter_id)
-      filter = SpliceReports::Filter.where(:id=>filter_id).first
+    def get_num_summary(checkins)
       num_current = 0
       num_invalid = 0
       num_insufficient = 0
-      
-      counts  = get_status_counts(filter)
-      if !counts.empty?
-        counts_hash = Hash.new
-        counts.each do |c|
-         counts_hash[c["status"]] = c["count"]  
-        end
-        
-        if filter.status.include? "Current"
-            num_current = counts_hash["valid"] if counts_hash["valid"]
-        end
-        if filter.status.include? "Invalid"
-          num_invalid = counts_hash["invalid"] if counts_hash["invalid"]
-        end
-        if filter.status.include? "Insufficient"
-          num_insufficient = counts_hash["partial"] if counts_hash["partial"]
+      checkins.each do | checkin | 
+        case checkin["status"]
+        when "current"
+          num_current += 1
+        when "invalid"
+          num_invalid += 1
+        when "insufficient" 
+          num_insufficient += 1
         end
       end
-    
       return {num_current: num_current, 
               num_invalid: num_invalid, 
               num_insufficient: num_insufficient,
               num_total: num_current + num_invalid + num_insufficient}
-
-    end
-   
-    def get_status_counts(filter)
-      rules_date = []
-      org_ids = []
-      start_date, end_date = get_start_end_dates(filter)
-      filter.organizations.each do |o|
-        org_ids << o.id.to_s
-      end
-
-      if filter["inactive"] == true
-        logger.info("inactive query selected")
-        rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
-      else
-        rules_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
-      end
-      
-     query = [
-
-        {"$match" => { "organization_id" => { "$in" => org_ids }}},
-        {"$group" => {
-          _id:  { ident: "$instance_identifier"},
-                checkin_date: {"$max" => "$checkin_date"},
-                status: {"$last" => "$entitlement_status.status"}},
-         },
-        {"$group" => {
-          _id: "$status", 
-          checkin_date: {"$max" => "$_id.checkin_date"},
-          count: {"$sum" => 1}
-          }
-        },
-        {"$project" => {
-          _id: 0,
-          status: "$_id",
-          count: 1
-
-         } 
-        }
-      ] 
-      
-      aggregate_query = rules_date + query
-      result = @@c.aggregate(aggregate_query) 
-      logger.info("Dashboard: counts get_status_counts for filter #{filter.id} result: #{result}")
-      return result 
     end
 
       def checkins_to_csv(checkins)
@@ -160,7 +105,7 @@ module SpliceReports
       def get_export_metadata(now, checkins, filter_id)
         data = "Generated at: #{now}\n"
         data << "Number of checkins: #{checkins.size}\n"
-        summary = get_num_summary(filter_id)
+        summary = get_num_summary(checkins)
         summary.each do |key, value|
           data << "\t#{key}: #{value}\n"
         end
@@ -239,9 +184,9 @@ module SpliceReports
 
     def index
       @filter = SpliceReports::Filter.find(params[:filter_id])
-      #filtered_checkins = run_filter_by_id(@filter.id, nil).as_json
-      #summary = get_num_summary(filtered_checkins)
-      summary = get_num_summary(@filter.id)
+      filtered_checkins = run_filter_by_id(@filter.id, nil).as_json
+      summary = get_num_summary(filtered_checkins)
+      #summary = get_num_summary(@filter.id)
 
       #render :partial => "reports/report"
       #render :partial => "report", :locals => {:report_invalid => @report_invalid, :report_valid => @report_valid}
@@ -280,7 +225,7 @@ module SpliceReports
           filtered_checkins = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
           logger.info("items(): #{filtered_checkins}")
           #total = self.run_filter_by_id(params[:filter_id], nil).count
-          total = self.get_num_summary(params[:filter_id])[:num_total]
+          total = self.get_num_summary(filtered_checkins)[:num_total]
           render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_checkins } 
         end
       end
@@ -385,7 +330,7 @@ module SpliceReports
       #paginated prior  
       #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
       #duplicate entries in the various reports.  
-      aggregate_query = rules_org + rules_date + query + rules_status + rules
+      aggregate_query = rules_org + query + rules_date + rules_status + rules
       result = @@c.aggregate(aggregate_query)
       #result = @@c.aggregate( rules_date + query + rules )
       logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
