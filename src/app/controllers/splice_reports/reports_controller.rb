@@ -321,7 +321,7 @@ module SpliceReports
           sort_order = Mongo::ASCENDING
         end
         #always sort failing at the top
-        query.push({"$sort" => {:status => Mongo::ASCENDING}})
+        query.push({"$sort" => {:status => Mongo::DESCENDING}})
         query.push({"$sort" => {params[:sort_by] => sort_order}})
       end
 
