@@ -25,7 +25,8 @@ unique_systems = int(unique_systems) + 1
 
 def replaceAll():
 	old_file = open("orig_marketing_product_usage.json", "r")
-	os.remove("marketing_product_usage.json")
+	if( os.path.isfile("marketing_product_usage.json")):
+		os.remove("marketing_product_usage.json")
 	new_file = open("marketing_product_usage.json", "a")
 	#old_file_no_breaks = map(lambda line: line.rstrip('\n'), old_file)
 
