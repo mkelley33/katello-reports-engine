@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    21%{?dist}
+Release:    22%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Jun 17 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-22
+- adding another example json file (whayutin@redhat.com)
+- del mpu file if created (whayutin@redhat.com)
+- updated data load scripts (whayutin@redhat.com)
+- changed status sort to DESCENDING, still not working ideally.. when the table
+  is paginated the sort does not work as expected (whayutin@redhat.com)
+- fix for pagination not working.. count was set to page instead of total
+  (whayutin@redhat.com)
+
 * Thu Jun 13 2013 wes hayutin <whayutin@redhat.com> 0.0.5-21
 - added gpl notice (whayutin@redhat.com)
 
