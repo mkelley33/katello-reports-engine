@@ -224,8 +224,8 @@ module SpliceReports
         format.any(:json, :html) do
           filtered_checkins = self.run_filter_by_id(params[:filter_id], params[:offset] || 0)
           logger.info("items(): #{filtered_checkins}")
-          #total = self.run_filter_by_id(params[:filter_id], nil).count
-          total = self.get_num_summary(filtered_checkins)[:num_total]
+          total = self.run_filter_by_id(params[:filter_id], nil).count
+          #total = get_num_summary(filtered_checkins)[:num_total]
           render :json=>{ :subtotal=>total, :total=>total, :systems=> filtered_checkins } 
         end
       end
@@ -313,7 +313,6 @@ module SpliceReports
                     organization_name: {"$last" => "$organization_name"}
                     }
         },
-        {"$sort" => { checkin_date: -1}},
       ]
  
       if params.key?(:sort_by)
