@@ -48,7 +48,8 @@ def replaceAll():
 			line1 = orig_line.replace("server_ident", ident)
 			line2 = line1.replace("sat_id", str(int("1000011111") + (i + 1)  + x))
 			line3 = line2.replace("change_time", str(gotime) + "000")
-			new_file.write(line3)
+			line4 = line3.replace("replace_name", ident)
+			new_file.write(line4)
 
 	old_file.close()
 	new_file.close()
