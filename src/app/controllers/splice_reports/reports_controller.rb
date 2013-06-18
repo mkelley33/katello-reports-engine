@@ -283,7 +283,7 @@ module SpliceReports
 
       if filter["inactive"] == true
         logger.info("inactive query selected")
-        rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
+        rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date, "$lt" => end_date}}}}
       else
         rules_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
       end
@@ -329,7 +329,7 @@ module SpliceReports
       #paginated prior  
       #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
       #duplicate entries in the various reports.  
-      aggregate_query = rules_org + query + rules_date + rules_status + rules
+      aggregate_query = rules_org + rules_date + query + rules_status + rules
       result = @@c.aggregate(aggregate_query)
       #result = @@c.aggregate( rules_date + query + rules )
       logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
@@ -420,7 +420,7 @@ module SpliceReports
             ],
           :sort => 
             ["checkin_date", Mongo::DESCENDING],
-          :limit => 50
+          :limit => 250
         })
       result = result.map do |item| 
         item["entitlement_status"]["status"] = translate_checkin_status(item["entitlement_status"]["status"])
