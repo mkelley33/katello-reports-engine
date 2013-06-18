@@ -18,9 +18,8 @@
 
 .sixty
   .dash
+    %span.tipsy-icon.info{:id => "filter_tip"}
     .dashhead
-    .fr
-      %span.tipsy-icon.info{:id => "filter_tip"}
     .fl.clear.portal
     #dashboard_subscriptions.big_widget
       .left_side
@@ -57,8 +56,10 @@
               #{_("Total Systems")}
 
       .right_side
+        
         #overlay
         #sub_graph
+        
     
 
 %div{ 'ng-controller' => 'ReportsController' }

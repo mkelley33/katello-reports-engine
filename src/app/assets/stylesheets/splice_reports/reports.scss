@@ -11,6 +11,11 @@
   }
 }
 
+.sixty {
+  margin-left: 20px;
+  width: 650px;
+  float: none;
+}
 
 .subs_image_wrapper {
   height:36px;
@@ -50,14 +55,39 @@
 
 
 .filter_tip {
-  float: right;
+  float: right !important;
+  z-index: 1;
 }
 
+
 .tiptext {
+    float: right !important;
     background:#FFFF;
     padding : 5px;
     width : 300px;
 }
+
+.dash #dashboard_subscriptions h5 {
+  display: inline;
+  font-size: 145%;
+}
+
+.dash #dashboard_subscriptions .right_side #overlay {
+  height: 130px;
+  position: absolute;
+  right: 15px;
+  top: 19px;
+  width: 118px;
+  z-index: 1;
+}
+
+.dash #dashboard_subscriptions #sub_graph {
+  width: 150px;
+  height: 150px;
+  padding: 4px 4px 4px 4px;
+}
+
+
 .description {
     display:none;
     padding : 5px;
@@ -90,9 +120,4 @@ ul.popup_filter {
 
 .nutupane-details-open {
     width: 85.7% !important;
-}
-
-
-.sixty {
-  float: none;
 }
