@@ -37,13 +37,5 @@ var plot = function() {
 $(document).ready(function() {
    	plot();
 
-   	$("#filter_tip").mouseover(function() {
-          $("#description").show();
-        }).click(function() {
-          $("#description").hide();
-        });
-   	$("#description").click(function() {
-          $("#description").hide();
-	});
 });
 
