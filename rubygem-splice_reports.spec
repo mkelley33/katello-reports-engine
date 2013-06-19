@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    26%{?dist}
+Release:    27%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jun 19 2013 wes hayutin <whayutin@redhat.com> 0.0.5-27
+- finally have a working query for active and inactive systems.. inactive =
+  find latest checkin for each instance.. if a checkin is not gt than
+  start_date => inactive (whayutin@redhat.com)
+- update playpen script (whayutin@redhat.com)
+
 * Wed Jun 19 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-26
 - Update path for pub key (jwmatthews@gmail.com)
 
