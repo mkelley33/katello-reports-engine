@@ -68,7 +68,7 @@ GEMFILE
 cp etc/splice/splice_reports.yml %{buildroot}/etc/splice/
 
 # TODO this will be replaced with a RPM that delivers the public key
-cp etc/pki/splice_reports_key.gpg.pub %{buildroot}/etc/pki/splice
+cp etc/pki/splice/splice_reports_key.gpg.pub %{buildroot}/etc/pki/splice
 %clean
 rm -rf %{buildroot}
 
