@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    24%{?dist}
+Release:    25%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jun 19 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-25
+- Update spec to install pub key from etc/pki instead of playpen/example
+  (jwmatthews@gmail.com)
+
 * Wed Jun 19 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-24
 - Update public gpg key with beta key, private is in internal cloude.git
   (jwmatthews@gmail.com)
