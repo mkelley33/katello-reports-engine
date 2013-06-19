@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    22%{?dist}
+Release:    23%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jun 19 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-23
+- missed a row (whayutin@redhat.com)
+- update test data (whayutin@redhat.com)
+- moved the date filter back in front of the mongo grouping, put an end date on
+  inactive queries and increased the checkin detail limit from 50 to 250
+  (whayutin@redhat.com)
+
 * Mon Jun 17 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-22
 - adding another example json file (whayutin@redhat.com)
 - del mpu file if created (whayutin@redhat.com)
