@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    28%{?dist}
+Release:    29%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Jun 24 2013 wes hayutin <whayutin@redhat.com> 0.0.5-29
+- changed fitler removal message s/provider/filter/ (whayutin@redhat.com)
+
 * Mon Jun 24 2013 wes hayutin <whayutin@redhat.com> 0.0.5-28
 - bz#977314 fix for check-in's not found when there are older and newer
   checkins than the specified date range (whayutin@redhat.com)
