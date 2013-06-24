@@ -261,9 +261,12 @@ module SpliceReports
       logger.info(start_date.to_s)
       logger.info(end_date.to_s)
       rules = []
-      rules_date = []
+      rules_inactive_start = []
+      rules_inactive_date = []
+      rules_active_date = []
       rules_org = []
       rules_status = []
+
       if offset
         rules << {"$skip" => offset.to_i}
         rules << {"$limit" => current_user.page_size}
@@ -281,13 +284,9 @@ module SpliceReports
         }
       end
 
-      if filter["inactive"] == true
-        logger.info("inactive query selected")
-        rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
-        #rules_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date, "$lt" => end_date}}}}
-      else
-        rules_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
-      end
+      rules_inactive_start << {"$match" => {:checkin_date=> {"$lt" => end_date}}}
+      rules_inactive_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
+      rules_active_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
 
       #move status back into an array
       if @filter.status.is_a?(String)
@@ -315,6 +314,7 @@ module SpliceReports
                     }
         },
       ]
+
  
       if params.key?(:sort_by)
         sort_order = Mongo::DESCENDING
@@ -333,10 +333,10 @@ module SpliceReports
 
       if filter["inactive"] == true
         # find the latest checkin per instance in orgs, if checkin is *not* in date range.. it is inactive
-        aggregate_query = rules_org + query + rules_date + rules_status + rules
+        aggregate_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules
       else
         # find all checkins in org and date range, find the latest checkin per instance_identifier
-        aggregate_query = rules_org + rules_date +  query + rules_status + rules
+        aggregate_query = rules_org + rules_active_date +  query + rules_status + rules
       end
 
       result = @@c.aggregate(aggregate_query)
@@ -408,7 +408,7 @@ module SpliceReports
     def find_instance_checkins(filter, params)
       #This should return all the checkins for an instance with in
       # the parameteres of the filter
-      logger.info("FIND INSTANCE CHECKINS")
+      logger.info("SYSTEM CHECKINS: find the last 250 check-ins from the system ")
       start_date, end_date = get_start_end_dates(filter)
 
       row = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
@@ -416,7 +416,7 @@ module SpliceReports
       result = @@c.find(
         {
           "instance_identifier" => instance_identifier,
-          "checkin_date" => {"$gt" => start_date, "$lt" => end_date}
+          "checkin_date" => { "$lt" => end_date }
         },
         {
           :fields => 
@@ -436,7 +436,7 @@ module SpliceReports
         item["checkin_date"] = format_time(item["checkin_date"])
         item
       end
-      #debugger
+      logger.info("find_instance_checkins_results():\nResults #{result.count} items")
       return result.as_json
 
     end
