@@ -11,3 +11,5 @@ src/Gemfile*.lock
 .Trash*
 *.sublime-workspace
 *.swp
+.gitignore
+
