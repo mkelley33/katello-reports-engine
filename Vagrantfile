@@ -28,5 +28,5 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder KATELLO_GIT_CHECKOUT, "/katello"
   config.vm.provision :shell,
-      :inline => "cd /vagrant/devel_env/el6 && ./setup_katello_devel_env.sh && ./setup_splice_rails_engine.sh"
+      :inline => "cd /vagrant/devel_env/el6 && ./clear_prior_splice_install.sh && ./setup_katello_devel_env.sh && ./setup_splice_rails_engine.sh"
 end
