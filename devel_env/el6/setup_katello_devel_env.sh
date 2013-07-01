@@ -1,7 +1,6 @@
 # Following: https://fedorahosted.org/katello/wiki/DevelopmentSetup
 
-#Location of Katello git checkout
-export KATELLO_GIT_PATH=/katello
+source env_vars
 
 setenforce 0
 sed -i "s/^SELINUX.*/SELINUX=permissive/" /etc/selinux/config

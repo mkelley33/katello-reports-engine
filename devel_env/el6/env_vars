@@ -1,0 +1,3 @@
+export KATELLO_GIT_PATH=/katello
+export SPLICE_REPORTS_GIT_PATH="`pwd`/../../"
+

@@ -1,5 +1,6 @@
-KATELLO_GIT_PATH="/katello"
-SPLICE_REPORTS_GIT_PATH="`pwd`/../../"
+#!/bin/bash
+
+source env_vars
 
 wget http://ec2-23-22-86-129.compute-1.amazonaws.com/pub/splice_el6_x86_64.repo -O /etc/yum.repos.d/splice_el6_x86_64.repo
 
