@@ -32,7 +32,8 @@ fi
 
 # Run bundle install on katello
 scl enable ruby193 "cd ${KATELLO_GIT_PATH} && bundle install"
-scl enable ruby193 "cd ${KATELLO_GIT_PATH} && rake railties:install:migrations"
+# Note, splice_reports no longer requires a "railties:install:migrations" do not run that command
+# it will cause migrations to be added twice resulting in an error: Multiple migrations have the name ..."
 scl enable ruby193 "cd ${KATELLO_GIT_PATH} && rake db:migrate"
 
 echo "The 'splice_reports' rails engine: ${SPLICE_REPORTS_GIT_PATH} has been configured for ${KATELLO_GIT_PATH}"
