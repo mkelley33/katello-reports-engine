@@ -18,8 +18,10 @@ class Query
 	  end_date = Time.now.utc
 	  start_date = end_date - filter["hours"].hours
 	elsif filter["start_date"] != nil && filter["end_date"] != nil
-      start_date = DateTime.strptime(filter['start_date'], '%Y-%m-%d %l:%M:%S')
-      end_date = DateTime.strptime(filter['end_date'], '%Y-%m-%d %l:%M:%S')
+      #start_date = DateTime.strptime(filter['start_date'], '%Y-%m-%d %l:%M:%S')
+      start_date = DateTime.strptime(filter['start_date'], '%Y-%m-%d')
+      #end_date = DateTime.strptime(filter['end_date'], '%Y-%m-%d %l:%M:%S')
+      end_date = DateTime.strptime(filter['end_date'], '%Y-%m-%d')
 
       start_date = Time.parse(start_date.to_s).utc
 	  end_date = Time.parse(end_date.to_s).utc
@@ -49,8 +51,8 @@ class Query
       logger = Logging.logger(STDOUT)
   	  logger.level = :info
 
-      logger.info("get_marketing_product_results: filter=#{filter}, offset=#{offset}, search=#{search}")
-      logger.info("get_marketing_product_results: organizations=#{filter.organizations}")
+      #logger.info("get_marketing_product_results: filter=#{filter}, offset=#{offset}, search=#{search}")
+      #logger.info("get_marketing_product_results: organizations=#{filter.organizations}")
 
       #get org id's
       org_ids = []
@@ -58,8 +60,8 @@ class Query
         org_ids << o.id.to_s
       end
       start_date, end_date = get_start_end_dates(filter)
-      logger.info(start_date.to_s)
-      logger.info(end_date.to_s)
+      #logger.info(start_date.to_s)
+      #logger.info(end_date.to_s)
       rules = []
       rules_inactive_start = []
       rules_inactive_date = []
@@ -145,7 +147,7 @@ class Query
 
       result = @@c.aggregate(aggregate_query)
       #result = @@c.aggregate( rules_date + query + rules )
-      logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
+      #logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
       #result
       # Translate values in DB to what webui expects
       result.map do |item| 

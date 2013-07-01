@@ -20,16 +20,16 @@
 class Filter
   attr_accessor :name, :hours, :start_date, :end_date, :status, :inactive, :organizations
 
-  def initialize(name)
+  def initialize(name, hours, start_date, end_date, status, inactive)
   	@name = name
   	@description = name
   	@locked = false
-  	@hours = nil
+  	@hours = hours #nil
   	@satellite_name = 'any'
-  	@start_date = "2013-05-01 04:00:00"
-  	@end_date = "2013-06-30 04:00:00"
-  	@status = ["Current", "Invalid", "Insufficient"]
-  	@inactive = false
+  	@start_date = start_date #"2013-05-01 04:00:00"
+  	@end_date = end_date #"2013-06-30 04:00:00"
+  	@status = status #["Current", "Invalid", "Insufficient"]
+  	@inactive = inactive #false
   	@organizations = []
 
   	

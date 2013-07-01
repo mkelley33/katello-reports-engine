@@ -1,49 +1,81 @@
+#run from rvm
+
 # execute
 require 'mongo'
 require 'pp'
 require 'pry'
 require 'pry-nav'
 
-require_relative './query'
 require_relative './filter'
+require_relative './mongo_conn'
+require_relative './query'
+
+
 
 	class Start
 	  include Mongo
 
       def initialize
-      	@client = MongoClient.new('localhost', 27017)
-      	@results = @client['checkin_service']
-      	@marketing_report_data   = @results['marketing_product_usage']
+      	conn = MongoConn.new()
+      	@marketing_report_data = conn.get_coll_marketing_report_data()
+
       end
 
-      def get_collection()
+      def get_collection
       	return @marketing_report_data
       end
 
-      def count
-      	puts "from run_me"
-      	puts @marketing_report_data.count()
-      end
+      #def count
+      #	puts "from run_me"
+      #	puts @marketing_report_data.count()
+      #end
     end
 
 #test connection
 test = Start.new()
-#test.count
+coll = test.get_collection()
+puts coll.count()
+
 
 #test query module
 q = Query.new(test.get_collection)
-#puts q.count()
-
-#test filter
-f = Filter.new("test1")
-#puts f.name, f.start_date
-#puts f.organizations[0].id
-#puts f.status
-
-#test aggregation
-#get_marketing_product_results(filter, offset, search)
 params = {}
-puts q.get_marketing_product_results(f, params, nil, nil)
+
+#execute a filter: 
+
+#create filter
+	#@name = name
+	#@hours = hours #nil
+	#@start_date = start_date #"2013-05-01 04:00:00"
+	#@end_date = end_date #"2013-06-30 04:00:00"
+	#@status = status #["Current", "Invalid", "Insufficient"]
+	#@inactive = inactive #false
+	#@organizations = []
+
+f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Current", "Invalid", "Insufficient"], false)
+result =  q.get_marketing_product_results(f, params, nil, nil)
+puts result
+puts result.count
+puts "==" * 20
+
+f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Current"], false)
+result =  q.get_marketing_product_results(f, params, nil, nil)
+puts result
+puts result.count
+puts "==" * 20
+
+f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Invalid"], false)
+result =  q.get_marketing_product_results(f, params, nil, nil)
+puts result
+puts result.count
+puts "==" * 20
+
+f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Insufficient"], false)
+result =  q.get_marketing_product_results(f, params, nil, nil)
+puts result
+puts result.count
+puts "==" * 20
+
 
 
 
