@@ -8,20 +8,20 @@ require_relative '../../query'
 db = MongoConn.new()
 mpu = db.get_coll_marketing_report_data()
 
-Given(/^there is a populated database where the last checkin is Current "(.*?)"$/) do  |arg1|
+Given(/^there is one unique instance in the db  "(.*?)"$/) do |arg1|
 
   arg1.to_i.should == mpu.distinct('instance_identifier').count
 
 end
 
-When(/^I define several filters "(.*?)" starting at "(.*?)" ending at "(.*?)" with entitlement_status "(.*?)" and inactive "(.*?)"$/) do  |name, f_start, f_end, status, inactive|
+When(/^I define a filter "(.*?)" starting at "(.*?)" ending at "(.*?)" with entitlement_status "(.*?)" and inactive "(.*?)"$/) do |name, f_start, f_end, status, inactive|
 #When(/^I define a filter "(.*?)"$/) do |name, start|
 #
   @filter = Filter.new(name, nil, f_start, f_end, status.split(","), inactive)
 #
 end
 
-Then(/^when I execute the filters, the report should have this number of rows "(.*?)"$/) do |arg1|
+Then(/^when I execute the filter, the report should have this number of rows "(.*?)"$/) do |arg1|
   params = {}
   q = Query.new(mpu)
   @result =  q.get_marketing_product_results(@filter, params, nil, nil)
