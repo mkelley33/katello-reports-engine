@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-KATELLO_GIT_CHECKOUT="/git/katello"
+KATELLO_GIT_CHECKOUT="../katello"
 
 Vagrant.configure("2") do |config|
   # All Vagrant configuration is done here. The most common configuration
