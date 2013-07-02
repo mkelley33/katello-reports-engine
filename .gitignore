@@ -13,4 +13,5 @@ src/Gemfile*.lock
 *.swp
 .vagrant
 devel_env/el6/log_*
+splice-reports.sublime-project
 
