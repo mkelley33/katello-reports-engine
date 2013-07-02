@@ -40,7 +40,9 @@ def replaceAll():
 			t = random.randint(0,50)
 			delta = timedelta(hours=int(t))
 			now = datetime.datetime.now()
+
 			nowish = now + delta
+
 			gotime = calendar.timegm(nowish.timetuple())
 			#status = status_array[r]
 			ident = "server_ident" + str(i + 1) + str(x)

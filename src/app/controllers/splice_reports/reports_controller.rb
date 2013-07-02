@@ -248,7 +248,116 @@ module SpliceReports
       end
     end
 
+<<<<<<< HEAD
     
+=======
+    def get_marketing_product_results(filter, offset, search)
+      logger.info("get_marketing_product_results: filter=#{filter}, offset=#{offset}, search=#{search}")
+      logger.info("get_marketing_product_results: organizations=#{filter.organizations}")
+
+      #get org id's
+      org_ids = []
+      filter.organizations.each do |o|
+        org_ids << o.id.to_s
+      end
+      start_date, end_date = get_start_end_dates(filter)
+      logger.info(start_date.to_s)
+      logger.info(end_date.to_s)
+      rules = []
+      rules_active = []
+      rules_inactive = []
+      rules_org = []
+      rules_status = []
+      rules_not_deleted = []
+      rules_deleted = []
+      if offset
+        rules << {"$skip" => offset.to_i}
+        rules << {"$limit" => current_user.page_size}
+      end
+
+      if not search.nil? and not search.blank?
+        logger.info("Search by filter id and search term: " + search.to_s )
+        rules << {
+          "$match" => { 
+            "$or" => [
+              {"systemid" => {"$regex" => search}},
+              {"hostname" => {"$regex" => search}}
+            ]
+          }
+        }
+      end
+
+      
+      rules_inactive << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
+      
+      rules_active << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
+
+      rules_not_deleted << { "$match" => { "deleted" => { "$exists" => false }}}
+      rules_deleted << {"$match" => { "deleted" => "true"}}
+      
+
+      #move status back into an array
+      if @filter.status.is_a?(String)
+        filter["status"] = filter["status"].split(", ")
+      end
+      #translate the terms
+      index = filter["status"].index("Current") and filter["status"][index] = "valid"
+      index = filter["status"].index("Invalid") and filter["status"][index] = "invalid"
+      index = filter["status"].index("Insufficient") and filter["status"][index] = "partial"
+
+      rules_status << {"$match" => { "status" => { "$in" => filter["status"] }}}
+      rules_org << {"$match" => { "organization_id" => { "$in" => org_ids }}}
+      
+      query = [
+        {"$group" => {
+                    _id: { ident: "$instance_identifier"},
+                    record: {"$last" => "$_id"},
+                    checkin_date: {"$max" => "$checkin_date"},
+                    status: {"$last" => "$entitlement_status.status"},
+                    identifier: {"$last" => "$instance_identifier"},
+                    splice_server: {"$last" => "$splice_server"},
+                    systemid: {"$last" => "$facts.systemid"},
+                    deleted: {"$last" => "$facts.deleted"},
+                    hostname: {"$last" => "$name"},
+                    organization_name: {"$last" => "$organization_name"}
+                    }
+        },
+        {"$sort" => { checkin_date: -1}},
+      ]
+ 
+      if params.key?(:sort_by)
+        sort_order = Mongo::DESCENDING
+        if /DESC/i.match(params[:sort_order])
+          sort_order = Mongo::ASCENDING
+        end
+        #always sort failing at the top
+        query.push({"$sort" => {:status => Mongo::ASCENDING}})
+        query.push({"$sort" => {params[:sort_by] => sort_order}})
+      end
+
+      #"rules" MUST COME AFTER THE SORT.  The data will not return correctly if results are limited
+      #paginated prior  
+      #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
+      #duplicate entries in the various reports.  
+      active_query = rules_org  + query + rules_not_deleted + rules_active + rules_status + rules
+      active_result = @@c.aggregate(active_query)
+
+      inactive_query = rules_org  + query + rules_inactive + rules_status + rules
+      inactive_result = @@c.aggregate(inactive_query)
+
+      deleted_query = rules_org  + query + rules_deleted  + rules_status + rules
+      deleted_result = @@c.aggregate(deleted_query)
+      
+      result = active_result + inactive_result + deleted_result
+      logger.info("get_marketing_product_results():\nQuery: #{active_query}\nResults #{result.count} items")
+      #result
+      # Translate values in DB to what webui expects
+      result.map do |item| 
+       item["status"] = translate_checkin_status(item["status"])
+       item
+      end
+    end
+>>>>>>> nutupan
 
     def record
       logger.info(params.to_s)

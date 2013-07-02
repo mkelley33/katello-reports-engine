@@ -1,4 +1,4 @@
-= javascript 'splice_reports/reports.controller', 'splice_reports/reports.piechart', 'widgets/nutupane', 'components/scrollWithPage.directive.js', 'components/inline_edit.directive', 'components/input.directive'
+= javascript 'splice_reports/reports.controller', 'splice_reports/report_index.js', 'splice_reports/reports.piechart', 'widgets/nutupane', 'components/scrollWithPage.directive.js', 'components/inline_edit.directive', 'components/input.directive'
 
 = stylesheet 'dashboard'
 = stylesheet 'splice_reports/reports'
@@ -18,9 +18,8 @@
 
 .sixty
   .dash
+    %span.tipsy-icon.info{:id => "filter_tip"}
     .dashhead
-    .fr
-      %span.tipsy-icon.info{:id => "filter_tip"}
     .fl.clear.portal
     #dashboard_subscriptions.big_widget
       .left_side
@@ -57,8 +56,10 @@
               #{_("Total Systems")}
 
       .right_side
+        
         #overlay
         #sub_graph
+        
     
 
 %div{ 'ng-controller' => 'ReportsController' }
