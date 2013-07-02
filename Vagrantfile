@@ -3,6 +3,15 @@
 
 KATELLO_GIT_CHECKOUT="../katello"
 
+
+$setup_script = <<EOF
+cd /vagrant/devel_env/el6
+./clear_prior_splice_install.sh | tee log_clear_prior_splice_install
+./setup_katello_devel_env.sh | tee log_setup_katello_devel_env
+./setup_splice_rails_engine.sh | tee log_setup_splice_rails_engine
+EOF
+
+
 Vagrant.configure("2") do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -27,6 +36,6 @@ Vagrant.configure("2") do |config|
   # config.vm.network :public_network
 
   config.vm.synced_folder KATELLO_GIT_CHECKOUT, "/katello"
-  config.vm.provision :shell,
-      :inline => "cd /vagrant/devel_env/el6 && ./clear_prior_splice_install.sh && ./setup_katello_devel_env.sh && ./setup_splice_rails_engine.sh"
+  config.vm.provision :shell, :inline => $setup_script
+      #:inline => "cd /vagrant/devel_env/el6 && ./clear_prior_splice_install.sh && ./setup_katello_devel_env.sh && ./setup_splice_rails_engine.sh"
 end

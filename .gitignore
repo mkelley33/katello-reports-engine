@@ -12,4 +12,5 @@ src/Gemfile*.lock
 *.sublime-workspace
 *.swp
 .vagrant
+devel_env/el6/log_*
 

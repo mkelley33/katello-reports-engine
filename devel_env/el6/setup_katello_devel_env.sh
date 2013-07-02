@@ -41,6 +41,8 @@ EOF
 service postgresql restart
 
 scl enable ruby193 "cd ${KATELLO_GIT_PATH} && bundle install"
+# Revert any changes to db/schema.rb  (Clears up issues if we have multiple re-installs of devel env)
+cd ${KATELLO_GIT_PATH} && git checkout db/schema.rb
 cd ${KATELLO_GIT_PATH} && echo "yes" | scl enable ruby193 "./script/katello-reset-dbs development ."
 echo "Katello devel enviroment is setup"
 echo "Please run the below to bring up the Katello Development Server:"
