@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    29%{?dist}
+Release:    30%{?dist}
 Group:      Development/Libraries
 License:    GPLv2
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,29 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Tue Jul 02 2013 wes hayutin <whayutin@redhat.com> 0.0.5-30
+- Merge branch 'wes_test' (whayutin@redhat.com)
+- broke out the mongo aggragtion into its own class, and changed the cuke tests
+  to use that class (whayutin@redhat.com)
+- Update vagrant devel to cleanup prior setups with katello db/schema.rb, also
+  save setup runs to separate log files (jwmatthews@gmail.com)
+- Fix syntax issue with clear splice script (jwmatthews@gmail.com)
+- adding more tests (whayutin@redhat.com)
+- Clear prior splice_reports installs when using Vagrant (jwmatthews@gmail.com)
+- have cuke running queries successfully (whayutin@redhat.com)
+- Do not run "railties:install:migrations" (jwmatthews@gmail.com)
+- Move common vars to env_vars (jwmatthews@gmail.com)
+- Ignore .vagrant (jwmatthews@gmail.com)
+- Update so KATELLO_GIT_PATH is consistent with both scripts
+  (jwmatthews@gmail.com)
+- first pass at breaking out the mongo aggregtion query, have it running
+  independently of rails (whayutin@redhat.com)
+- Change location of Katello checkout to be relative to this directory
+  (jwmatthews@gmail.com)
+- Updating gems for rspec/cucumber (jwmatthews@gmail.com)
+- Adding scripts to launcha  katello+splice devel env in a VM.  Needs more work
+  on splice integration to Katello (jwmatthews@gmail.com)
+
 * Mon Jun 24 2013 wes hayutin <whayutin@redhat.com> 0.0.5-29
 - changed fitler removal message s/provider/filter/ (whayutin@redhat.com)
 
