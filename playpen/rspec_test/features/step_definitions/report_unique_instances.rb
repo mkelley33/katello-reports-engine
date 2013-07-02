@@ -1,8 +1,12 @@
 #unique instances
+require 'pry'
+require 'pry-nav'
 
 require_relative '../../mongo_conn'
 require_relative '../../filter'
-require_relative '../../query'
+require_relative '../../../../src/lib/splice_reports/report_query'
+
+include SpliceReports
 
 #setup the db
 db = MongoConn.new()
@@ -18,13 +22,16 @@ When(/^I define several filters "(.*?)" starting at "(.*?)" ending at "(.*?)" wi
 #When(/^I define a filter "(.*?)"$/) do |name, start|
 #
   @filter = Filter.new(name, nil, f_start, f_end, status.split(","), inactive)
+  #pp @filter
 #
 end
 
 Then(/^when I execute the filters, the report should have this number of rows "(.*?)"$/) do |arg1|
+  @result = 0
   params = {}
-  q = Query.new(mpu)
-  @result =  q.get_marketing_product_results(@filter, params, nil, nil)
+  q = ReportQuery.new(mpu)
+  #result =  q.get_marketing_product_results(f, params, nil, nil, page_size)
+  @result =  q.get_marketing_product_results(@filter, params, nil, nil, 25)
   @result.count.to_s.should == arg1
 end
 

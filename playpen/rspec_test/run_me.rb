@@ -8,7 +8,9 @@ require 'pry-nav'
 
 require_relative './filter'
 require_relative './mongo_conn'
-require_relative './query'
+require_relative '../../src/lib/splice_reports/report_query'
+
+include SpliceReports
 
 
 
@@ -38,7 +40,7 @@ puts coll.count()
 
 
 #test query module
-q = Query.new(test.get_collection)
+q = ReportQuery.new(test.get_collection)
 params = {}
 
 #execute a filter: 
@@ -51,27 +53,29 @@ params = {}
 	#@status = status #["Current", "Invalid", "Insufficient"]
 	#@inactive = inactive #false
 	#@organizations = []
+#def get_marketing_product_results(filter, params, offset, search, page_size)
+page_size = 25
 
 f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Current", "Invalid", "Insufficient"], false)
-result =  q.get_marketing_product_results(f, params, nil, nil)
+result =  q.get_marketing_product_results(f, params, nil, nil, page_size)
 puts result
 puts result.count
 puts "==" * 20
 
 f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Current"], false)
-result =  q.get_marketing_product_results(f, params, nil, nil)
+result =  q.get_marketing_product_results(f, params, nil, nil, page_size)
 puts result
 puts result.count
 puts "==" * 20
 
 f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Invalid"], false)
-result =  q.get_marketing_product_results(f, params, nil, nil)
+result =  q.get_marketing_product_results(f, params, nil, nil, page_size)
 puts result
 puts result.count
 puts "==" * 20
 
 f = Filter.new("test1", nil, "2013-05-01", "2013-06-30", ["Insufficient"], false)
-result =  q.get_marketing_product_results(f, params, nil, nil)
+result =  q.get_marketing_product_results(f, params, nil, nil, page_size)
 puts result
 puts result.count
 puts "==" * 20

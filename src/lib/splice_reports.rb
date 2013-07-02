@@ -14,6 +14,7 @@
 require "splice_reports/config"
 require "splice_reports/engine"
 require "splice_reports/mongo_conn"
+require "splice_reports/report_query"
 
 module SpliceReports
 end

@@ -2,7 +2,7 @@
 
 require_relative '../../mongo_conn'
 require_relative '../../filter'
-require_relative '../../query'
+require_relative '../../../../src/lib/splice_reports/report_query'
 
 #setup the db
 db = MongoConn.new()
@@ -22,9 +22,11 @@ When(/^I define a filter "(.*?)" starting at "(.*?)" ending at "(.*?)" with enti
 end
 
 Then(/^when I execute the filter, the report should have this number of rows "(.*?)"$/) do |arg1|
+  @result = 0
   params = {}
-  q = Query.new(mpu)
-  @result =  q.get_marketing_product_results(@filter, params, nil, nil)
+  q = ReportQuery.new(mpu)
+  #result =  q.get_marketing_product_results(f, params, nil, nil, page_size)
+  @result =  q.get_marketing_product_results(@filter, params, nil, nil, 25)
   @result.count.to_s.should == arg1
 end
 

@@ -13,7 +13,8 @@ Feature: report query
 
     Scenarios: no matches
       | populate | name        | f_start       | f_end         | status                        | inactive |  result |
-      | 1        | basic       | 2013-05-01    | 2013-06-01    | Current,Invalid,Insufficient  | false    |  1      |
-      | 1        | basic       | 2013-05-01    | 2013-06-01    | Invalid,Insufficient          | false    |  0      |
-      | 1        | basic       | 2013-05-01    | 2013-06-01    | Invalid                       | false    |  0      |
-      | 1        | basic       | 2013-05-01    | 2013-06-01    | Insufficient                  | false    |  0      |
+      | 1        | basic       | 2013-05-01    | 2013-06-30    | Current                       | false    |  1      |
+      | 1        | basic       | 2013-05-01    | 2013-06-30    | Current,Invalid,Insufficient  | false    |  1      |
+      | 1        | basic       | 2013-05-01    | 2013-06-30    | Invalid,Insufficient          | false    |  0      |
+      | 1        | basic       | 2013-05-01    | 2013-06-30    | Invalid                       | false    |  0      |
+      | 1        | basic       | 2013-05-01    | 2013-06-30    | Insufficient                  | false    |  0      |
