@@ -3,10 +3,13 @@
 source env_vars
 
 wget http://ec2-23-22-86-129.compute-1.amazonaws.com/pub/splice_el6_x86_64.repo -O /etc/yum.repos.d/splice_el6_x86_64.repo
+wget http://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-subscription-manager.repo -O /etc/yum.repos.d/epel-subscription-manager.repo
 
 # Install deps for splice-reports
 yum -y install ruby193-rubygem-mongo ruby193-rubygem-bson_ext ruby193-rubygem-zipruby
 yum -y install mongodb-server v8
+
+yum -y install spacewalk-splice-tool
 
 # Install splice-reports Rails engine into Katello
 cat <<EOF > ${KATELLO_GIT_PATH}/bundler.d/splice_reports.rb
