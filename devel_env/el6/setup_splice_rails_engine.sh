@@ -54,9 +54,11 @@ echo "The 'splice_reports' rails engine: ${SPLICE_REPORTS_GIT_PATH} has been con
 echo "Please run the below to bring up the Katello Development Server:"
 echo " On your main devel machine:"
 echo "  1) Ensure that there is an entry for the VM's hostname: splice.example.com in /etc/hosts"
+echo "  2) To ssh to guest.. type: vagrant ssh"
 echo ""
 echo " On the newly created VM:"
 echo " 1) cd ${KATELLO_GIT_PATH}"
 echo " 2) sudo scl enable ruby193 'rails s'"
+echo " 3) as of 7/2013 you will have to enable the experimental UI in the user account settings of katello"
 echo "Enjoy."
 =======
