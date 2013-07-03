@@ -307,7 +307,7 @@ module SpliceReports
       #This should return all the checkins for an instance with in
       # the parameteres of the filter
       logger.info("SYSTEM CHECKINS: find the last 250 check-ins from the system ")
-      start_date, end_date = get_start_end_dates(filter)
+      start_date, end_date = @@query.get_start_end_dates(filter)
 
       row = @@c.find({:_id => BSON::ObjectId(params[:id])}).first
       instance_identifier = row["instance_identifier"]
