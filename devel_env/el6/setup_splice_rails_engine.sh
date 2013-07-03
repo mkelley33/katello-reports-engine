@@ -39,6 +39,16 @@ scl enable ruby193 "cd ${KATELLO_GIT_PATH} && bundle install"
 # it will cause migrations to be added twice resulting in an error: Multiple migrations have the name ..."
 scl enable ruby193 "cd ${KATELLO_GIT_PATH} && rake db:migrate"
 
+#install deps for sample data
+yum -y install python-mongoengine pymongo
+
+#load sample data
+pushd /vagrant/playpen/create_sample_data/
+/vagrant/playpen/create_sample_data/create.py -u 10
+/vagrant/playpen/create_sample_data/load_data.py -d
+popd
+
+
 echo "The 'splice_reports' rails engine: ${SPLICE_REPORTS_GIT_PATH} has been configured for ${KATELLO_GIT_PATH}"
 
 echo "Please run the below to bring up the Katello Development Server:"
@@ -49,4 +59,4 @@ echo " On the newly created VM:"
 echo " 1) cd ${KATELLO_GIT_PATH}"
 echo " 2) sudo scl enable ruby193 'rails s'"
 echo "Enjoy."
-
+=======
