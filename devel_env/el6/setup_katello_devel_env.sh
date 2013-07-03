@@ -44,6 +44,12 @@ scl enable ruby193 "cd ${KATELLO_GIT_PATH} && bundle install"
 # Revert any changes to db/schema.rb  (Clears up issues if we have multiple re-installs of devel env)
 cd ${KATELLO_GIT_PATH} && git checkout db/schema.rb
 cd ${KATELLO_GIT_PATH} && echo "yes" | scl enable ruby193 "./script/katello-reset-dbs development ."
+if [ $? -ne 0 ]; then
+  echo "Failed to reset Katello DB."
+  echo "Please ensure you are running with the latest katello git checkout and retry"
+  exit
+fi
+
 echo "Katello devel enviroment is setup"
 echo "Please run the below to bring up the Katello Development Server:"
 echo " ** If setting this up in VM, ensure you ssh into the VM prior to running below**"
