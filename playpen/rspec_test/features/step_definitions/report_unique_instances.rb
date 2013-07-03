@@ -13,7 +13,9 @@ db = MongoConn.new()
 mpu = db.get_coll_marketing_report_data()
 
 Given(/^there is a populated database where the last checkin is Current "(.*?)"$/) do  |arg1|
-
+  mpu.drop()
+  load_db = system("mongorestore data/dump")
+  load_db.should == true
   arg1.to_i.should == mpu.distinct('instance_identifier').count
 
 end
@@ -21,6 +23,8 @@ end
 When(/^I define several filters "(.*?)" starting at "(.*?)" ending at "(.*?)" with entitlement_status "(.*?)" and inactive "(.*?)"$/) do  |name, f_start, f_end, status, inactive|
 #When(/^I define a filter "(.*?)"$/) do |name, start|
 #
+  inactive = false if inactive == "false"
+  inactive = true if inactive == "true"
   @filter = Filter.new(name, nil, f_start, f_end, status.split(","), inactive)
   #pp @filter
 #

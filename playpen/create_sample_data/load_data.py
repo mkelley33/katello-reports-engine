@@ -10,11 +10,13 @@ import os
 drop = False
 parser = OptionParser()
 parser.add_option("-d", "--drop", action="store_true", dest="drop", help="drop mpu collection")
+parser.add_option("-p", "--path-to-orig", dest="path", help="path to original json file .. orig_marketing_product_usage.json")
 (opts, args) = parser.parse_args()
 drop = opts.drop
+path = opts.path
 print(drop)
 
-DUMP_DIR = '.'
+DUMP_DIR = path
 
 def setup_database():
     # Disconnect from the default mongo db, and use a test db instead.

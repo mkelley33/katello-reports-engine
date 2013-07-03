@@ -43,10 +43,8 @@ scl enable ruby193 "cd ${KATELLO_GIT_PATH} && rake db:migrate"
 yum -y install python-mongoengine pymongo
 
 #load sample data
-pushd /vagrant/playpen/create_sample_data/
-/vagrant/playpen/create_sample_data/create.py -u 10
-/vagrant/playpen/create_sample_data/load_data.py -d
-popd
+/vagrant/playpen/create_sample_data/create.py -u 10 -p "/vagrant/playpen/create_sample_data/"
+/vagrant/playpen/create_sample_data/load_data.py -d -p "/vagrant/playpen/create_sample_data/"
 
 
 echo "The 'splice_reports' rails engine: ${SPLICE_REPORTS_GIT_PATH} has been configured for ${KATELLO_GIT_PATH}"

@@ -10,9 +10,13 @@ import sys
 
 unique_systems = 0
 parser = OptionParser()
-parser.add_option("-u", "--unique-systems", dest="unique_systems", help="number of unique systems to create")
+parser.add_option("-u", "--unique-systems-status", dest="unique_systems", help="number of unique systems to create for each status")
+parser.add_option("-p", "--path-to-orig", dest="path", help="path to original json file .. orig_marketing_product_usage.json")
 (opts, args) = parser.parse_args()
+
 unique_systems = opts.unique_systems
+path = opts.path
+
 print("creating " + str(unique_systems) + " unique systems")
 
 mandatories = ['unique_systems']
@@ -24,10 +28,12 @@ for m in mandatories:
 unique_systems = int(unique_systems) + 1
 
 def replaceAll():
-	old_file = open("orig_marketing_product_usage.json", "r")
-	if( os.path.isfile("marketing_product_usage.json")):
-		os.remove("marketing_product_usage.json")
-	new_file = open("marketing_product_usage.json", "a")
+	orig = os.path.join(path, "orig_marketing_product_usage.json")
+	new = os.path.join(path, "marketing_product_usage.json")
+	old_file = open(orig, "r")
+	if( os.path.isfile(new)):
+		os.remove(new)
+	new_file = open(new, "a")
 	#old_file_no_breaks = map(lambda line: line.rstrip('\n'), old_file)
 
 	orig_line = ""
@@ -37,8 +43,8 @@ def replaceAll():
 		#status_array = ["current", "invalid", "insufficient"]
 		for x in range(1, unique_systems):
 			r = random.randint(0,2)
-			t = random.randint(0,50)
-			delta = timedelta(hours=int(t))
+			#t = random.randint(0,23)
+			delta = timedelta(hours=int(x))
 			now = datetime.datetime.now()
 
 			nowish = now + delta
