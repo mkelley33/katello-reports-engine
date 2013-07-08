@@ -59,4 +59,5 @@ echo " 1) cd ${KATELLO_GIT_PATH}"
 echo " 2) sudo scl enable ruby193 'rails s'"
 echo " 3) as of 7/2013 you will have to enable the experimental UI in the user account settings of katello"
 echo "Enjoy."
-=======
+echo "======="
+
