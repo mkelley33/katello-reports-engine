@@ -1,0 +1,4 @@
+export KATELLO_GIT_PATH=/katello
+export SPLICE_REPORTS_GIT_PATH="/splice-reports"
+export LIB_HOME=/home/ec2-user
+

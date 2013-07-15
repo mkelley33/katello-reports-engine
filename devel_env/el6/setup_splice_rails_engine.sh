@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source env_vars
+source ./env_vars
 
 wget http://ec2-23-22-86-129.compute-1.amazonaws.com/pub/splice_el6_x86_64.repo -O /etc/yum.repos.d/splice_el6_x86_64.repo
 wget http://repos.fedorapeople.org/repos/candlepin/subscription-manager/epel-subscription-manager.repo -O /etc/yum.repos.d/epel-subscription-manager.repo

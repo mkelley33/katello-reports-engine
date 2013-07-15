@@ -1,6 +1,6 @@
 # Following: https://fedorahosted.org/katello/wiki/DevelopmentSetup
 
-source env_vars
+source ./env_vars
 
 setenforce 0
 sed -i "s/^SELINUX.*/SELINUX=permissive/" /etc/selinux/config
@@ -28,7 +28,7 @@ chkconfig katello-jobs off; chkconfig katello off
 
 # Update katello.yml with development/test DBs
 cp /etc/katello/katello.yml ${KATELLO_GIT_PATH}/config/katello.yml
-../update_katello_yml.rb ${KATELLO_GIT_PATH}/config/katello.yml
+${LIB_HOME}/update_katello_yml.rb ${KATELLO_GIT_PATH}/config/katello.yml
 
 # Modify DB access
 cat >/var/lib/pgsql/data/pg_hba.conf <<EOF
