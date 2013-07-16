@@ -61,7 +61,7 @@ if __name__ == "__main__":
     #
     # Update EC2 tag with version of RCS installed
     #
-    datestmp = datetime.now().strftime("%Y-%M-%d %H:%m")
+    datestmp = datetime.now().strftime("%Y-%m-%d %H:%M")
     tag = tag_instance(instance, hostname, ssh_user, ssh_key, data="Splice Devel Env %s" % (datestmp))
 
     end = time.time()
