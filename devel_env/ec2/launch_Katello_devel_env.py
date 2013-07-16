@@ -32,7 +32,7 @@ if __name__ == "__main__":
     ssh_command(hostname, ssh_user, ssh_key, "sudo chown root:root /etc/sysconfig/iptables")
     ssh_command(hostname, ssh_user, ssh_key, "sudo service iptables restart")
     #
-    # Run install script
+    # Copy scripts over
     #
     scp_to_command(hostname, ssh_user, ssh_key, "./env_vars", "~")
     scp_to_command(hostname, ssh_user, ssh_key, "./prepare.sh", "~")
@@ -42,13 +42,22 @@ if __name__ == "__main__":
     ssh_command(hostname, ssh_user, ssh_key, "chmod +x ./setup_katello_devel_env.sh")
     scp_to_command(hostname, ssh_user, ssh_key, "%s/setup_splice_rails_engine.sh" % (SCRIPT_DIR), "~")
     ssh_command(hostname, ssh_user, ssh_key, "chmod +x ./setup_splice_rails_engine.sh")
+    scp_to_command(hostname, ssh_user, ssh_key, "%s/run_rails.sh" % (SCRIPT_DIR), "~")
+    ssh_command(hostname, ssh_user, ssh_key, "chmod +x ./run_rails.sh")
+    #
+    # Run install script
+    #
     print "Set hostname and checkout git repos"
     ssh_command(hostname, ssh_user, ssh_key, "time sudo ./prepare.sh &> ./prepare.log")
+
     print "Setup Katello Devel Env"
     ssh_command(hostname, ssh_user, ssh_key, "time sudo ./setup_katello_devel_env.sh &> ./setup_katello_devel_env.log")
 
     print "Install SpliceReports"
     ssh_command(hostname, ssh_user, ssh_key, "time sudo ./setup_splice_rails_engine.sh &> ./setup_splice_rails_engine.log")
+
+    print "Kicking off Rails server in screen session"
+    ssh_command(hostname, ssh_user, ssh_key, "time sudo ./run_rails.sh &> ./run_rails.log")
     #
     # Update EC2 tag with version of RCS installed
     #
@@ -57,4 +66,6 @@ if __name__ == "__main__":
 
     end = time.time()
     print "%s install completed on: %s in %s seconds" % (tag, hostname, end-start)
+    print "Visit http://%s:3000/katello to see the webui" % (hostname)
+
 

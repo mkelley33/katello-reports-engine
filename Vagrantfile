@@ -10,6 +10,7 @@ cd /vagrant/devel_env/el6
 ./clear_prior_splice_install.sh | tee log_clear_prior_splice_install
 ./setup_katello_devel_env.sh | tee log_setup_katello_devel_env
 ./setup_splice_rails_engine.sh | tee log_setup_splice_rails_engine
+./run_rails.sh
 EOF
 
 
