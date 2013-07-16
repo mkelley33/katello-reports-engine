@@ -22,6 +22,7 @@
     #satellite
       = form.select :satellite_name, options_for_select(@available_splice_servers_hash.invert), {}, {:label => _("Satellite Server:"), :size=>1, :id => "satellite_name"}
     = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:multiple=>true, :label=> _("Organizations"), :size => 2}
+    = form.select :state, options_for_select(@state_hash.invert), {}, {:label => _("LifeCycle State:"), :size=>1, :multiple=>true, :size => 2}
 
 
     
@@ -45,15 +46,7 @@
       = form.text_field :start_date, :label => _("Start Date:"), :class=>'datepicker'
       = form.text_field :end_date, :label => _("End Date:"),:class=>'datepicker'
     
-    .grid_3.ra
-    #inactive
-    %fieldset.clearfix
-      .grid_10.prefix_1.fielditem
-        .grid_5.la
-          %label #{_("Inactive")}
-        %input.inactive{:label => _("Inactive:"), :type=>:checkbox, :name=>"inactive", :id=>"inactive"}   
-          %span.tipsify.details_icon-grey{:id => "tip_inactive", :title => tip_inactive_text}
-
+    
     = form.submit _("Save Filter"), :id => :save_filter
     
 

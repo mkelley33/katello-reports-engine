@@ -117,54 +117,64 @@ module SpliceReports
       #duplicate entries in the various reports.  
       result = nil
 
-      # find all checkins in org and date range, find the latest checkin per instance_identifier
-      active_query = rules_org + rules_active_date +  query + rules_status + rules_not_deleted + rules
-      active_result = @@c.aggregate(active_query)
-      logger.info("get_marketing_product_results():\nQuery: #{active_query}\nResults #{active_result.count} items")
+      if filter.state.include?("Active")
+        # find all checkins in org and date range, find the latest checkin per instance_identifier
+        active_query = rules_org + rules_active_date +  query + rules_status + rules_not_deleted + rules
+        active_result = @@c.aggregate(active_query)
+        logger.info("get_marketing_product_results():\nQuery: #{active_query}\nResults #{active_result.count} items")
 
-      # find the latest checkin per instance in orgs, if checkin is *not* in date range.. it is inactive
-      inactive_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules_not_deleted + rules
+        #Add / Convert needed data
+        active_result.map do |item|
+          item["state"] = "active"
+          item["status"] = translate_checkin_status(item["status"])
+          item
+        end
+        result =  active_result
 
-      #find any deletion event that occured in the date range
-      #deleted_query = rules_org + rules_active_date  + rules_deleted + rules  
-      deleted_query = rules_org + rules_active_date + rules_deleted + rules
-
-      inactive_result = @@c.aggregate(inactive_query)
-      logger.info("get_marketing_product_results():\nQuery: #{inactive_query}\nResults #{inactive_result.count} items")
-
-      deleted_result = @@c.aggregate(deleted_query)
-      logger.info("get_marketing_product_results():\nQuery: #{deleted_query}\nResults #{deleted_result.count} items")
-
-      #Add / Convert needed data
-      active_result.map do |item|
-        item["state"] = "active"
-        item["status"] = translate_checkin_status(item["status"])
-        item
       end
-
-      inactive_result.map do |item|
-        item["state"] = "inactive"
-        item["status"] = translate_checkin_status(item["status"])
-        item
-      end
-    
-      deleted_result.map do |item| 
-        #debugger
-        this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 1, :sort => 'checkin_service'}).to_a[0]
-        item["record"] = this_item["_id"]
-        item["status"] = this_item["entitlement_status"]["status"]
-        item["splice_server"] = this_item["splice_server"]
-        item["systemid"] = this_item["facts"]["systemid"]
-        item["hostname"] = this_item["name"]
-        item["state"] = "deleted"
-        item["status"] = translate_checkin_status(item["status"])
-        item
-      end
-
       
-      result =  active_result + inactive_result + deleted_result
       
-      #result = @@c.aggregate( rules_date + query + rules )
+      if filter.state.include?("Inactive")
+        # find the latest checkin per instance in orgs, if checkin is *not* in date range.. it is inactive
+        inactive_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules_not_deleted + rules
+
+        inactive_result = @@c.aggregate(inactive_query)
+        logger.info("get_marketing_product_results():\nQuery: #{inactive_query}\nResults #{inactive_result.count} items")
+
+        inactive_result.map do |item|
+          item["state"] = "inactive"
+          item["status"] = translate_checkin_status(item["status"])
+          item
+        end
+        result = result + inactive_result
+
+      end
+
+      if filter.state.include?("Deleted")
+
+        #find any deletion event that occured in the date range
+        #deleted_query = rules_org + rules_active_date  + rules_deleted + rules  
+        deleted_query = rules_org + rules_active_date + rules_deleted + rules
+
+        deleted_result = @@c.aggregate(deleted_query)
+        logger.info("get_marketing_product_results():\nQuery: #{deleted_query}\nResults #{deleted_result.count} items")
+
+        deleted_result.map do |item| 
+          #debugger
+          this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 1, :sort => 'checkin_service'}).to_a[0]
+          item["record"] = this_item["_id"]
+          item["status"] = this_item["entitlement_status"]["status"]
+          item["splice_server"] = this_item["splice_server"]
+          item["systemid"] = this_item["facts"]["systemid"]
+          item["hostname"] = this_item["name"]
+          item["state"] = "deleted"
+          item["status"] = translate_checkin_status(item["status"])
+          item
+        end
+        result = result + deleted_result
+
+      end
+
       logger.info(result)
       result
       

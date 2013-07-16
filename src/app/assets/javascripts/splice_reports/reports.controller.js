@@ -51,7 +51,7 @@ angular.module('Katello.systems').controller('ReportsController',
             show: true
         },{
             id: 'state',
-            display: 'State',
+            display: 'Lifecycle State',
             show: true
         }];
 

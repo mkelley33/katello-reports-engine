@@ -19,7 +19,8 @@ module SpliceReports
     before_filter :status_hash
     before_filter :avail_splice_servers_hash
     before_filter :number_of_hours_hash
-    before_filter :inactive_hash
+    #before_filter :inactive_hash
+    before_filter :state_hash
 
     def rules
       read_system = lambda{System.find(params[:id]).readable?}
@@ -41,7 +42,7 @@ module SpliceReports
     end
 
     def param_rules
-      items = {:filter => [:name, :description, :status, :inactive, :satellite_name, :hours, :start_date, :end_date, :organizations]}
+      items = {:filter => [:name, :description, :status, :state, :satellite_name, :hours, :start_date, :end_date, :organizations]}
       {
         :create => items,
         :update => items
@@ -91,13 +92,7 @@ module SpliceReports
       filter_params[:end_date] = parse_calendar_date(filter_params[:end_date]) unless filter_params[:end_date].blank?
       
       filter_params[:status].delete("")
-
-      if params[:inactive] == "on"
-        logger.info("inactive is on")
-        filter_params[:inactive] = true
-      else
-        filter_params[:inactive] = false
-      end 
+      filter_params[:state].delete("")
 
       organizations = []
       if org_ids
@@ -145,6 +140,9 @@ module SpliceReports
       if @filter.status.is_a?(Array)
         @filter.status = @filter.status*", "
       end
+      if @filter.state.is_a?(Array)
+        @filter.state = @filter.state*", "
+      end
       render :partial => "edit", :locals => {:editable => !@filter.locked }
 
     end
@@ -158,6 +156,12 @@ module SpliceReports
         status = filter_params["status"]
         #serialize the array to a string
         filter_params["status"] = status*", "
+      end
+
+      if filter_params[:state]
+        state = filter_params["state"]
+        #serialize the array to a string
+        filter_params["state"] = state*", "
       end
 
       if filter_params[:organizations]
@@ -215,6 +219,15 @@ module SpliceReports
       @status_hash =  status_hash
     end
 
+    def state_hash
+      state = ["Active", "Inactive", "Deleted"]
+      state_hash = {}
+      state.each_with_index { |val, index|
+        state_hash[val] = val
+      }
+      @state_hash =  state_hash
+    end
+
     def avail_splice_servers_hash
       splice_servers = SpliceReports::MongoConn.new.get_splice_servers()
       server_hash = {}
@@ -233,15 +246,7 @@ module SpliceReports
       @number_of_hours_hash = num_hash
     end
 
-    def inactive_hash
-      days = ['true', 'false']
-      days_hash = {}
-      days.each_with_index { |val, index|
-        days_hash[val] = val.to_s
-      }
-      @inactive_hash = days_hash
-    end
-
+    
     def accessible_orgs
       Organization.readable
     end

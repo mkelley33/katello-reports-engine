@@ -78,6 +78,16 @@
              'data-url' => splice_reports_filter_path(@filter.id),
              'data-options' => @accessible_orgs_hash.to_json}
       = @filter.organizations.collect{|o| o.name}.join(", ")
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("LifeCycle State")}:
+    .grid_10.la#filter_status{:title=>@filter[:state],
+                               'name' => 'filter[state]',
+                               :class => ("editable edit_multiselect" if editable),
+                               'data-url' => splice_reports_filter_path(@filter.id),
+                               'data-options' => @state_hash.to_json}
+      = @filter.state
  
 
   %div#edit_hour
@@ -112,26 +122,7 @@
                            'id' => 'end_date',
                            :class=>("editable edit_datepicker" if editable),
                            'data-url' => splice_reports_filter_path(@filter.id)} #{friendly_date(@filter[:end_date]) || _("None")}
-
-  %div#edit_hour
-    %fieldset
-      .grid_2.ra
-        %label #{_("Inactive:")}
-      - if @filter.inactive.equal?(true)
-        .grid_10.la{'name' => 'filter[inactive]',
-                'id' => 'inactive',
-                 :class => ("editable edit_select" if editable),
-                 'data-url' => splice_reports_filter_path(@filter.id), 
-                 'data-options' => @inactive_hash.to_json}
-          = "true" 
-      - else 
-        .grid_10.la{'name' => 'filter[inactive]',
-                'id' => 'inactive',
-                 :class => ("editable edit_select" if editable),
-                 'data-url' => splice_reports_filter_path(@filter.id), 
-                 'data-options' => @inactive_hash.to_json}
-          = "false" 
-          
+        
 
 
     
