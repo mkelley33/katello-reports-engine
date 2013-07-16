@@ -46,6 +46,8 @@ module SpliceReports
       rules_active_date = []
       rules_org = []
       rules_status = []
+      rules_not_deleted = []
+      rules_deleted = []
 
       if offset
         rules << {"$skip" => offset.to_i}
@@ -67,6 +69,9 @@ module SpliceReports
       rules_inactive_start << {"$match" => {:checkin_date=> {"$lt" => end_date}}}
       rules_inactive_date << {"$match" => {:checkin_date=> { "$not" => {"$gt" => start_date}}}}
       rules_active_date << {"$match" => {:checkin_date=> {"$gt" => start_date, "$lt" => end_date}}}
+      rules_not_deleted << { "$match" => { "deleted" => { "$exists" => false }}}
+      #rules_deleted << {"$match" => { "deleted" => "true"}}
+      rules_deleted << { "$match" => { "deleted" => { "$exists" => true }}}
 
       #move status back into an array
       if filter.status.is_a?(String)
@@ -110,25 +115,59 @@ module SpliceReports
       #paginated prior  
       #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
       #duplicate entries in the various reports.  
+      result = nil
 
-      if filter.inactive == true
-        # find the latest checkin per instance in orgs, if checkin is *not* in date range.. it is inactive
-        aggregate_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules
-      else
-        # find all checkins in org and date range, find the latest checkin per instance_identifier
-        aggregate_query = rules_org + rules_active_date +  query + rules_status + rules
+      # find all checkins in org and date range, find the latest checkin per instance_identifier
+      active_query = rules_org + rules_active_date +  query + rules_status + rules_not_deleted + rules
+      active_result = @@c.aggregate(active_query)
+      logger.info("get_marketing_product_results():\nQuery: #{active_query}\nResults #{active_result.count} items")
+
+      # find the latest checkin per instance in orgs, if checkin is *not* in date range.. it is inactive
+      inactive_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules_not_deleted + rules
+
+      #find any deletion event that occured in the date range
+      #deleted_query = rules_org + rules_active_date  + rules_deleted + rules  
+      deleted_query = rules_org + rules_active_date + rules_deleted + rules
+
+      inactive_result = @@c.aggregate(inactive_query)
+      logger.info("get_marketing_product_results():\nQuery: #{inactive_query}\nResults #{inactive_result.count} items")
+
+      deleted_result = @@c.aggregate(deleted_query)
+      logger.info("get_marketing_product_results():\nQuery: #{deleted_query}\nResults #{deleted_result.count} items")
+
+      #Add / Convert needed data
+      active_result.map do |item|
+        item["state"] = "active"
+        item["status"] = translate_checkin_status(item["status"])
+        item
       end
-      #binding.pry
-      #debugger
-      result = @@c.aggregate(aggregate_query)
+
+      inactive_result.map do |item|
+        item["state"] = "inactive"
+        item["status"] = translate_checkin_status(item["status"])
+        item
+      end
+    
+      deleted_result.map do |item| 
+        #debugger
+        this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 1, :sort => 'checkin_service'}).to_a[0]
+        item["record"] = this_item["_id"]
+        item["status"] = this_item["entitlement_status"]["status"]
+        item["splice_server"] = this_item["splice_server"]
+        item["systemid"] = this_item["facts"]["systemid"]
+        item["hostname"] = this_item["name"]
+        item["state"] = "deleted"
+        item["status"] = translate_checkin_status(item["status"])
+        item
+      end
+
+      
+      result =  active_result + inactive_result + deleted_result
+      
       #result = @@c.aggregate( rules_date + query + rules )
-      logger.info("get_marketing_product_results():\nQuery: #{aggregate_query}\nResults #{result.count} items")
-      #result
-      # Translate values in DB to what webui expects
-      result.map do |item| 
-       item["status"] = translate_checkin_status(item["status"])
-       item
-      end
+      logger.info(result)
+      result
+      
     end
 
     def get_start_end_dates(filter)

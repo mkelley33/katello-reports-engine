@@ -49,6 +49,10 @@ angular.module('Katello.systems').controller('ReportsController',
             id: 'date',
             display: 'Check-In Time',
             show: true
+        },{
+            id: 'state',
+            display: 'State',
+            show: true
         }];
 
         var transform = function(data){
@@ -80,6 +84,9 @@ angular.module('Katello.systems').controller('ReportsController',
                             //display: $filter('date')(system.date, 'medium'),
                             display: date.toUTCString().replace("GMT", "+0000"),
                             column_id: 'date'
+                        },{
+                            display: system.state,
+                            column_id: 'state'
                         }]
                     };
                     rows.push(row);

@@ -40,17 +40,6 @@ print "\n"
 start_date = Time.utc(2013, 04, 12)
 end_date = Time.utc(2013, 05, 30)
 list = Hash.new
-systems_unique.each do |system|
-  row = @coll.find({"instance_identifier" => system,
-  					"created" => {"$gt" => start_date, "$lt" => end_date}},
-  				 :fields => ["created"],
-  				 :sort => ['created', :asc]).limit(1).to_a
-  #print row[0]["created"].to_s
-  list[system]=row[0]["created"].to_s
-end
-print "list of keys \n"
-print list.keys
-print (systems_unique -  list.keys).to_s << space
 
 
 print "Find objects w/ invalid status using NOT: "  
@@ -61,6 +50,12 @@ print "Find objects NOT in a date range:"
 date_range = @coll.find({"created" => { "$not" => {"$gt" => Time.utc(2013, 05, 12)}}}, :fields => ["created"]).to_a
 print date_range.to_s << space
 
+
+print "FIND and SORT"
+#results = @coll.find({ "instance_identifier" => "28f4cbcb-c503-4d20-a725-333eb1e36142" },  :fields => ["instance_identifier"]).to_a
+#results = @coll.find.sort({ "instance_identifier" => "28f4cbcb-c503-4d20-a725-333eb1e36142" }, :limit => 1, :fields => ["instance_identifier"]).to_a
+results = @coll.find({"instance_identifier" => "28f4cbcb-c503-4d20-a725-333eb1e36142"}, {:skip => 1, :limit => 1, :sort => 'checkin_service'})
+print results.to_s << space
 	
 
 
