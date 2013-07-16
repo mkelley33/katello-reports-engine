@@ -11,7 +11,7 @@ Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
 Release:    30%{?dist}
 Group:      Development/Libraries
-License:    GPLv2
+License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
 Source0:    rubygem-%{gem_name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
