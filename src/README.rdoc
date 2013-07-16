@@ -1,3 +1,4 @@
 = SpliceReports
 
-This project rocks and uses MIT-LICENSE.
+A Rails engine for Katello that provides enhanced reporting.
+
