@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    30%{?dist}
+Release:    31%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,35 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Tue Jul 16 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-31
+- 977453 - splice components should use same license (jwmatthews@gmail.com)
+- Added run of 'rails s' at end of devel env setup scripts
+  (jwmatthews@gmail.com)
+- Scripts to launch a katello/splice devel env in EC-2 (jwmatthews@gmail.com)
+- Fix missing 'echo' in script (jwmatthews@gmail.com)
+- added tests, modified the way populate data works, updated setup_splice
+  (whayutin@redhat.com)
+- fix call to get dates (whayutin@redhat.com)
+- added some more help messages to vagrant devel setup (whayutin@redhat.com)
+- add sample data to build (whayutin@redhat.com)
+- Added more instructions at end of splice install (jwmatthews@gmail.com)
+- Added an error message when katello-reset-dbs fails, prompts user to ensure
+  katello has been refreshed (jwmatthews@gmail.com)
+- remove sublime files (whayutin@redhat.com)
+- install sst (cduryee@redhat.com)
+- fixed merge conflict (whayutin@redhat.com)
+- merge in nutupane (whayutin@redhat.com)
+- breaking out a report_index.js file.. (whayutin@redhat.com)
+- the tipsy info on the report keeps interfering w/ the dashboard and becomes
+  hidden behind the other objects.. The top left hand corner is a safer spot to
+  place this tip for now (whayutin@redhat.com)
+- del mpu file if created (whayutin@redhat.com)
+- first pass at combining active, inactive and deleted systems
+  (whayutin@redhat.com)
+- updated data load scripts (whayutin@redhat.com)
+- committed changes for the updated nutupane, added Routes, nutupane is now
+  instantiated (whayutin@redhat.com)
+
 * Tue Jul 02 2013 wes hayutin <whayutin@redhat.com> 0.0.5-30
 - Merge branch 'wes_test' (whayutin@redhat.com)
 - broke out the mongo aggragtion into its own class, and changed the cuke tests
