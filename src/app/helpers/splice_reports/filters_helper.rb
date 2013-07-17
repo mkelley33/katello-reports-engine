@@ -19,13 +19,23 @@ module SpliceReports
       date_obj.strftime('%m/%d/%Y')
     end
 
+    def tip_status
+      tip = _("Search for check-ins based on the Subscription Status of the system")
+    end
+
+    def tip_org
+      tip = _("List of Organizations that the user has access to. Pick one or more Organizations")
+    end
+
     def tip_time_text
     	tip = _("Find check-in's that have occurred in the specified time frame.  You may search for 
           check-ins from the last 4 to 48 hours, or you may specify a range of dates")
     end
 
-    def tip_inactive_text
-    	tip = _("Find systems that have not checked-in during the specified time frame.")
+    def tip_lifecycle_state
+    	tip = _("Active is defined as a system that is sending check-ins to the Satellite Server.  Inactive
+        is defined as a registered system that has no check-ins in the specified time period.  Deleted 
+        is defined as a system that has been removed from the Satellite")
     end
   end
 

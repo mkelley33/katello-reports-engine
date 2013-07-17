@@ -18,13 +18,16 @@
 
     .grid_3.ra
     #criteria
+    %i.tipsify.details_icon-grey{:id => "tip_status", :title => tip_status}
     = form.select :status, options_for_select(@status_hash.invert), {}, {:label => _("Subscription Status:"), :size=>1, :multiple=>true, :size => 2}
     #satellite
       = form.select :satellite_name, options_for_select(@available_splice_servers_hash.invert), {}, {:label => _("Satellite Server:"), :size=>1, :id => "satellite_name"}
+
+    %i.tipsify.details_icon-grey{:id => "tip_org", :title => tip_org}
     = form.select :organizations, options_for_select(@accessible_orgs_hash.invert), {}, {:multiple=>true, :label=> _("Organizations"), :size => 2}
+    
+    %i.tipsify.details_icon-grey{:id => "tip_state", :title => tip_lifecycle_state}
     = form.select :state, options_for_select(@state_hash.invert), {}, {:label => _("LifeCycle State:"), :size=>1, :multiple=>true, :size => 2}
-
-
     
     %fieldset.clearfix
       .grid_11.prefix_1.fielditem
