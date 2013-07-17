@@ -73,10 +73,14 @@ module SpliceReports
       #rules_deleted << {"$match" => { "deleted" => "true"}}
       rules_deleted << { "$match" => { "deleted" => { "$exists" => true }}}
 
-      #move status back into an array
+      #move status / state back into an array
       if filter.status.is_a?(String)
         filter.status = filter.status.split(", ")
       end
+      if filter.state.is_a?(String)
+        filter.state = filter.state.split(", ")
+      end
+
       #translate the terms
       index = filter.status.index("Current") and filter.status[index] = "valid"
       index = filter.status.index("Invalid") and filter.status[index] = "invalid"

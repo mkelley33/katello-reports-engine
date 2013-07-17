@@ -93,6 +93,7 @@ module SpliceReports
       
       filter_params[:status].delete("")
       filter_params[:state].delete("")
+      filter_params[:state] = filter_params[:state].join(", ")
 
       organizations = []
       if org_ids
