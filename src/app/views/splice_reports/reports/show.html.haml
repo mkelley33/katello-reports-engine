@@ -93,9 +93,9 @@
         - if @filter['hours'] != nil
           %li
             = _("Hours: ") + @filter['hours'].to_s
-        - if @filter['inactive'] != nil
+        - if @filter['state'] != nil
           %li
-            = _("Inactive: ") + @filter['inactive'].to_s
+            = _("LifeCycle State: ") + @filter['state'].to_s
 
 
       
