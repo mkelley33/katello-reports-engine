@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    32%{?dist}
+Release:    33%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,11 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jul 17 2013 wes hayutin <whayutin@redhat.com> 0.0.5-33
+- found bug w/ query if active was not selected (whayutin@redhat.com)
+- added tipsy tips for filters (whayutin@redhat.com)
+- changed default report to active/inactive (whayutin@redhat.com)
+
 * Wed Jul 17 2013 wes hayutin <whayutin@redhat.com> 0.0.5-32
 - added more validation for the filters, also changed status to Subscription
   Status on the filter pages (whayutin@redhat.com)
