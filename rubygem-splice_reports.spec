@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    31%{?dist}
+Release:    32%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,19 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jul 17 2013 wes hayutin <whayutin@redhat.com> 0.0.5-32
+- added more validation for the filters, also changed status to Subscription
+  Status on the filter pages (whayutin@redhat.com)
+- add lifecycle state to filter help popup (whayutin@redhat.com)
+- fix filter state array (whayutin@redhat.com)
+- update filter, edit filter for lifecycle state. Update reports controller for
+  lifecycle state (whayutin@redhat.com)
+- first pass at adding deleted systems, have it all in one report atm
+  (whayutin@redhat.com)
+- Fix timestamp on tag for devel env (jwmatthews@gmail.com)
+- 977445 - ruby193-rubygem-splice_reports has wrong license file packaged
+  (jwmatthews@gmail.com)
+
 * Tue Jul 16 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-31
 - 977453 - splice components should use same license (jwmatthews@gmail.com)
 - Added run of 'rails s' at end of devel env setup scripts
