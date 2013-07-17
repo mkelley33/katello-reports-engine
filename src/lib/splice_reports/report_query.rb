@@ -119,11 +119,13 @@ module SpliceReports
       #paginated prior  
       #The order of rules_org + query + rules_date + rules_status + rules is critical to avoid
       #duplicate entries in the various reports.  
-      result = nil
+      active_result = []
+      inactive_result = []
+      deleted_result = []
 
       if filter.state.include?("Active")
         # find all checkins in org and date range, find the latest checkin per instance_identifier
-        active_query = rules_org + rules_active_date +  query + rules_status + rules_not_deleted + rules
+        active_query = rules_org + rules_active_date +  query + rules_not_deleted + rules_status + rules
         active_result = @@c.aggregate(active_query)
         logger.info("get_marketing_product_results():\nQuery: #{active_query}\nResults #{active_result.count} items")
 
@@ -133,8 +135,6 @@ module SpliceReports
           item["status"] = translate_checkin_status(item["status"])
           item
         end
-        result =  active_result
-
       end
       
       
@@ -150,8 +150,6 @@ module SpliceReports
           item["status"] = translate_checkin_status(item["status"])
           item
         end
-        result = result + inactive_result
-
       end
 
       if filter.state.include?("Deleted")
@@ -175,10 +173,9 @@ module SpliceReports
           item["status"] = translate_checkin_status(item["status"])
           item
         end
-        result = result + deleted_result
-
       end
 
+      result = active_result + inactive_result + deleted_result
       logger.info(result)
       result
       
