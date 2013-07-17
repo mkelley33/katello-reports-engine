@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    33%{?dist}
+Release:    34%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jul 17 2013 wes hayutin <whayutin@redhat.com> 0.0.5-34
+- bz#978377 fix filter popup capitalization (whayutin@redhat.com)
+
 * Wed Jul 17 2013 wes hayutin <whayutin@redhat.com> 0.0.5-33
 - found bug w/ query if active was not selected (whayutin@redhat.com)
 - added tipsy tips for filters (whayutin@redhat.com)
