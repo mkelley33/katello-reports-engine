@@ -19,7 +19,6 @@ module SpliceReports
     before_filter :status_hash
     before_filter :avail_splice_servers_hash
     before_filter :number_of_hours_hash
-    #before_filter :inactive_hash
     before_filter :state_hash
 
     def rules

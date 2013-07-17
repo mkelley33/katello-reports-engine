@@ -75,9 +75,9 @@
           %br
         %li
           - if @filter['status'].is_a?(Array)
-            = _("Status: ") + @filter['status'].*(', ')
+            = _("Subscription Status: ") + @filter['status'].*(', ')
           - else
-            = _("Status: ") + @filter['status']
+            = _("Subscription Status: ") + @filter['status']
         %li
           = _("Satellite Server: ") + @filter['satellite_name']
         - orgs =  @filter.organizations.collect{|o| o.name}.join(', ')
