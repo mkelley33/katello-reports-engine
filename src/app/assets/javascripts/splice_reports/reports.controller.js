@@ -102,8 +102,10 @@ angular.module('Katello.systems').controller('ReportsController',
         var nutupane                = new Nutupane();
 
         $scope.table                = nutupane.table;
-        //$scope.table.url            = KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
-        $scope.table.url            = Routes.root_path() + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
+        //Ask Eric what the proper path variable should be..
+        //Currently the Routes.root_path() is returning /katell vs. /katello
+        $scope.table.url            = KT.routes.options.prefix + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
+        //$scope.table.url            = Routes.root_path() + '/splice_reports/filters/' + Splice.filter_id + '/reports/items';
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
