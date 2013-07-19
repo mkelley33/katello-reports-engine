@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    34%{?dist}
+Release:    35%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,19 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri Jul 19 2013 wes hayutin <whayutin@redhat.com> 0.0.5-35
+- updated query to pull the second to last checkin for the previous mpu before
+  a delete mpu (whayutin@redhat.com)
+- had to sanitize the checkin list and remove the link for deleted systems in
+  the checkin list (root@ec2-107-21-145-194.compute-1.amazonaws.com)
+- added some checking of previous mpu's (whayutin@redhat.com)
+- fixed sanitized loop (whayutin@redhat.com)
+- need to make sure the limit is atleast 2 (whayutin@redhat.com)
+- remove debug statements (whayutin@redhat.com)
+- first pass at sanitizing deleted records (whayutin@redhat.com)
+- something is chomping off the last letter in katello using Route.
+  (whayutin@redhat.com)
+
 * Wed Jul 17 2013 wes hayutin <whayutin@redhat.com> 0.0.5-34
 - bz#978377 fix filter popup capitalization (whayutin@redhat.com)
 
