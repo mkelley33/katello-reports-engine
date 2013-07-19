@@ -35,7 +35,7 @@ module SpliceReports
       #get org id's
       org_ids = []
       filter.organizations.each do |o|
-        org_ids << o.id.to_s
+        org_ids << o.label.to_s
       end
       start_date, end_date = get_start_end_dates(filter)
       logger.info(start_date.to_s)
@@ -160,22 +160,26 @@ module SpliceReports
 
         deleted_result = @@c.aggregate(deleted_query)
         logger.info("get_marketing_product_results():\nQuery: #{deleted_query}\nResults #{deleted_result.count} items")
-
-        deleted_result.map do |item| 
-          #debugger
-          this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 1, :sort => 'checkin_service'}).to_a[0]
-          item["record"] = this_item["_id"]
-          item["status"] = this_item["entitlement_status"]["status"]
-          item["splice_server"] = this_item["splice_server"]
-          item["systemid"] = this_item["facts"]["systemid"]
-          item["hostname"] = this_item["name"]
-          item["state"] = "deleted"
-          item["status"] = translate_checkin_status(item["status"])
-          item
+  
+        deleted_result_sanitized = []
+        deleted_result.map do |item|
+          this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 1, :sort => 'checkin_service'}).to_a
+          if this_item.count <= 1
+            debugger
+            logger.info("Only one record of this instance was found, the found record was a deletion checkin, not enough data to display")
+          else
+            item["record"] = this_item["_id"]
+            item["status"] = "deleted"
+            item["splice_server"] = this_item["splice_server"]
+            item["systemid"] = this_item["facts"]["systemid"]
+            item["hostname"] = this_item["name"]
+            item["state"] = "deleted"
+            deleted_result_sanatized.add(item)
+          end
         end
       end
 
-      result = active_result + inactive_result + deleted_result
+      result = active_result + inactive_result + deleted_result_sanitized
       logger.info(result)
       result
       
