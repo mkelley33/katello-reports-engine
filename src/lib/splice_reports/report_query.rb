@@ -160,20 +160,32 @@ module SpliceReports
 
         deleted_result_unsanitized = @@c.aggregate(deleted_query)
         logger.info("get_marketing_product_results():\nQuery: #{deleted_query}\nResults #{deleted_result.count} items")
-
+        
         deleted_result_unsanitized.map do |item|
-          this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 2, :sort => 'checkin_service'}).to_a
-          if this_item.count <= 1
+          this_item = []
+          dirty_items = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 2, :sort => 'checkin_service'}).to_a
+
+          #sanitize the previous record, need to make sure all the fields are available
+          if dirty_items.count <= 1
             logger.info("Only one record of this instance was found, the found record was a deletion checkin, not enough data to display")
           else
-            this_item = this_item[0]
-            item["record"] = this_item["_id"]
-            item["status"] = "deleted"
-            item["splice_server"] = this_item["splice_server"]
-            item["systemid"] = this_item["facts"]["systemid"]
-            item["hostname"] = this_item["name"]
-            item["state"] = "deleted"
-            deleted_result << item
+            if not dirty_items[0].has_key?("deleted")
+              this_item = dirty_items[0]
+            elsif not dirty_items[1].has_key?("deleted")
+              this_item = dirty_items[1]
+            else
+              logger.info("Unable to find enough data to include this deleted entry #{item["instance_identifier"]}\n")
+            end
+             
+            if not this_item.empty?
+              item["record"] = this_item["_id"]
+              item["status"] = "deleted"
+              item["splice_server"] = this_item["splice_server"]
+              item["systemid"] = this_item["facts"]["systemid"]
+              item["hostname"] = this_item["name"]
+              item["state"] = "deleted"
+              deleted_result << item
+            end
           end
         end
       end
