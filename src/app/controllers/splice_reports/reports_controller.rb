@@ -330,8 +330,16 @@ module SpliceReports
           :limit => 250
         })
       result = result.map do |item| 
-        item["entitlement_status"]["status"] = translate_checkin_status(item["entitlement_status"]["status"])
-        item["checkin_date"] = format_time(item["checkin_date"])
+        if item.has_key?("entitlement_status")
+          item["entitlement_status"]["status"] = translate_checkin_status(item["entitlement_status"]["status"])
+        else
+          item[:entitlement_status] = {:status => "deleted"}
+        end
+        if item.key?("checkin_date")
+          item["checkin_date"] = format_time(item["checkin_date"])
+        else
+          logger.info("Error finding the check-in date")
+        end
         item
       end
       logger.info("find_instance_checkins_results():\nResults #{result.count} items")
