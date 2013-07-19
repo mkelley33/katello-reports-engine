@@ -163,7 +163,8 @@ module SpliceReports
         
         deleted_result_unsanitized.map do |item|
           this_item = []
-          dirty_items = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 2, :sort => 'checkin_service'}).to_a
+          dirty_items = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 2, :sort => ['checkin_date', Mongo::DESCENDING]}).to_a
+          #dirty_items = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 2, :sort => 'checkin_date'}).to_a
 
           #sanitize the previous record, need to make sure all the fields are available
           if dirty_items.count <= 1

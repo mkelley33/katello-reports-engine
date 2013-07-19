@@ -1,5 +1,4 @@
 #!/usr/bin/ruby
-require 'rubygems'
 require 'mongo'
 
 include Mongo
@@ -51,11 +50,19 @@ date_range = @coll.find({"created" => { "$not" => {"$gt" => Time.utc(2013, 05, 1
 print date_range.to_s << space
 
 
-print "FIND and SORT"
+print "FIND and SORT\n"
 #results = @coll.find({ "instance_identifier" => "28f4cbcb-c503-4d20-a725-333eb1e36142" },  :fields => ["instance_identifier"]).to_a
 #results = @coll.find.sort({ "instance_identifier" => "28f4cbcb-c503-4d20-a725-333eb1e36142" }, :limit => 1, :fields => ["instance_identifier"]).to_a
-results = @coll.find({"instance_identifier" => "28f4cbcb-c503-4d20-a725-333eb1e36142"}, {:skip => 1, :limit => 1, :sort => 'checkin_service'})
-print results.to_s << space
+print "ASCENDING\n"
+results = @coll.find({"instance_identifier" => "1735fd13-c694-4175-8302-ec5c98b1a4e0"}, {:skip => 0, :limit => 2, :sort => ['checkin_date', Mongo::ASCENDING]}).to_a
+results.map do |item|
+  print item.to_s << space
+end
+print "DECENDING\n"
+results = @coll.find({"instance_identifier" => "1735fd13-c694-4175-8302-ec5c98b1a4e0"}, {:skip => 0, :limit => 2, :sort => ['checkin_date', Mongo::DESCENDING]}).to_a
+results.map do |item|
+  print item.to_s << space
+end
 	
 
 
