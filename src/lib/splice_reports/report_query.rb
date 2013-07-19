@@ -165,7 +165,6 @@ module SpliceReports
         deleted_result.map do |item|
           this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 1, :sort => 'checkin_service'}).to_a
           if this_item.count <= 1
-            debugger
             logger.info("Only one record of this instance was found, the found record was a deletion checkin, not enough data to display")
           else
             item["record"] = this_item["_id"]
