@@ -158,11 +158,10 @@ module SpliceReports
         #deleted_query = rules_org + rules_active_date  + rules_deleted + rules  
         deleted_query = rules_org + rules_active_date + rules_deleted + rules
 
-        deleted_result = @@c.aggregate(deleted_query)
+        deleted_result_unsanitized = @@c.aggregate(deleted_query)
         logger.info("get_marketing_product_results():\nQuery: #{deleted_query}\nResults #{deleted_result.count} items")
-  
-        deleted_result_sanitized = []
-        deleted_result.map do |item|
+
+        deleted_result_unsanitized.map do |item|
           this_item = @@c.find({"instance_identifier" => item["instance_identifier"]}, {:skip => 0, :limit => 2, :sort => 'checkin_service'}).to_a
           if this_item.count <= 1
             logger.info("Only one record of this instance was found, the found record was a deletion checkin, not enough data to display")
@@ -174,12 +173,12 @@ module SpliceReports
             item["systemid"] = this_item["facts"]["systemid"]
             item["hostname"] = this_item["name"]
             item["state"] = "deleted"
-            deleted_result_sanatized.add(item)
+            deleted_result << item
           end
         end
       end
-
-      result = active_result + inactive_result + deleted_result_sanitized
+ 
+      result = active_result + inactive_result + deleted_result
       logger.info(result)
       result
       
