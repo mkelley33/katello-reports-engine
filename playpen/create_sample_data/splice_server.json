@@ -1,0 +1,1 @@
+{ "_cls" : "SpliceServer", "_id" : ObjectId( "519666d29fb9bf3e9d001ccf" ), "_types" : [ "SpliceServer" ], "created" : Date( 1371064817370 ), "description" : "RCS data for satellite-splice-tool", "environment" : "sst_env_1", "hostname" : "sst-host", "updated" : Date( 1371064817370 ), "uuid" : "ec2-50-19-34-184.compute-1.amazonaws.com" }
