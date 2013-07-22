@@ -87,7 +87,7 @@ module SpliceReports
       index = filter.status.index("Insufficient") and filter.status[index] = "partial"
 
       rules_status << {"$match" => { "status" => { "$in" => filter.status }}}
-      rules_org << {"$match" => { "organization_id" => { "$in" => org_ids }}}
+      rules_org << {"$match" => { "organization_label" => { "$in" => org_ids }}}
       
       query = [
         {"$group" => {
