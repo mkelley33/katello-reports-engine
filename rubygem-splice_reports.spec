@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    35%{?dist}
+Release:    36%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Tue Jul 23 2013 Chris Duryee (beav) <cduryee@redhat.com>
+- add cloude and katello-cli shared folders (cduryee@redhat.com)
+- update sample data to use key organization_label (whayutin@redhat.com)
+- Merge branch 'master' of github.com:splice/splice-reports
+  (whayutin@redhat.com)
+- change organization_id to organziation_label (whayutin@redhat.com)
+- fixed up sample data for ec2 build
+  (root@ec2-23-21-17-146.compute-1.amazonaws.com)
+
 * Fri Jul 19 2013 wes hayutin <whayutin@redhat.com> 0.0.5-35
 - updated query to pull the second to last checkin for the previous mpu before
   a delete mpu (whayutin@redhat.com)
