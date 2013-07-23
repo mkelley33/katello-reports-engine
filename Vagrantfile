@@ -3,7 +3,8 @@
 
 KATELLO_GIT_CHECKOUT="../katello"
 SST_GIT_CHECKOUT="../spacewalk-splice-tool"
-
+KATELLOCLI_GIT_CHECKOUT="../katello-cli"
+CLOUDE_GIT_CHECKOUT="../cloude"
 
 $setup_script = <<EOF
 cd /vagrant/devel_env/el6
@@ -39,6 +40,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder KATELLO_GIT_CHECKOUT, "/katello"
   config.vm.synced_folder SST_GIT_CHECKOUT, "/spacewalk-splice-tool"
+  config.vm.synced_folder KATELLOCLI_GIT_CHECKOUT, "/katello-cli"
+  config.vm.synced_folder CLOUDE_GIT_CHECKOUT, "/cloude"
   config.vm.provision :shell, :inline => $setup_script
       #:inline => "cd /vagrant/devel_env/el6 && ./clear_prior_splice_install.sh && ./setup_katello_devel_env.sh && ./setup_splice_rails_engine.sh"
 end
