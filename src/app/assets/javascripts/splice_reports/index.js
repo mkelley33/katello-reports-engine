@@ -42,7 +42,7 @@ $(document).ready(function() {
             $("#daterange").show();
             $("#hour").hide();            
         });
-
+       
 
         //New Filter: If a user sets a value to a different field, reset any previous value in the
         // the other fields

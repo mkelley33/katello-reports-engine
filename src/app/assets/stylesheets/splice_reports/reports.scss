@@ -132,5 +132,22 @@ ul.popup_filter {
 }
 
 .nutupane-details-open {
-    width: 85.7% !important;
+  width: 85.7% !important;
 }
+
+a.currentlyActive {
+ text-decoration: underline; 
+}
+
+nav.subnav > ul li a {
+  cursor: pointer;
+  text-transform: none;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #FFF;
+  display: block;
+  margin: 0;
+  padding: 8px 16px 6px;
+  color: #747474;
+  float: left;
+}
+

@@ -44,11 +44,11 @@ module SpliceReports
       num_insufficient = 0
       checkins.each do | checkin | 
         case checkin["status"]
-        when "current"
+        when "Current"
           num_current += 1
-        when "invalid"
+        when "Invalid"
           num_invalid += 1
-        when "insufficient" 
+        when "Insufficient" 
           num_insufficient += 1
         end
       end

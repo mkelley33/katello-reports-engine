@@ -36,7 +36,7 @@ module Navigation
           :options => {:class=>"panel_link"}
         },
         { :key => :record_checkin_list,
-          :name =>_("System Check-In's "),
+          :name =>_("System Check-Ins "),
           :url => lambda{checkin_list_splice_reports_filter_reports_path(filter.id, :id=>record['_id'].to_s)},
           :if => lambda{true},
           :options => {:class=>"panel_link"}

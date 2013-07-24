@@ -131,7 +131,7 @@ module SpliceReports
 
         #Add / Convert needed data
         active_result.map do |item|
-          item["state"] = "active"
+          item["state"] = "Active"
           item["status"] = translate_checkin_status(item["status"])
           item
         end
@@ -146,7 +146,7 @@ module SpliceReports
         logger.info("get_marketing_product_results():\nQuery: #{inactive_query}\nResults #{inactive_result.count} items")
 
         inactive_result.map do |item|
-          item["state"] = "inactive"
+          item["state"] = "Inactive"
           item["status"] = translate_checkin_status(item["status"])
           item
         end
@@ -180,11 +180,11 @@ module SpliceReports
              
             if not this_item.empty?
               item["record"] = this_item["_id"]
-              item["status"] = "deleted"
+              item["status"] = "Deleted"
               item["splice_server"] = this_item["splice_server"]
               item["systemid"] = this_item["facts"]["systemid"]
               item["hostname"] = this_item["name"]
-              item["state"] = "deleted"
+              item["state"] = "Deleted"
               deleted_result << item
             end
           end
@@ -221,11 +221,11 @@ module SpliceReports
     def translate_checkin_status(value)
       case value
       when "valid"
-        "current"
+        "Current"
       when "partial"
-        "insufficient"
+        "Insufficient"
       when "invalid"
-        "invalid"
+        "Invalid"
       else
         value
       end
