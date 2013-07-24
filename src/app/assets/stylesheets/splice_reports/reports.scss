@@ -135,8 +135,8 @@ ul.popup_filter {
   width: 85.7% !important;
 }
 
-a.currentlyActive {
- text-decoration: underline; 
+.active {
+ text-decoration: underline !important; 
 }
 
 nav.subnav > ul li a {
