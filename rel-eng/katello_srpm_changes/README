@@ -1,0 +1,6 @@
+build_modified_katello.rb is used to:
+ - Fetch latest katello master from git
+ - Build a test srpm
+ - Patch srpm so splice_reports assets will be precompiled
+ - Build patched SRPM
+
