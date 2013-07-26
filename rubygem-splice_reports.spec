@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    36%{?dist}
+Release:    37%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,19 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri Jul 26 2013 Wes Hayutin <whayutin@redhat.com> 0.0.5-37
+- unable to get this working w/o two clicks.. but adding selected class from
+  katello vs underline (whayutin@redhat.com)
+- changing the details panel to snap to the left hand column vs. lining up to
+  the right (whayutin@redhat.com)
+- changed the wording from total systems -> Subscribed Systems in the dashboard
+  (whayutin@redhat.com)
+- fix db seed .. change array to string for state (whayutin@redhat.com)
+- underline of details navigation working w/ two clicks... not there yet
+  (root@ec2-54-224-221-216.compute-1.amazonaws.com)
+- trying to underline links in details (whayutin@redhat.com)
+- fixing some uxd bugs (whayutin@redhat.com)
+
 * Tue Jul 23 2013 Chris Duryee (beav) <cduryee@redhat.com>
 - add cloude and katello-cli shared folders (cduryee@redhat.com)
 - update sample data to use key organization_label (whayutin@redhat.com)
