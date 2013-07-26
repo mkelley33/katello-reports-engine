@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'optparse'
 require 'fileutils'
 
 def src_dir
@@ -27,6 +26,10 @@ end
 
 def rpmbuild_dir
   "#{out_dir}/rpmbuild"
+end
+
+def get_dist
+  "el6_splice"
 end
 
 def patches
@@ -81,12 +84,17 @@ def patch_srpm raw_srpm
   cmd("cp #{raw_srpm} #{work_dir}")
   cmd("cd #{work_dir} && rpm2cpio #{raw_srpm} | cpio -i")
   cmd("cd #{work_dir} && patch -p0 < #{SPEC_PATCH}")
+  cmd("sed -i '/^Release:/ s/$/_splice/' #{work_dir}/katello.spec")
   cmd("cd #{work_dir} && cp katello-*.tar.gz #{rpmbuild_dir}/SOURCES")
   patches.each do |path|
     cmd("cd #{work_dir} && cp #{path} #{rpmbuild_dir}/SOURCES")
   end
   output = cmd("cd #{work_dir} && rpmbuild --define '_topdir #{rpmbuild_dir}' -bs katello.spec -D 'scl ruby193'")
   get_srpm_path(output)
+end
+
+def build_srpm patched_srpm
+  cmd("rpmbuild --define '_topdir #{rpmbuild_dir}' --rebuild #{patched_srpm} -D 'scl ruby193'")
 end
 
 if __FILE__ == $0
@@ -97,9 +105,13 @@ if __FILE__ == $0
 
   fetch_katello_git
   raw_srpm = generate_srpm 
-  puts "Raw Katello SRPM formed at: '#{raw_srpm}'"
   patched_srpm = patch_srpm raw_srpm
+  build_srpm patched_srpm
+  puts ""
+  puts "Success!"
+  puts ""
+  puts "Raw Katello SRPM formed at: '#{raw_srpm}'"
   puts "Patched Katello SRPM formed at: `#{patched_srpm}`"
-  build_srpm = patched_srpm
+  puts "SRPM has been built and is available under: #{rpmbuild_dir}"
 end
 
