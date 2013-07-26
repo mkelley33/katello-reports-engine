@@ -1,0 +1,17 @@
+diff -Naur katello-1.4.2.orig/config/application.rb katello-1.4.2/config/application.rb
+--- katello-1.4.2.orig/config/application.rb	2013-05-31 14:12:55.151553849 -0400
++++ katello-1.4.2/config/application.rb	2013-05-31 16:32:55.364553820 -0400
+@@ -162,9 +162,12 @@
+       if path =~ /\.(css|js)\z/
+         full_path = Rails.application.assets.resolve(path).to_path
+         app_assets_path = Rails.root.join('app', 'assets').to_path
+-        if full_path.starts_with? app_assets_path
++        if full_path.starts_with? app_assets_path || full_path.includes?('splice_reports')
+           puts "including asset: " + full_path
+           true
++        elsif full_path.include?('splice_reports')
++          puts "including splice_reports asset: " + full_path
++          true
+         else
+           puts "excluding asset: " + full_path
+           false
