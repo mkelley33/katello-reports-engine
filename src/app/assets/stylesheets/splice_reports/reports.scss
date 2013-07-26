@@ -128,15 +128,10 @@ ul.popup_filter {
   }
 
 .table.details-visible {
-  width: inherit;
+  width: 20%
 }
-
-.nutupane-details-open {
-  width: inherit;
-}
-
-.active {
- text-decoration: underline !important; 
+.details-visible > thead  {
+  width: 100%
 }
 
 nav.subnav > ul li a {
