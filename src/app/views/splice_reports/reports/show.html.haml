@@ -71,7 +71,7 @@
       %ul{:class => "popup_filter"}
         %li
           = _("Description: ") + @filter['description']
-        - if (@filter['description'].length > 60)
+        - if (@filter['description'].length > 65)
           %br
         %li
           - if @filter['status'].is_a?(Array)
