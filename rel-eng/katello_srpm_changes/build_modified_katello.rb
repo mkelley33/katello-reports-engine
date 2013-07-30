@@ -84,7 +84,12 @@ def patch_srpm raw_srpm
   cmd("cp #{raw_srpm} #{work_dir}")
   cmd("cd #{work_dir} && rpm2cpio #{raw_srpm} | cpio -i")
   cmd("cd #{work_dir} && patch -p0 < #{SPEC_PATCH}")
+  # Note:  We are using sed to modify the katello.spec below opposed to putting these changes
+  # in the .patch file because the .spec is going to slightly change each time there is a new
+  # build/commit to katello master.  To avoid patches failing, we are trying to isolate those
+  # associated with text that will change and cause patch applying to be rejected.
   cmd("sed -i '/^Release:/ s/$/_splice/' #{work_dir}/katello.spec")
+  cmd("sed -i '/^%setup -q .*/ s/$/\\n%patch1 -p1 -b .splice_reports_1/' #{work_dir}/katello.spec")
   cmd("cd #{work_dir} && cp katello-*.tar.gz #{rpmbuild_dir}/SOURCES")
   patches.each do |path|
     cmd("cd #{work_dir} && cp #{path} #{rpmbuild_dir}/SOURCES")
