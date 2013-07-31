@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    37%{?dist}
+Release:    38%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Wed Jul 31 2013 Chris Duryee (beav) <cduryee@redhat.com>
+- Merge branch 'master' of github.com:splice/splice-reports
+  (whayutin@redhat.com)
+- css to max out columns to the left of details (whayutin@redhat.com)
+- fixed default report filter spacing (whayutin@redhat.com)
+
 * Fri Jul 26 2013 Wes Hayutin <whayutin@redhat.com> 0.0.5-37
 - unable to get this working w/o two clicks.. but adding selected class from
   katello vs underline (whayutin@redhat.com)
