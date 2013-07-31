@@ -1,5 +1,5 @@
---- katello.spec.orig	2013-07-26 13:20:29.279156840 -0400
-+++ katello.spec	2013-07-26 13:21:28.645646764 -0400
+--- katello.spec.original	2013-07-30 14:29:24.390902573 -0400
++++ katello.spec	2013-07-30 20:33:27.222340817 -0400
 @@ -51,6 +51,10 @@
  BuildRequires:   %{scl_ruby}
  Requires:        %{scl_ruby}
@@ -11,23 +11,22 @@
  %description
  Provides a package for managing application life-cycle for Linux systems.
  
-@@ -438,6 +442,10 @@
+@@ -437,6 +441,9 @@
+ 
  %build
  export RAILS_ENV=build
- 
 +cat <<EOF > bundler.d/splice_reports.rb
 +gem 'splice_reports'
 +EOF
-+
+ 
  #don't distribute quiet_paths
  rm -f config/initializers/quiet_paths.rb
- 
-@@ -453,6 +461,8 @@
-     rm -rf bundler.d/assets.rb
+@@ -491,6 +498,8 @@
+     mv lib/tasks_disabled lib/tasks
  %endif
  
 +rm bundler.d/splice_reports.rb
 +
- #replace shebangs for SCL
- %if %{?scl:1}%{!?scl:0}
-     find script/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
+ #man pages
+ a2x -d manpage -f manpage man/katello-service.8.asciidoc
+ 
