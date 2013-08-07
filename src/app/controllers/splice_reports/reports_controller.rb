@@ -58,13 +58,37 @@ module SpliceReports
               num_total: num_current + num_invalid + num_insufficient}
     end
 
+
+      def translate_header(field_name)
+        case field_name
+        when "checkin_date"
+          "CHECK-IN TIME"
+        when "status"
+          "STATUS"
+        when "identifier"
+          "SYSTEM ID"
+        when "splice_server"
+          "SATELLITE SERVER"
+        when "systemid"
+          "SYSTEM ID"
+        when "hostname"
+          "HOSTNAME"
+        when "organization_name"
+          "ORGANIZATION"
+        when "state"
+          "LIFECYCLE STATE"
+        else
+          field_name
+        end
+      end
+
       def checkins_to_csv(checkins)
         return "" unless checkins.length > 0
         # Assuming all arrays have a hash with same keys, also assuming order of keys is same for all entries in array
         fields = checkins[0].keys
         # Header
         header = ""
-        fields.each { |field| header << field << ", "}
+        fields.each { |field| header << translate_header(field) << ", "}
         # Body
         body_lines = checkins.map { |checkin|
           entry = ""
