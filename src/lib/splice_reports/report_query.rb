@@ -140,16 +140,25 @@ module SpliceReports
       
       if filter.state.include?("Inactive")
         # find the latest checkin per instance in orgs, if checkin is *not* in date range.. it is inactive
-        inactive_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules_not_deleted + rules
+        #inactive_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules_not_deleted + rules
+        inactive_query = rules_org + rules_inactive_start + query + rules_inactive_date + rules_status + rules
 
-        inactive_result = @@c.aggregate(inactive_query)
-        logger.info("get_marketing_product_results():\nQuery: #{inactive_query}\nResults #{inactive_result.count} items")
+        inactive_tmp_result = @@c.aggregate(inactive_query)
+        logger.info("get_marketing_product_results():\nQuery: #{inactive_query}\nResults #{inactive_tmp_result.count} items")
 
-        inactive_result.map do |item|
+        inactive_tmp_result.map do |item|
           item["state"] = "Inactive"
           item["status"] = translate_checkin_status(item["status"])
           item
         end
+
+        logger.info("Remove 'deleted' systems from list of inactive.  Original list had #{inactive_tmp_result.count} items")
+        inactive_result = inactive_tmp_result.select do |item|
+          is_deleted = @@c.find({"instance_identifier" => item["identifier"], "deleted" => true})
+          is_deleted.count == 0
+        end
+        logger.info("List of inactive_results after removing deleted has #{inactive_result.count} items")
+        
       end
 
       if filter.state.include?("Deleted")
