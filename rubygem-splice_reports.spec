@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    39%{?dist}
+Release:    40%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,14 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Thu Aug 08 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-40
+- Fix so filters are sorted with the default Red Hat filter on top
+  (jwmatthews@gmail.com)
+- Updated list of inactive systems to filter deleted systems, fixes issue with
+  inactive system report in future (jwmatthews@gmail.com)
+- 995132: remove double-validation of some form fields (cduryee@redhat.com)
+- 995202: always use experimental UI for report view (cduryee@redhat.com)
+
 * Thu Aug 08 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-39
 - Updated column headers on export to match column names from webui
   (jwmatthews@gmail.com)
