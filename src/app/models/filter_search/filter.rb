@@ -30,7 +30,11 @@ module FilterSearch::Filter
     end
 
     def extended_index_attrs
-      {:name_sort=>self.name}
+      if self.locked?
+        {:name_sort=>"0000000#{self.name}"}
+      else
+        {:name_sort=>self.name}
+      end
     end
   end
 end

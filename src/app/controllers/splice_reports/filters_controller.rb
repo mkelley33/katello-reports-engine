@@ -253,7 +253,7 @@ module SpliceReports
 
     def items
       ids = Filter.where("user_id = #{current_user.id} or locked = true").pluck(:id)
-      render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, 'ask'],
+      render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
                           {:default_field => :name, :filter=>[{:id=>ids}]})
     end
 
