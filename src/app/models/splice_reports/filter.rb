@@ -19,8 +19,6 @@ module SpliceReports
     has_and_belongs_to_many :organizations, :join_table => 'splice_reports_filters_organizations', :foreign_key=>'splice_reports_filter_id'
     belongs_to :user
 
-    validates :name, :presence => true
-    validates :status, :presence => true
     validates_with Validators::KatelloNameFormatValidator, :attributes => :name
     validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
