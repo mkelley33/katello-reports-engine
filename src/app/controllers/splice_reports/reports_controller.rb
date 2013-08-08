@@ -219,7 +219,8 @@ module SpliceReports
                                   :num_current => summary[:num_current], 
                                   :num_invalid => summary[:num_invalid], 
                                   :num_insufficient => summary[:num_insufficient], 
-                                  :num_total => summary[:num_total]}
+                                  :num_total => summary[:num_total]},
+                     :layout => 'layouts/katello_experimental'
     end
 
     def items
