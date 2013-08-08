@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    38%{?dist}
+Release:    39%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Thu Aug 08 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-39
+- Updated column headers on export to match column names from webui
+  (jwmatthews@gmail.com)
+
 * Wed Jul 31 2013 Chris Duryee (beav) <cduryee@redhat.com>
 - Merge branch 'master' of github.com:splice/splice-reports
   (whayutin@redhat.com)
