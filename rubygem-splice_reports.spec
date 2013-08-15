@@ -9,7 +9,7 @@
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
 Version:    0.0.5
-Release:    40%{?dist}
+Release:    41%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{katello_bundlerd_dir}/splice_reports.rb
 
 %changelog
+* Thu Aug 15 2013 Chris Duryee (beav) <cduryee@redhat.com>
+- 996636: remove empty doc subpackage (cduryee@redhat.com)
+
 * Thu Aug 08 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-40
 - Fix so filters are sorted with the default Red Hat filter on top
   (jwmatthews@gmail.com)
