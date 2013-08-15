@@ -32,14 +32,6 @@ Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 A ruby engine that provides enhanced Satellite reporting 
 for Katello/SAM
 
-%package doc
-BuildArch:  noarch
-Requires:   %{?scl_prefix}%{pkg_name} = %{version}-%{release}
-Summary:    Documentation for rubygem-%{gem_name}
-
-%description doc
-This package contains documentation for rubygem-%{gem_name}.
-
 %prep
 %setup -n rubygem-%{gem_name}-%{version} -q
 mkdir -p .%{gem_dir}
@@ -79,9 +71,6 @@ rm -rf %{buildroot}
 %{gem_dir}
 %{gem_spec}
 %{katello_bundlerd_dir}/splice_reports.rb
-
-%files doc
-%defattr(-,root,root,-)
 
 %changelog
 * Thu Aug 08 2013 John Matthews <jwmatthews@gmail.com> 0.0.5-40
