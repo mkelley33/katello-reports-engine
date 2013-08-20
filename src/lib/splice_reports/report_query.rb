@@ -154,7 +154,7 @@ module SpliceReports
 
         logger.info("Remove 'deleted' systems from list of inactive.  Original list had #{inactive_tmp_result.count} items")
         inactive_result = inactive_tmp_result.select do |item|
-          is_deleted = @@c.find({"instance_identifier" => item["identifier"], "deleted" => true})
+          is_deleted = @@c.find({"instance_identifier" => item["identifier"], "deleted" => true, :checkin_date=>{"$lt" => end_date}})
           is_deleted.count == 0
         end
         logger.info("List of inactive_results after removing deleted has #{inactive_result.count} items")
