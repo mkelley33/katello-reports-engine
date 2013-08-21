@@ -8,8 +8,8 @@
 
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
-Version:    0.0.5
-Release:    42%{?dist}
+Version:    0.0.6
+Release:    1%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
 URL:        https://github.com/splice/splice-reports
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{katello_bundlerd_dir}/splice_reports.rb
 
 %changelog
+* Wed Aug 21 2013 Chris Duryee (beav) <cduryee@redhat.com>
+- use version tagger (cduryee@redhat.com)
+
 * Tue Aug 20 2013 Chris Duryee (beav) <cduryee@redhat.com>
 - 999027: only filter deleted systems with date in range (cduryee@redhat.com)
 
