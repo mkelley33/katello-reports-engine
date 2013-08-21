@@ -66,7 +66,7 @@ module SpliceReports
         when "status"
           "STATUS"
         when "identifier"
-          "SYSTEM ID"
+          "DB ID"
         when "splice_server"
           "SATELLITE SERVER"
         when "systemid"
