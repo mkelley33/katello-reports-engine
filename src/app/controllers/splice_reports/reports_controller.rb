@@ -84,6 +84,7 @@ module SpliceReports
 
       def checkins_to_csv(checkins)
         return "" unless checkins.length > 0
+        text_fields = ['status', 'identifier', 'splice_server', 'hostname', 'organization_name', 'state']
         # Assuming all arrays have a hash with same keys, also assuming order of keys is same for all entries in array
         fields = checkins[0].keys
         # Header
@@ -95,6 +96,8 @@ module SpliceReports
           fields.each do |field| 
             if field == "record" and checkin[field].key?("$oid")
               entry << checkin[field]["$oid"] << ", " 
+            elsif text_fields.include?(field) # add quotes to text entries
+              entry << '"' << checkin[field].to_s << '", '
             else
               entry << checkin[field].to_s << ", "
             end 
