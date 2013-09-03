@@ -8,7 +8,7 @@
 
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
-Version:    0.0.9
+Version:    0.0.10
 Release:    1%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{katello_bundlerd_dir}/splice_reports.rb
 
 %changelog
+* Tue Sep 03 2013 Chris Duryee (beav) <cduryee@redhat.com>
+- bump version (cduryee@redhat.com)
+
 * Tue Sep 03 2013 Chris Duryee (beav) <cduryee@redhat.com>
 - 1003625: add quotes to text fields in export (cduryee@redhat.com)
 
