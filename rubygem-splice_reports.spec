@@ -8,7 +8,7 @@
 
 Summary:    Enhanced satellite reporting ruby engine 
 Name:       %{?scl_prefix}rubygem-%{gem_name}
-Version:    0.0.10
+Version:    0.0.11
 Release:    1%{?dist}
 Group:      Development/Libraries
 License:    GPLv2+
@@ -73,6 +73,10 @@ rm -rf %{buildroot}
 %{katello_bundlerd_dir}/splice_reports.rb
 
 %changelog
+* Mon Sep 09 2013 Chris Duryee (beav) <cduryee@redhat.com>
+- version bump (cduryee@redhat.com)
+- 1005108: fix link back to system details in katello (cduryee@redhat.com)
+
 * Tue Sep 03 2013 Chris Duryee (beav) <cduryee@redhat.com>
 - bump version (cduryee@redhat.com)
 
