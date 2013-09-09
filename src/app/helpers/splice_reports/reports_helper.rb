@@ -91,7 +91,7 @@ module SpliceReports
     end
         
     def system_link(system)
-      systems_path() + "#!/?item=#{system.id}&search=id:#{system.id}"
+      systems_path(system.id, :anchor => "/&list_search=id:#{system.id}&panel=system_#{system.id}")
     end
 
     def get_filter_details(filter)
