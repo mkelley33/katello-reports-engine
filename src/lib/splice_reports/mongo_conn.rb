@@ -19,9 +19,15 @@ module SpliceReports
     include Mongo
 
     def initialize
-      @client = MongoClient.new('localhost', 27017)
-
-
+      reports_config = Katello.config.reports
+      database_config = reports_config.database if reports_config
+      if database_config
+        host = database_config.host
+        port = database_config.port
+      end
+      host ||= 'localhost'
+      port ||= '27017'
+      @client = MongoClient.new(host, port)
     end
 
     def get_coll_marketing_report_data
