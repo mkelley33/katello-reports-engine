@@ -1,1 +1,2 @@
-RAILS ENGINE based splice reporting 
+# Reports for SAM and Katello
+
