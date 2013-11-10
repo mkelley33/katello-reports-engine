@@ -38,9 +38,9 @@ mkdir -p .%{gem_dir}
 
 %build
 %{?scl:scl enable %{scl} "}
-cd src && gem build %{gem_name}.gemspec && cd ..
+cd engine && gem build %{gem_name}.gemspec && cd ..
 gem install --local --no-wrappers --install-dir .%{gem_dir} \
-            --force src/%{gem_name}-%{version}.gem --no-rdoc --no-ri
+            --force engine/%{gem_name}-%{version}.gem --no-rdoc --no-ri
 %{?scl:"}
 
 
