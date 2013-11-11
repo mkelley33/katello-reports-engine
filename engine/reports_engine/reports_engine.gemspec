@@ -1,18 +1,18 @@
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
-require "rollup/version"
+require "reports_engine/version"
 
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = "rollup"
-  s.version     = Rollup::VERSION
+  s.name        = "reports_engine"
+  s.version     = ReportsEngine::VERSION
   s.authors     = [""]
   s.email       = [""]
   s.homepage    = "https://github.com/katello/katello-reports-engine"
   s.summary     = "Rails engine to provide enhanced reports for Katello/SAM."
-  s.description = "Description of Rollup."
+  s.description = "Description of ReportsEngine."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]

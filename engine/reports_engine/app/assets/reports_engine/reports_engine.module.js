@@ -13,7 +13,7 @@
 
 /**
  * @ngdoc module
- * @name  Rollup
+ * @name  ReportsEngine
  *
  * @description
  *   Base module that defines the Katello reports engine's module
@@ -21,7 +21,7 @@
  *   application.
  */
 
-angular.module('Rollup', [
+angular.module('ReportsEngine', [
   // TODO: confirm whether or not other modules such as bastion
   // and alchemy need to be included here.
 ]);
@@ -29,7 +29,7 @@ angular.module('Rollup', [
 
 /**
  * @ngdoc config
- * @name  Rollup.config
+ * @name  ReportsEngine.config
  *
  * @requires $httpProvider
  * @requires $urlRouterProvider
@@ -38,7 +38,7 @@ angular.module('Rollup', [
  *   Used for establishing application wide configuration such as adding the Rails CSRF token
  *   to every request.
  */
-angular.module('Rollup').config(['$httpProvider', '$urlRouterProvider', function($httpProvider, $urlRouterProvider) {
+angular.module('ReportsEngine').config(['$httpProvider', '$urlRouterProvider', function($httpProvider, $urlRouterProvider) {
     $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
     $httpProvider.defaults.headers.common['ACCEPT'] = 'application/json, text/plain, */*, version=2';
     $urlRouterProvider.otherwise("/");
@@ -47,7 +47,7 @@ angular.module('Rollup').config(['$httpProvider', '$urlRouterProvider', function
 
 /**
  * @ngdoc run
- * @name Rollup.run
+ * @name ReportsEngine.run
  *
  * @requires $rootScope
  * @requires $state
@@ -58,7 +58,7 @@ angular.module('Rollup').config(['$httpProvider', '$urlRouterProvider', function
  * @description
  *   Set up some common state related functionality and set the current language.
  */
-angular.module('Rollup').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale',
+angular.module('ReportsEngine').run(['$rootScope', '$state', '$stateParams', 'gettextCatalog', 'currentLocale',
     function($rootScope, $state, $stateParams, gettextCatalog, currentLocale) {
 
         $rootScope.$state = $state;

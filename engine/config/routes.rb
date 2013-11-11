@@ -12,7 +12,7 @@
 
 Rails.application.routes.draw do
 
-  namespace :reports do
+  namespace :reports_engine do
     resources :filters do
       collection do
         get :items

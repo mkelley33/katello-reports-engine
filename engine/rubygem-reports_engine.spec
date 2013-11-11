@@ -1,7 +1,7 @@
 %{?scl:%scl_package rubygem-%{gem_name}}
 %{!?scl:%global pkg_name %{name}}
 
-%global gem_name rollup
+%global gem_name reports_engine
 
 %define rubyabi 1.9.1
 %global katello_bundlerd_dir /usr/share/katello/bundler.d
@@ -46,31 +46,31 @@ gem install --local --no-wrappers --install-dir .%{gem_dir} \
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/etc/rollup
-mkdir -p %{buildroot}/etc/pki/rollup
+mkdir -p %{buildroot}/etc/reports_engine
+mkdir -p %{buildroot}/etc/pki/reports_engine
 mkdir -p %{buildroot}%{gem_dir}
 mkdir -p %{buildroot}%{katello_bundlerd_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
 
 cat <<GEMFILE > %{buildroot}%{katello_bundlerd_dir}/%{gem_name}.rb
-gem 'rollup'
+gem 'reports_engine'
 GEMFILE
 
-cp etc/rollup/rollup.yml %{buildroot}/etc/rollup/
+cp etc/reports_engine/reports_engine.yml %{buildroot}/etc/reports_engine/
 
 # TODO this will be replaced with a RPM that delivers the public key
-cp etc/pki/rollup/rollup_key.gpg.pub %{buildroot}/etc/pki/rollup
+cp etc/pki/reports_engine/reports_engine_key.gpg.pub %{buildroot}/etc/pki/reports_engine
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%config /etc/rollup/rollup.yml
-/etc/pki/rollup/rollup_key.gpg.pub
+%config /etc/reports_engine/reports_engine.yml
+/etc/pki/reports_engine/reports_engine_key.gpg.pub
 %{gem_dir}
 %{gem_spec}
-%{katello_bundlerd_dir}/rollup.rb
+%{katello_bundlerd_dir}/reports_engine.rb
 
 %changelog
 TODO
