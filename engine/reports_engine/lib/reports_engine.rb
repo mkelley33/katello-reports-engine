@@ -11,9 +11,9 @@ require File.expand_path("reports_engine/engine", File.dirname(__FILE__))
 
 module ReportsEngine
   initializer :finisher_hook do |engine|
-    require File.expand_path("app/models/splice_reports", File.dirname(__FILE__))
+    require File.expand_path("../app/models/splice_reports", File.dirname(__FILE__))
 
-    resources = Dir[File.dirname(__FILE__) + '/navigation/*.rb']
+    resources = Dir[File.dirname(__FILE__) + '../navigation/*.rb']
     resources.uniq.each{ |f| require f }
 
     ::Navigation::Additions.insert_after(:organizations, ReportsEngine::Navigation::ReportFilter)
